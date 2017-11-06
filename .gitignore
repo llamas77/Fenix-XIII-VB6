@@ -1,0 +1,20 @@
+/*
+!.gitignore
+
+**/.DS_Store
+**.log
+
+!cliente/
+cliente/*
+!cliente/Client.vbp
+!cliente/CODIGO/
+
+!servidor/
+servidor/*
+!servidor/server.vbp
+!servidor/Codigo/
+
+!world editor/
+world editor/*
+!world editor/FXIIIWE.vbp
+!world editor/Codigo/
