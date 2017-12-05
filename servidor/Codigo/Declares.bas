@@ -629,7 +629,7 @@ Public Type tHechizo
     Warp As Byte
     Invoca As Byte
     NumNpc As Integer
-    Cant As Integer
+    cant As Integer
 
 '    Materializa As Byte
 '    ItemIndex As Byte
@@ -680,7 +680,7 @@ Public Type Position
 End Type
 
 Public Type WorldPos
-    map As Integer
+    Map As Integer
     X As Integer
     Y As Integer
 End Type
@@ -1716,7 +1716,7 @@ End Enum
 
 Public Const GOHOME_PENALTY As Integer = 5
 
-Public Const TELEP_OBJ_INDEX As Integer = 1012
+Public Const TELEP_OBJ_INDEX As Integer = 378 ' TODO: cambiar al item 1012
 
 Public Const HUMANO_H_PRIMER_CABEZA As Integer = 1
 Public Const HUMANO_H_ULTIMA_CABEZA As Integer = 23 'En verdad es hasta la 51, pero como son muchas estas las dejamos no seleccionables
