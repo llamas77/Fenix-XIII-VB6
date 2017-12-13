@@ -361,18 +361,18 @@ Public Sub DrawInventory()
     Dim loopC As Long
     Dim SrcRect As Rect
     
-    Dim w As Long
-    Dim h As Long
+    Dim W As Long
+    Dim H As Long
         
-    w = InventoryWindow.ScaleWidth / ownTilePixelWidth
-    h = InventoryWindow.ScaleHeight / ownTilePixelHeight
+    W = InventoryWindow.ScaleWidth / ownTilePixelWidth
+    H = InventoryWindow.ScaleHeight / ownTilePixelHeight
     
     Call DirectDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
     Call DirectDevice.BeginScene
         
     For loopC = 1 To UBound(Inventory)
-            startdX = ((loopC - 1) Mod w) * ownTilePixelHeight
-            startdY = ((loopC - 1) \ h) * ownTilePixelHeight
+            startdX = ((loopC - 1) Mod W) * ownTilePixelHeight
+            startdY = ((loopC - 1) \ H) * ownTilePixelHeight
             
             If Inventory(loopC).GrhIndex Then
             
@@ -403,7 +403,7 @@ Public Sub DrawInventory()
             End If
     Next loopC
     
-    Call DirectX_EndScene(InventoryRect, InventoryWindow.hWnd)
+    Call DirectX_EndScene(InventoryRect, InventoryWindow.hwnd)
 End Sub
 
 Public Sub Initialize(ByRef InvPic As PictureBox, ByVal MaxObjs As Byte, _

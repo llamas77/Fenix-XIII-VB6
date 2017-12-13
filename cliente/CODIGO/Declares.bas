@@ -224,6 +224,11 @@ Public Const MAXATRIBUTOS As Byte = 38
 Public Const FLAGORO As Integer = MAX_INVENTORY_SLOTS + 1
 Public Const GOLD_OFFER_SLOT As Integer = INV_OFFER_SLOTS + 1
 
+Public Enum eMoveType
+    Inventory = 1
+    Bank
+End Enum
+
 Public Enum eFaccion
     Neutral = 0
     Real = 1

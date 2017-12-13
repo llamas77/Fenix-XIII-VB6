@@ -246,6 +246,7 @@ Private Enum ClientPacketID
     GuildFoundate
     GuildConfirmFoundation
     GuildRequest
+    MoveItem
 End Enum
 
 Public Enum FontTypeNames
@@ -8257,6 +8258,24 @@ Public Sub WriteGuildRequest(ByVal GuildName As String)
     Call outgoingData.WriteByte(ClientPacketID.GuildRequest)
     Call outgoingData.WriteString(GuildName)
 End Sub
+
+''
+' Writes the "Moveitem" message to the outgoing data buffer.
+'
+Public Sub WriteMoveItem(ByVal originalSlot As Integer, ByVal newSlot As Integer, ByVal moveType As eMoveType)
+'***************************************************
+'Author: Budi
+'Last Modification: 05/01/2011
+'Writes the "MoveItem" message to the outgoing data buffer
+'***************************************************
+    With outgoingData
+        Call .WriteByte(ClientPacketID.MoveItem)
+        Call .WriteByte(originalSlot)
+        Call .WriteByte(newSlot)
+        Call .WriteByte(moveType)
+    End With
+End Sub
+
 
 ''
 ' Flushes the outgoing data incomingData of the user.
