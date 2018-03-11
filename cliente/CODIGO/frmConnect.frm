@@ -297,20 +297,20 @@ Public Sub LoginNewChar()
     
     UserName = GetComponentText(txtNick)
             
-    'If Right$(UserName, 1) = " " Then
-    '    UserName = RTrim$(UserName)
-    '    MsgBox "Nombre invalido, se han removido los espacios al final del nombre"
-    'End If
+    If Right$(UserName, 1) = " " Then
+        UserName = RTrim$(UserName)
+        MsgBox "Nombre invalido, se han removido los espacios al final del nombre"
+    End If
     
     UserRaza = Components(cmbRaza).SelIndex
     UserSexo = Components(cmbSexo).SelIndex
     
     
-    'UserAtributos(eAtributos.Fuerza) = Val(GetComponentText(lblFuerza))
-    'UserAtributos(eAtributos.Agilidad) = Val(GetComponentText(lblAgilidad))
-    'UserAtributos(eAtributos.Constitucion) = Val(GetComponentText(lblConstitucion))
-    'UserAtributos(eAtributos.Inteligencia) = Val(GetComponentText(lblInteligencia))
-    'UserAtributos(eAtributos.Carisma) = Val(GetComponentText(lblCarisma))
+    UserAtributos(eAtributos.Fuerza) = Val(GetComponentText(lblFuerza))
+    UserAtributos(eAtributos.Agilidad) = Val(GetComponentText(lblAgilidad))
+    UserAtributos(eAtributos.Constitucion) = Val(GetComponentText(lblConstitucion))
+    UserAtributos(eAtributos.Inteligencia) = Val(GetComponentText(lblInteligencia))
+    UserAtributos(eAtributos.Carisma) = Val(GetComponentText(lblCarisma))
     
     UserHogar = Components(cmbHogar).SelIndex
     

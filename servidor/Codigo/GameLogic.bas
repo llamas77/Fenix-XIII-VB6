@@ -728,9 +728,9 @@ With UserList(UserIndex)
            If UserList(TempCharIndex).flags.AdminInvisible = 0 Or .flags.Privilegios And PlayerType.Dios Then
                 With UserList(TempCharIndex)
                     If LenB(.DescRM) = 0 And .showName Then 'No tiene descRM y quiere que se vea su nombre.
-                        If EsNewbie(TempCharIndex) Then
-                            Stat = " <Newbie>"
-                        End If
+                      '  If EsNewbie(TempCharIndex) Then
+                       '     Stat = " <Newbie>"
+                       ' End If
                         
                         If .Faccion.Bando Then
                             If .Faccion.BandoOriginal <> .Faccion.Bando Then

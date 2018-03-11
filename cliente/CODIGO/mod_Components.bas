@@ -868,8 +868,10 @@ End With
 End Sub
 
 Public Function GetComponentText(ByVal ID As Integer) As String
-        
-    GetComponentText = Components(ID).TextBuffer
+    Dim str As String
+    str = Components(ID).TextBuffer
+
+    GetComponentText = IIf(Len(str) > 0, str, Components(ID).Text)
     
 End Function
 

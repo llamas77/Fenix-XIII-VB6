@@ -83,7 +83,7 @@ VersionLegalCopyright="Argentum Online is copyright of Pablo Ignacio Marquez"
 VersionProductName="Argentum Server"
 CondComp="UsarQueSocket = 1 : ConUpTime = 1"
 CompilationType=0
-OptimizationType=2
+OptimizationType=0
 FavorPentiumPro(tm)=0
 CodeViewDebugInfo=0
 NoAliasing=-1

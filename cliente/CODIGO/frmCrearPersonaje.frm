@@ -941,7 +941,6 @@ Begin VB.Form frmCrearPersonaje
    Begin VB.Image imgHogar 
       Height          =   2850
       Left            =   5640
-      Picture         =   "frmCrearPersonaje.frx":1443
       Top             =   9120
       Visible         =   0   'False
       Width           =   2985
