@@ -1258,36 +1258,38 @@ Private Sub HandleCommerceInit()
 '
 '***************************************************
     Dim i As Long
-    
-    
+   
+   
     ' Initialize commerce inventories
-    'Call InvComUsu.Initialize(frmComerciar.picInvUser, Inventario.MaxObjs)
-    'Call InvComNpc.Initialize(frmComerciar.picInvNpc, MAX_NPC_INVENTORY_SLOTS)
-
+    Call InvComUsu.Initialize(frmComerciar.picInvUser, Inventario.MaxObjs)
+    Call InvComNpc.Initialize(frmComerciar.picInvNpc, MAX_NPC_INVENTORY_SLOTS)
+ 
     'Fill user inventory
     For i = 1 To MAX_INVENTORY_SLOTS
         If Inventario.OBJIndex(i) <> 0 Then
             With Inventario
-                'Call InvComUsu.SetItem(i, .OBJIndex(i), _
-                .Amount(i), .Equipped(i), .GrhIndex(i), _
+                Call InvComUsu.SetItem(i, .OBJIndex(i), _
+                .amount(i), .Equipped(i), .GrhIndex(i), _
                 .OBJType(i), .MaxHit(i), .MinHit(i), .MaxDef(i), .MinDef(i), _
                 .Valor(i), .ItemName(i))
+                Call InvComUsu.DrawInventory
             End With
         End If
     Next i
-    
+   
     ' Fill Npc inventory
     For i = 1 To 50
         If NPCInventory(i).OBJIndex <> 0 Then
             With NPCInventory(i)
-                'Call InvComNpc.SetItem(i, .OBJIndex, _
-                .Amount, 0, .GrhIndex, _
+                Call InvComNpc.SetItem(i, .OBJIndex, _
+                .amount, 0, .GrhIndex, _
                 .OBJType, .MaxHit, .MinHit, .MaxDef, .MinDef, _
                 .Valor, .Name)
+                Call InvComNpc.DrawInventory
             End With
         End If
     Next i
-    
+   
     'Set state and show form
     Comerciando = True
     frmComerciar.Show , frmMain
@@ -1304,34 +1306,39 @@ Private Sub HandleBankInit()
 '***************************************************
     Dim i As Long
     Dim BankGold As Long
-
+ 
     BankGold = incomingData.ReadLong
-    'Call InvBanco(0).Initialize(frmBancoObj.PicBancoInv, MAX_BANCOINVENTORY_SLOTS)
-    'Call InvBanco(1).Initialize(frmBancoObj.PicInv, Inventario.MaxObjs)
-    
+    Call InvBanco(0).Initialize(frmBancoObj.PicBancoInv, MAX_BANCOINVENTORY_SLOTS)
+    Call InvBanco(1).Initialize(frmBancoObj.PicInv, Inventario.MaxObjs)
+   
     For i = 1 To Inventario.MaxObjs
         With Inventario
-            'Call InvBanco(1).SetItem(i, .OBJIndex(i), _
-                .Amount(i), .Equipped(i), .GrhIndex(i), _
+            Call InvBanco(1).SetItem(i, .OBJIndex(i), _
+                .amount(i), .Equipped(i), .GrhIndex(i), _
                 .OBJType(i), .MaxHit(i), .MinHit(i), .MaxDef(i), .MinDef(i), _
                 .Valor(i), .ItemName(i))
+               
+           Call InvBanco(1).DrawInventory
+ 
         End With
     Next i
-    
+   
     For i = 1 To MAX_BANCOINVENTORY_SLOTS
         With UserBancoInventory(i)
-            'Call InvBanco(0).SetItem(i, .OBJIndex, _
-                .Amount, .Equipped, .GrhIndex, _
+            Call InvBanco(0).SetItem(i, .OBJIndex, _
+                .amount, .Equipped, .GrhIndex, _
                 .OBJType, .MaxHit, .MinHit, .MaxDef, .MinDef, _
                 .Valor, .Name)
+               
+           Call InvBanco(0).DrawInventory
         End With
     Next i
-    
+   
     'Set state and show form
     Comerciando = True
-    
+   
     frmBancoObj.lblUserGld.Caption = BankGold
-    
+   
     frmBancoObj.Show , frmMain
 End Sub
 
@@ -1345,38 +1352,47 @@ Private Sub HandleUserCommerceInit()
 '
 '***************************************************
     Dim i As Long
-    
-
-
+   
+ 
+ 
     TradingUserName = incomingData.ReadString
-    
+   
     'todo
     ' Initialize commerce inventories
-    'Call InvComUsu.Initialize(frmComerciarUsu.picInvComercio, Inventario.MaxObjs)
-    'Call InvOfferComUsu(0).Initialize(frmComerciarUsu.picInvOfertaProp, INV_OFFER_SLOTS)
-    'Call InvOfferComUsu(1).Initialize(frmComerciarUsu.picInvOfertaOtro, INV_OFFER_SLOTS)
-    'Call InvOroComUsu(0).Initialize(frmComerciarUsu.picInvOroProp, INV_GOLD_SLOTS, , TilePixelWidth * 2, TilePixelHeight, TilePixelWidth / 2)
-    'Call InvOroComUsu(1).Initialize(frmComerciarUsu.picInvOroOfertaProp, INV_GOLD_SLOTS, , TilePixelWidth * 2, TilePixelHeight, TilePixelWidth / 2)
-    'Call InvOroComUsu(2).Initialize(frmComerciarUsu.picInvOroOfertaOtro, INV_GOLD_SLOTS, , TilePixelWidth * 2, TilePixelHeight, TilePixelWidth / 2)
-
+    Call InvComUsu.Initialize(frmComerciarUsu.picInvComercio, Inventario.MaxObjs)
+    Call InvOfferComUsu(0).Initialize(frmComerciarUsu.picInvOfertaProp, INV_OFFER_SLOTS)
+    Call InvOfferComUsu(1).Initialize(frmComerciarUsu.picInvOfertaOtro, INV_OFFER_SLOTS)
+    Call InvOroComUsu(0).Initialize(frmComerciarUsu.picInvOroProp, INV_GOLD_SLOTS, , TilePixelWidth * 2, TilePixelHeight, TilePixelWidth / 2)
+    Call InvOroComUsu(1).Initialize(frmComerciarUsu.picInvOroOfertaProp, INV_GOLD_SLOTS, , TilePixelWidth * 2, TilePixelHeight, TilePixelWidth / 2)
+    Call InvOroComUsu(2).Initialize(frmComerciarUsu.picInvOroOfertaOtro, INV_GOLD_SLOTS, , TilePixelWidth * 2, TilePixelHeight, TilePixelWidth / 2)
+ 
     'Fill user inventory
     For i = 1 To MAX_INVENTORY_SLOTS
         If Inventario.OBJIndex(i) <> 0 Then
             With Inventario
-                'Call InvComUsu.SetItem(i, .OBJIndex(i), _
-                .Amount(i), .Equipped(i), .GrhIndex(i), _
+                Call InvComUsu.SetItem(i, .OBJIndex(i), _
+                .amount(i), .Equipped(i), .GrhIndex(i), _
                 .OBJType(i), .MaxHit(i), .MinHit(i), .MaxDef(i), .MinDef(i), _
                 .Valor(i), .ItemName(i))
             End With
         End If
     Next i
-
+ 
     ' Inventarios de oro
-    'Call InvOroComUsu(0).SetItem(1, ORO_INDEX, UserGLD, 0, ORO_GRH, 0, 0, 0, 0, 0, 0, "Oro")
-    'Call InvOroComUsu(1).SetItem(1, ORO_INDEX, 0, 0, ORO_GRH, 0, 0, 0, 0, 0, 0, "Oro")
-    'Call InvOroComUsu(2).SetItem(1, ORO_INDEX, 0, 0, ORO_GRH, 0, 0, 0, 0, 0, 0, "Oro")
-
-
+    Call InvOroComUsu(0).SetItem(1, ORO_INDEX, UserGLD, 0, ORO_GRH, 0, 0, 0, 0, 0, 0, "Oro")
+    Call InvOroComUsu(1).SetItem(1, ORO_INDEX, 0, 0, ORO_GRH, 0, 0, 0, 0, 0, 0, "Oro")
+    Call InvOroComUsu(2).SetItem(1, ORO_INDEX, 0, 0, ORO_GRH, 0, 0, 0, 0, 0, 0, "Oro")
+   
+   
+    Call InvOroComUsu(0).DrawInventory
+    Call InvOroComUsu(1).DrawInventory
+    Call InvOroComUsu(2).DrawInventory
+   
+    Call InvOfferComUsu(0).DrawInventory
+    Call InvOfferComUsu(1).DrawInventory
+   
+    Call InvComUsu.DrawInventory
+ 
     'Set state and show form
     Comerciando = True
     Call frmComerciarUsu.Show(vbModeless, frmMain)
@@ -3874,44 +3890,46 @@ Private Sub HandleTradeOK()
 'Last Modification: 05/17/06
 '
 '***************************************************
-
-
-    
+ 
+ 
+   
     If frmComerciar.Visible Then
         Dim i As Long
-        
+       
         'Update user inventory
         For i = 1 To MAX_INVENTORY_SLOTS
             ' Agrego o quito un item en su totalidad
             If Inventario.OBJIndex(i) <> InvComUsu.OBJIndex(i) Then
                 With Inventario
-                    'Call InvComUsu.SetItem(i, .OBJIndex(i), _
-                    .Amount(i), .Equipped(i), .GrhIndex(i), _
+                    Call InvComUsu.SetItem(i, .OBJIndex(i), _
+                    .amount(i), .Equipped(i), .GrhIndex(i), _
                     .OBJType(i), .MaxHit(i), .MinHit(i), .MaxDef(i), .MinDef(i), _
                     .Valor(i), .ItemName(i))
+                    InvComUsu.DrawInventory
                 End With
             ' Vendio o compro cierta cantidad de un item que ya tenia
             ElseIf Inventario.amount(i) <> InvComUsu.amount(i) Then
                 Call InvComUsu.ChangeSlotItemAmount(i, Inventario.amount(i))
             End If
         Next i
-        
+       
         ' Fill Npc inventory
         For i = 1 To 20
             ' Compraron la totalidad de un item, o vendieron un item que el npc no tenia
             If NPCInventory(i).OBJIndex <> InvComNpc.OBJIndex(i) Then
                 With NPCInventory(i)
-                    'Call InvComNpc.SetItem(i, .OBJIndex, _
-                    .Amount, 0, .GrhIndex, _
+                    Call InvComNpc.SetItem(i, .OBJIndex, _
+                    .amount, 0, .GrhIndex, _
                     .OBJType, .MaxHit, .MinHit, .MaxDef, .MinDef, _
                     .Valor, .Name)
+                    InvComNpc.DrawInventory
                 End With
             ' Compraron o vendieron cierta cantidad (no su totalidad)
             ElseIf NPCInventory(i).amount <> InvComNpc.amount(i) Then
                 'Call InvComNpc.ChangeSlotItemAmount(i, NPCInventory(i).Amount)
             End If
         Next i
-    
+   
     End If
 End Sub
 
@@ -3924,21 +3942,20 @@ Private Sub HandleBankOK()
 'Last Modification: 05/17/06
 '
 '***************************************************
-
-
-    
+ 
     Dim i As Long
-    
+   
     If frmBancoObj.Visible Then
-        
+       
         For i = 1 To Inventario.MaxObjs
             With Inventario
-                'Call InvBanco(1).SetItem(i, .OBJIndex(i), .Amount(i), _
+                Call InvBanco(1).SetItem(i, .OBJIndex(i), .amount(i), _
                     .Equipped(i), .GrhIndex(i), .OBJType(i), .MaxHit(i), _
                     .MinHit(i), .MaxDef(i), .MinDef(i), .Valor(i), .ItemName(i))
+                    InvBanco(1).DrawInventory
             End With
         Next i
-        
+       
         'Alter order according to if we bought or sold so the labels and grh remain the same
         If frmBancoObj.LasActionBuy Then
             'frmBancoObj.List1(1).ListIndex = frmBancoObj.LastIndex2
@@ -3947,10 +3964,10 @@ Private Sub HandleBankOK()
             'frmBancoObj.List1(0).ListIndex = frmBancoObj.LastIndex1
             'frmBancoObj.List1(1).ListIndex = frmBancoObj.LastIndex2
         End If
-        
+       
         frmBancoObj.NoPuedeMover = False
     End If
-       
+     
 End Sub
 
 ''
@@ -3989,6 +4006,8 @@ On Error GoTo ErrHandler
     End With
     
     Call frmComerciarUsu.PrintCommerceMsg(TradingUserName & " ha modificado su oferta.", FontTypeNames.FONTTYPE_VENENO)
+    InvOroComUsu(2).DrawInventory
+    InvOroComUsu(1).DrawInventory
 
 ErrHandler:
     Dim error As Long
@@ -8115,7 +8134,7 @@ Private Sub HandleEligeFaccion()
     
     With incomingData
 
-        .ReadBoolean
+      '  .ReadBoolean
         
         frmMain.lblFaccion.Visible = .ReadBoolean
     End With

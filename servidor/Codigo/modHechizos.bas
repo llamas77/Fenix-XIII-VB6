@@ -41,7 +41,7 @@ If Npclist(NpcIndex).CanAttack = 0 Then Exit Sub
 If UserList(UserIndex).flags.invisible = 1 Or UserList(UserIndex).flags.Oculto = 1 Then Exit Sub
 
 ' Si no se peude usar magia en el mapa, no le deja hacerlo.
-If MapInfo(UserList(UserIndex).Pos.map).MagiaSinEfecto > 0 Then Exit Sub
+If MapInfo(UserList(UserIndex).Pos.Map).MagiaSinEfecto > 0 Then Exit Sub
 
 Npclist(NpcIndex).CanAttack = 0
 Dim daño As Integer
@@ -397,7 +397,7 @@ On Error GoTo Error
 
 With UserList(UserIndex)
     'No permitimos se invoquen criaturas en zonas seguras
-    If MapInfo(.Pos.map).Pk = False Or MapData(.Pos.map, .Pos.X, .Pos.Y).trigger = eTrigger.ZONASEGURA Then
+    If MapInfo(.Pos.Map).Pk = False Or MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ZONASEGURA Then
         Call WriteConsoleMsg(UserIndex, "No puedes invocar criaturas en zona segura.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
     End If
@@ -406,7 +406,7 @@ With UserList(UserIndex)
     Dim TargetPos As WorldPos
     
     
-    TargetPos.map = .flags.TargetMap
+    TargetPos.Map = .flags.TargetMap
     TargetPos.X = .flags.TargetX
     TargetPos.Y = .flags.TargetY
     
@@ -425,7 +425,7 @@ With UserList(UserIndex)
     Else
         If .NroMascotas >= MAXMASCOTAS Then Exit Sub
         
-        For NroNpcs = 1 To Hechizos(SpellIndex).Cant
+        For NroNpcs = 1 To Hechizos(SpellIndex).cant
             
             If .NroMascotas < MAXMASCOTAS Then
                 NpcIndex = SpawnNpc(Hechizos(SpellIndex).NumNpc, TargetPos, True, False)
@@ -473,7 +473,7 @@ Exit Sub
 Error:
     With UserList(UserIndex)
         LogError ("[" & Err.Number & "] " & Err.description & " por el usuario " & .Name & "(" & UserIndex & _
-                ") en (" & .Pos.map & ", " & .Pos.X & ", " & .Pos.Y & "). Tratando de tirar el hechizo " & _
+                ") en (" & .Pos.Map & ", " & .Pos.X & ", " & .Pos.Y & "). Tratando de tirar el hechizo " & _
                 Hechizos(SpellIndex).Nombre & "(" & SpellIndex & ") en la posicion ( " & .flags.TargetX & ", " & .flags.TargetY & ")")
     End With
 
@@ -1329,7 +1329,9 @@ With Npclist(NpcIndex)
         daño = DañoHechizo(UserIndex, SpellIndex)
     
         'CHECK: por que es una disminución del 5% de daño?
-        If Hechizos(SpellIndex).Baculo = ObjData(UserList(UserIndex).Invent.WeaponEqpObjIndex).Baculo Then daño = daño * 0.95
+         If UserList(UserIndex).Invent.WeaponEqpObjIndex > 0 Then
+            If Hechizos(SpellIndex).Baculo = ObjData(UserList(UserIndex).Invent.WeaponEqpObjIndex).Baculo Then daño = daño * 0.95
+         End If
     
         Call InfoHechizo(UserIndex)
         HechizoCasteado = True

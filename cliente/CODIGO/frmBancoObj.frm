@@ -65,26 +65,27 @@ Begin VB.Form frmBancoObj
       Appearance      =   0  'Flat
       BackColor       =   &H00000000&
       ForeColor       =   &H80000008&
-      Height          =   3795
+      Height          =   2400
       Left            =   540
-      ScaleHeight     =   3765
-      ScaleWidth      =   2400
+      ScaleHeight     =   160
+      ScaleMode       =   0  'User
+      ScaleWidth      =   160
       TabIndex        =   4
       Top             =   2400
-      Width           =   2430
+      Width           =   2400
    End
    Begin VB.PictureBox PicInv 
       Appearance      =   0  'Flat
       BackColor       =   &H00000000&
       ForeColor       =   &H80000008&
-      Height          =   3795
+      Height          =   2400
       Left            =   4020
-      ScaleHeight     =   16.617
+      ScaleHeight     =   160
       ScaleMode       =   0  'User
-      ScaleWidth      =   825.806
+      ScaleWidth      =   160
       TabIndex        =   3
       Top             =   2400
-      Width           =   2430
+      Width           =   2400
    End
    Begin VB.Label lblUserGld 
       AutoSize        =   -1  'True
@@ -364,7 +365,7 @@ End Sub
 
 Private Sub Image1_Click(Index As Integer)
     
-    Call audio.PlayWave(SND_CLICK)
+    Call Audio.PlayWave(SND_CLICK)
     
     If InvBanco(Index).SelectedItem = 0 Then Exit Sub
     

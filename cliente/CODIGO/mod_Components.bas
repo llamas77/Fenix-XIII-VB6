@@ -1386,7 +1386,7 @@ Public Sub btnSiguiente_EventHandler(ByVal hwnd As Long, _
                 Else
                 
                     If Validate(State) Then
-                        HelpWindow.Active = False
+                         HelpWindow.Active = False
                         Call ChangeRenderState(State + 1)
                     End If
                 End If

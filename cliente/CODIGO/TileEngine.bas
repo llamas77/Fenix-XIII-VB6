@@ -1902,6 +1902,31 @@ Private Sub ShowNextFrame(ByVal MouseViewX As Integer, ByVal MouseViewY As Integ
         LastInvRender = GetTickCount
      
         Call Inventario.DrawInventory
+        
+        If frmBancoObj.PicBancoInv.Visible Then _
+        Call InvBanco(0).DrawInventory
+       
+    If frmBancoObj.picInv.Visible Then _
+        Call InvBanco(1).DrawInventory
+   
+   
+    '//Comercio
+    If frmComerciar.picInvNpc.Visible Then _
+        Call InvComNpc.DrawInventory
+       
+    If frmComerciar.picInvUser.Visible Then _
+        Call InvComUsu.DrawInventory
+ 
+    If frmComerciarUsu.Visible Then
+         Call InvOroComUsu(0).DrawInventory
+         Call InvOroComUsu(1).DrawInventory
+         Call InvOroComUsu(2).DrawInventory
+   
+         Call InvOfferComUsu(0).DrawInventory
+         Call InvOfferComUsu(1).DrawInventory
+   
+         Call InvComUsu.DrawInventory
+     End If
     End If
           
 End Sub
@@ -2064,8 +2089,9 @@ With charlist(CharIndex)
                         Call Text_Draw(OffsetCounterX - .NombreOffset, OffsetCounterY + 30, .Nombre, Color)
                                
                         'Guild
-                        If LenB(.GuildName) > 0 Then _
-                            Call Text_Draw(OffsetCounterX - .GuildOffset, OffsetCounterY + 45, .GuildName, Color)
+                        If Len(.GuildName) > 0 Then .GuildOffset = (Text_GetWidth(cfonts(1), .GuildName) \ 2) - cfonts(1).RowPitch
+                        'If LenB(.GuildName) > 0 Then _
+                            'Call Text_Draw(OffsetCounterX - .GuildOffset, OffsetCounterY + 45, .GuildName, Color)
                            
                     End If
                 End If
@@ -2398,6 +2424,8 @@ Public Sub ChangeRenderState(ByVal State As eRenderState)
     With frmConnect
         
         Select Case State
+            Case eRenderState.eLogin
+                HelpWindow.Active = False
         
             Case eRenderState.eNewCharInfo
                 Call ShowComponents(.txtNick, .txtMail, .txtPass, .txtRepPass)
@@ -2433,7 +2461,7 @@ Public Sub ChangeRenderState(ByVal State As eRenderState)
                     
                     .Active = True
                 End With
-        
+            
         End Select
         
     End With

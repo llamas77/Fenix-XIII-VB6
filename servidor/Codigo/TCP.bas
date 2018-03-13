@@ -310,6 +310,8 @@ With UserList(UserIndex)
     
     .Stats.MaxHp = 15 + MiInt
     .Stats.MinHp = 15 + MiInt
+    .Stats.MinMAN = 0
+    .Stats.MaxMAN = 0
     
     MiInt = RandomNumber(1, .Stats.UserAtributos(eAtributos.Agilidad) \ 6)
     If MiInt = 1 Then MiInt = 2
@@ -336,16 +338,6 @@ With UserList(UserIndex)
     '???????????????? INVENTARIO ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
     Dim Slot As Byte
     .Invent.NroItems = 4
-    
-    .Invent.Object(1).OBJIndex = ManzanaNewbie
-    .Invent.Object(1).Amount = 100
-    
-    .Invent.Object(2).OBJIndex = 468
-    .Invent.Object(2).Amount = 100
-    
-    .Invent.Object(3).OBJIndex = 460
-    .Invent.Object(3).Amount = 1
-    .Invent.Object(3).Equipped = 1
 
     ' Ropa (Newbie)
     Slot = Slot + 1
@@ -361,25 +353,19 @@ With UserList(UserIndex)
         Case eRaza.Gnomo
             .Invent.Object(Slot).OBJIndex = 466
     End Select
-    
-    ' Equipo ropa
+
     .Invent.Object(Slot).Amount = 1
     .Invent.Object(Slot).Equipped = 1
-    
-    .Invent.ArmourEqpSlot = Slot
     .Invent.ArmourEqpObjIndex = .Invent.Object(Slot).OBJIndex
-
+    .Invent.ArmourEqpSlot = Slot
+    
     'Arma (Newbie)
     Slot = Slot + 1
     .Invent.Object(Slot).OBJIndex = 460
-    
-    ' Equipo arma
     .Invent.Object(Slot).Amount = 1
     .Invent.Object(Slot).Equipped = 1
-    
     .Invent.WeaponEqpObjIndex = .Invent.Object(Slot).OBJIndex
     .Invent.WeaponEqpSlot = Slot
-    
     .Char.WeaponAnim = ObjData(.Invent.WeaponEqpObjIndex).WeaponAnim
 
     ' Manzanas (Newbie)
@@ -553,7 +539,7 @@ Dim X As Integer, Y As Integer
 For Y = UserList(index).Pos.Y - MinYBorder + 1 To UserList(index).Pos.Y + MinYBorder - 1
         For X = UserList(index).Pos.X - MinXBorder + 1 To UserList(index).Pos.X + MinXBorder - 1
 
-            If MapData(UserList(index).Pos.map, X, Y).UserIndex = Index2 Then
+            If MapData(UserList(index).Pos.Map, X, Y).UserIndex = Index2 Then
                 EstaPCarea = True
                 Exit Function
             End If
@@ -574,7 +560,7 @@ Dim X As Integer, Y As Integer
 For Y = Pos.Y - MinYBorder + 1 To Pos.Y + MinYBorder - 1
         For X = Pos.X - MinXBorder + 1 To Pos.X + MinXBorder - 1
             If X > 0 And Y > 0 And X < 101 And Y < 101 Then
-                If MapData(Pos.map, X, Y).UserIndex > 0 Then
+                If MapData(Pos.Map, X, Y).UserIndex > 0 Then
                     HayPCarea = True
                     Exit Function
                 End If
@@ -594,7 +580,7 @@ Function HayOBJarea(Pos As WorldPos, OBJIndex As Integer) As Boolean
 Dim X As Integer, Y As Integer
 For Y = Pos.Y - MinYBorder + 1 To Pos.Y + MinYBorder - 1
         For X = Pos.X - MinXBorder + 1 To Pos.X + MinXBorder - 1
-            If MapData(Pos.map, X, Y).ObjInfo.OBJIndex = OBJIndex Then
+            If MapData(Pos.Map, X, Y).ObjInfo.OBJIndex = OBJIndex Then
                 HayOBJarea = True
                 Exit Function
             End If
@@ -797,7 +783,7 @@ With UserList(UserIndex)
     End If
     
     'Posicion de comienzo
-    If .Pos.map = 0 Then
+    If .Pos.Map = 0 Then
         Select Case .Hogar
             Case eCiudad.cNix
                 .Pos = Nix
@@ -814,7 +800,7 @@ With UserList(UserIndex)
                 .Pos = Ullathorpe
         End Select
     Else
-        If Not MapaValido(.Pos.map) Then
+        If Not MapaValido(.Pos.Map) Then
             Call WriteErrorMsg(UserIndex, "El PJ se encuenta en un mapa inválido.")
             Call FlushBuffer(UserIndex)
             Call CloseSocket(UserIndex)
@@ -824,33 +810,33 @@ With UserList(UserIndex)
     
     'Si es gm lo seteo en el mapa de gms
     If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero)) Then
-        .Pos.map = 86
+        .Pos.Map = 86
         .Pos.X = 50
         .Pos.Y = 50
     End If
     
     'Tratamos de evitar en lo posible el "Telefrag". Solo 1 intento de loguear en pos adjacentes.
     'Codigo por Pablo (ToxicWaste) y revisado por Nacho (Integer), corregido para que realmetne ande y no tire el server por Juan Martín Sotuyo Dodero (Maraxus)
-    If MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex <> 0 Or MapData(.Pos.map, .Pos.X, .Pos.Y).NpcIndex <> 0 Then
+    If MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex <> 0 Or MapData(.Pos.Map, .Pos.X, .Pos.Y).NpcIndex <> 0 Then
         Dim FoundPlace As Boolean
         Dim esAgua As Boolean
         Dim tX As Long
         Dim tY As Long
         
         FoundPlace = False
-        esAgua = (MapData(.Pos.map, .Pos.X, .Pos.Y).Agua = 1)
+        esAgua = (MapData(.Pos.Map, .Pos.X, .Pos.Y).Agua = 1)
         
         For tY = .Pos.Y - 1 To .Pos.Y + 1
             For tX = .Pos.X - 1 To .Pos.X + 1
                 If esAgua Then
                     'reviso que sea pos legal en agua, que no haya User ni NPC para poder loguear.
-                    If LegalPos(.Pos.map, tX, tY, True, False) Then
+                    If LegalPos(.Pos.Map, tX, tY, True, False) Then
                         FoundPlace = True
                         Exit For
                     End If
                 Else
                     'reviso que sea pos legal en tierra, que no haya User ni NPC para poder loguear.
-                    If LegalPos(.Pos.map, tX, tY, False, True) Then
+                    If LegalPos(.Pos.Map, tX, tY, False, True) Then
                         FoundPlace = True
                         Exit For
                     End If
@@ -866,24 +852,24 @@ With UserList(UserIndex)
             .Pos.Y = tY
         Else
             'Si no encontramos un lugar, sacamos al usuario que tenemos abajo, y si es un NPC, lo pisamos.
-            If MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex <> 0 Then
+            If MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex <> 0 Then
                'Si no encontramos lugar, y abajo teniamos a un usuario, lo pisamos y cerramos su comercio seguro
-                If UserList(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu > 0 Then
+                If UserList(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu > 0 Then
                     'Le avisamos al que estaba comerciando que se tuvo que ir.
-                    If UserList(UserList(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu).flags.UserLogged Then
-                        Call FinComerciarUsu(UserList(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu)
-                        Call WriteConsoleMsg(UserList(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu, "Comercio cancelado. El otro usuario se ha desconectado.", FontTypeNames.FONTTYPE_TALK)
-                        Call FlushBuffer(UserList(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu)
+                    If UserList(UserList(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu).flags.UserLogged Then
+                        Call FinComerciarUsu(UserList(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu)
+                        Call WriteConsoleMsg(UserList(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu, "Comercio cancelado. El otro usuario se ha desconectado.", FontTypeNames.FONTTYPE_TALK)
+                        Call FlushBuffer(UserList(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex).ComUsu.DestUsu)
                     End If
                     'Lo sacamos.
-                    If UserList(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex).flags.UserLogged Then
-                        Call FinComerciarUsu(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex)
-                        Call WriteErrorMsg(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex, "Alguien se ha conectado donde te encontrabas, por favor reconéctate...")
-                        Call FlushBuffer(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex)
+                    If UserList(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex).flags.UserLogged Then
+                        Call FinComerciarUsu(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex)
+                        Call WriteErrorMsg(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex, "Alguien se ha conectado donde te encontrabas, por favor reconéctate...")
+                        Call FlushBuffer(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex)
                     End If
                 End If
                 
-                Call CloseSocket(MapData(.Pos.map, .Pos.X, .Pos.Y).UserIndex)
+                Call CloseSocket(MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex)
             End If
         End If
     End If
@@ -895,7 +881,7 @@ With UserList(UserIndex)
     
     'If in the water, and has a boat, equip it!
     If .Invent.BarcoObjIndex > 0 And _
-            ((MapData(.Pos.map, .Pos.X, .Pos.Y).Agua = 1) Or BodyIsBoat(.Char.body)) Then
+            ((MapData(.Pos.Map, .Pos.X, .Pos.Y).Agua = 1) Or BodyIsBoat(.Char.body)) Then
         Dim Barco As ObjData
         Barco = ObjData(.Invent.BarcoObjIndex)
         .Char.Head = 0
@@ -916,8 +902,8 @@ With UserList(UserIndex)
     Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
     
     
-    Call WriteChangeMap(UserIndex, .Pos.map, MapInfo(.Pos.map).MapVersion) 'Carga el mapa
-    Call WritePlayMidi(UserIndex, val(ReadField(1, MapInfo(.Pos.map).Music, 45)))
+    Call WriteChangeMap(UserIndex, .Pos.Map, MapInfo(.Pos.Map).MapVersion) 'Carga el mapa
+    Call WritePlayMidi(UserIndex, val(ReadField(1, MapInfo(.Pos.Map).Music, 45)))
     
     If .flags.Privilegios <> PlayerType.User And .flags.Privilegios <> (PlayerType.User Or PlayerType.ChaosCouncil) And .flags.Privilegios <> (PlayerType.User Or PlayerType.RoyalCouncil) Then
         .flags.ChatColor = RGB(255, 128, 32)
@@ -936,12 +922,12 @@ With UserList(UserIndex)
     #End If
     
     'Crea  el personaje del usuario
-    Call MakeUserChar(True, .Pos.map, UserIndex, .Pos.map, .Pos.X, .Pos.Y)
+    Call MakeUserChar(True, .Pos.Map, UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
     
     Call WriteUserCharIndexInServer(UserIndex)
     ''[/el oso]
     
-    Call DoTileEvents(UserIndex, .Pos.map, .Pos.X, .Pos.Y)
+    Call DoTileEvents(UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
     
     Call CheckUserLevel(UserIndex)
     Call WriteUpdateUserStats(UserIndex)
@@ -971,7 +957,7 @@ With UserList(UserIndex)
     'usado para borrar Pjs
     Call WriteVar(CharPath & .Name & ".chr", "INIT", "Logged", "1")
         
-    MapInfo(.Pos.map).NumUsers = MapInfo(.Pos.map).NumUsers + 1
+    MapInfo(.Pos.Map).NumUsers = MapInfo(.Pos.Map).NumUsers + 1
     
     If .Stats.SkillPts > 0 Then
         Call WriteSendSkills(UserIndex)
@@ -984,7 +970,7 @@ With UserList(UserIndex)
         Call WriteVar(IniPath & "Server.ini", "INIT", "Record", str$(recordusuarios))
     End If
     
-    If .NroMascotas > 0 And MapInfo(.Pos.map).Pk Then
+    If .NroMascotas > 0 And MapInfo(.Pos.Map).Pk Then
         For i = 1 To MAXMASCOTAS
             If .MascotasType(i) > 0 Then
                 .MascotasIndex(i) = SpawnNpc(.MascotasType(i), .Pos, True, True)
@@ -1152,7 +1138,7 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
         .Name = vbNullString
         .desc = vbNullString
         .DescRM = vbNullString
-        .Pos.map = 0
+        .Pos.Map = 0
         .Pos.X = 0
         .Pos.Y = 0
         .ip = vbNullString
@@ -1341,7 +1327,7 @@ With UserList(UserIndex).ComUsu
     .Acepto = False
     
     For i = 1 To MAX_OFFER_SLOTS
-        .Cant(i) = 0
+        .cant(i) = 0
         .Objeto(i) = 0
     Next i
     
@@ -1362,7 +1348,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
 On Error GoTo Errhandler
 
 Dim N As Integer
-Dim map As Integer
+Dim Map As Integer
 Dim Name As String
 Dim i As Integer
 
@@ -1378,7 +1364,7 @@ End If
 UserList(UserIndex).flags.AtacadoPorNpc = 0
 UserList(UserIndex).flags.NPCAtacado = 0
 
-map = UserList(UserIndex).Pos.map
+Map = UserList(UserIndex).Pos.Map
 Name = UCase$(UserList(UserIndex).Name)
 
 UserList(UserIndex).Char.FX = 0
@@ -1404,7 +1390,7 @@ Call WriteVar(CharPath & UserList(UserIndex).Name & ".chr", "INIT", "Logged", "0
 '    Call SendToUserArea(UserIndex, "QDL" & UserList(UserIndex).Char.charindex)
 'End If
 
-If MapInfo(map).NumUsers > 0 Then
+If MapInfo(Map).NumUsers > 0 Then
     Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageRemoveCharDialog(UserList(UserIndex).Char.CharIndex))
 End If
 
@@ -1424,10 +1410,10 @@ For i = 1 To MAXMASCOTAS
 Next i
 
 'Update Map Users
-MapInfo(map).NumUsers = MapInfo(map).NumUsers - 1
+MapInfo(Map).NumUsers = MapInfo(Map).NumUsers - 1
 
-If MapInfo(map).NumUsers < 0 Then
-    MapInfo(map).NumUsers = 0
+If MapInfo(Map).NumUsers < 0 Then
+    MapInfo(Map).NumUsers = 0
 End If
 
 ' Si el usuario habia dejado un msg en la gm's queue lo borramos
@@ -1481,7 +1467,7 @@ Public Sub EnviarNoche(ByVal UserIndex As Integer)
 '
 '***************************************************
 
-    Call WriteSendNight(UserIndex, IIf(DeNoche And (MapInfo(UserList(UserIndex).Pos.map).Zona = Campo Or MapInfo(UserList(UserIndex).Pos.map).Zona = Ciudad), True, False))
+    Call WriteSendNight(UserIndex, IIf(DeNoche And (MapInfo(UserList(UserIndex).Pos.Map).Zona = Campo Or MapInfo(UserList(UserIndex).Pos.Map).Zona = Ciudad), True, False))
     Call WriteSendNight(UserIndex, IIf(DeNoche, True, False))
 End Sub
 

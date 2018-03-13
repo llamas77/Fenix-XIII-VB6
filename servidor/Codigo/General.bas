@@ -50,9 +50,9 @@ With UserList(UserIndex)
                 Case eRaza.Drow
                     CuerpoDesnudo = 32
                 Case eRaza.Elfo
-                    CuerpoDesnudo = 210
+                    CuerpoDesnudo = 21
                 Case eRaza.Gnomo
-                    CuerpoDesnudo = 222
+                    CuerpoDesnudo = 53
                 Case eRaza.Enano
                     CuerpoDesnudo = 53
             End Select
@@ -63,9 +63,9 @@ With UserList(UserIndex)
                 Case eRaza.Drow
                     CuerpoDesnudo = 40
                 Case eRaza.Elfo
-                    CuerpoDesnudo = 259
+                    CuerpoDesnudo = 39
                 Case eRaza.Gnomo
-                    CuerpoDesnudo = 260
+                    CuerpoDesnudo = 60
                 Case eRaza.Enano
                     CuerpoDesnudo = 60
             End Select
@@ -118,7 +118,7 @@ On Error GoTo Errhandler
     
     For i = TrashCollector.Count To 1 Step -1
         Set d = TrashCollector(i)
-        Call EraseObj(1, d.map, d.X, d.Y)
+        Call EraseObj(1, d.Map, d.X, d.Y)
         Call TrashCollector.Remove(i)
         Set d = Nothing
     Next i
@@ -165,8 +165,8 @@ On Error Resume Next
     Call LoadMotd
     Call BanIpCargar
     
-    Prision.map = 66
-    Libertad.map = 66
+    Prision.Map = 66
+    Libertad.Map = 66
     
     Prision.X = 75
     Prision.Y = 47
@@ -496,14 +496,14 @@ Function ReadField(ByVal Pos As Integer, ByRef Text As String, ByVal SepASCII As
     End If
 End Function
 
-Function MapaValido(ByVal map As Integer) As Boolean
+Function MapaValido(ByVal Map As Integer) As Boolean
 '***************************************************
 'Author: Unknown
 'Last Modification: -
 '
 '***************************************************
 
-    MapaValido = map >= 1 And map <= NumMaps
+    MapaValido = Map >= 1 And Map <= NumMaps
 End Function
 
 Sub MostrarNumUsers()
@@ -947,10 +947,10 @@ Public Function Intemperie(ByVal UserIndex As Integer) As Boolean
 '**************************************************************
 
     With UserList(UserIndex)
-        If MapInfo(.Pos.map).Zona <> "DUNGEON" Then
-            If MapData(.Pos.map, .Pos.X, .Pos.Y).trigger <> 1 And _
-               MapData(.Pos.map, .Pos.X, .Pos.Y).trigger <> 2 And _
-               MapData(.Pos.map, .Pos.X, .Pos.Y).trigger <> 4 Then Intemperie = True
+        If MapInfo(.Pos.Map).Zona <> "DUNGEON" Then
+            If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger <> 1 And _
+               MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger <> 2 And _
+               MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger <> 4 Then Intemperie = True
         Else
             Intemperie = False
         End If
@@ -1017,7 +1017,7 @@ Public Sub EfectoFrio(ByVal UserIndex As Integer)
         If .Counters.Frio < IntervaloFrio Then
             .Counters.Frio = .Counters.Frio + 1
         Else
-            If MapInfo(.Pos.map).Terreno = Nieve Then
+            If MapInfo(.Pos.Map).Terreno = Nieve Then
                 Call WriteConsoleMsg(UserIndex, "¡¡Estás muriendo de frío, abrigate o morirás!!", FontTypeNames.FONTTYPE_INFO)
                 modifi = Porcentaje(.Stats.MaxHp, 5)
                 .Stats.MinHp = .Stats.MinHp - modifi
@@ -1209,9 +1209,9 @@ Public Sub RecStamina(ByVal UserIndex As Integer, ByRef EnviarStats As Boolean, 
 '***************************************************
 
     With UserList(UserIndex)
-        If MapData(.Pos.map, .Pos.X, .Pos.Y).trigger = 1 And _
-           MapData(.Pos.map, .Pos.X, .Pos.Y).trigger = 2 And _
-           MapData(.Pos.map, .Pos.X, .Pos.Y).trigger = 4 Then Exit Sub
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = 1 And _
+           MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = 2 And _
+           MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = 4 Then Exit Sub
         
         
         Dim massta As Integer
@@ -1340,9 +1340,9 @@ Public Sub Sanar(ByVal UserIndex As Integer, ByRef EnviarStats As Boolean, ByVal
 '***************************************************
 
     With UserList(UserIndex)
-        If MapData(.Pos.map, .Pos.X, .Pos.Y).trigger = 1 And _
-           MapData(.Pos.map, .Pos.X, .Pos.Y).trigger = 2 And _
-           MapData(.Pos.map, .Pos.X, .Pos.Y).trigger = 4 Then Exit Sub
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = 1 And _
+           MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = 2 And _
+           MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = 4 Then Exit Sub
         
         Dim mashit As Integer
         'con el paso del tiempo va sanando....pero muy lentamente ;-)

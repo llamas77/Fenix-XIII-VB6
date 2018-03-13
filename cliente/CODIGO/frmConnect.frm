@@ -23,7 +23,7 @@ Begin VB.Form frmConnect
    Visible         =   0   'False
    Begin VB.PictureBox Render 
       Appearance      =   0  'Flat
-      BackColor       =   &H00000000&
+      BackColor       =   &H00808080&
       BorderStyle     =   0  'None
       ForeColor       =   &H80000008&
       Height          =   11520
@@ -109,38 +109,38 @@ Public Sub DirectXEvent8_DXCallback(ByVal EventID As Long)
     Dim OldMousePos As Position
     
         'Check if message is for us
-100     If EventID <> MouseEvent Then Exit Sub
+     If EventID <> MouseEvent Then Exit Sub
         If Me.WindowState <> 0 Then Exit Sub
 
         'Retrieve data
-105     NumEvents = DIDevice.GetDeviceData(DevData, DIGDD_DEFAULT)
+     NumEvents = DIDevice.GetDeviceData(DevData, DIGDD_DEFAULT)
 
         'Loop through data
-110     For loopC = 1 To NumEvents
-115         Select Case DevData(loopC).lOfs
+     For loopC = 1 To NumEvents
+        Select Case DevData(loopC).lOfs
 
             'Mouse wheel is scrolled
             Case DIMOFS_Z
                 Dim c As Integer
             
-120             c = Collision(MouseX, MouseY)
+             c = Collision(MouseX, MouseY)
             
                 'Scroll the chat buffer if the cursor is over the chat buffer window
-125             If c <> -1 Then
-130                 If DevData(loopC).lData > 0 Then
-135                     Call mod_Components.Execute(c, eComponentEvent.MouseScrollUp)
-140                 ElseIf DevData(loopC).lData < 0 Then
-145                     Call mod_Components.Execute(c, eComponentEvent.MouseScrollDown)
+             If c <> -1 Then
+                 If DevData(loopC).lData > 0 Then
+                     Call mod_Components.Execute(c, eComponentEvent.MouseScrollUp)
+                 ElseIf DevData(loopC).lData < 0 Then
+                     Call mod_Components.Execute(c, eComponentEvent.MouseScrollDown)
                     End If
 
-150                 GoTo NextLoopC
-                End If
+                 GoTo NextLoopC
+             End If
 
-            End Select
+        End Select
         
 NextLoopC:
 
-155     Next loopC
+     Next loopC
 
     '<EhFooter>
     Exit Sub
@@ -394,6 +394,8 @@ Public Sub LoginUser()
         frmMain.Socket1.Connect
 
     End If
+    
+    
 End Sub
 
 Function CheckData() As Boolean

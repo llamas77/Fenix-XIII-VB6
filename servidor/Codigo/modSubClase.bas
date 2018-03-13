@@ -53,16 +53,16 @@ Public Sub RecibirSubClase(ByVal UserIndex As Integer, ByVal Clase As Byte)
                     End If
             
 195             Case eClass.Luchador
-200                 If Clase = 1 Then
-205                     .Clase = eClass.Con_Mana
-210                     Call AprenderHechizo(UserIndex, 2)
-
-215                     .Stats.MaxMAN = 100
-
-225                     If Not PuedeSubirClase(UserIndex) Then Call WriteSubeClase(UserIndex, False)
-                    Else
-230                     .Clase = eClass.Sin_Mana
-                    End If
+                If Clase = 1 Then
+                    .Clase = eClass.Con_Mana
+                    Call AprenderHechizo(UserIndex, 2)
+                    .Stats.MinMAN = 100
+                    .Stats.MaxMAN = 100
+                    Call WriteUpdateUserStats(UserIndex)
+                    If Not PuedeSubirClase(UserIndex) Then Call WriteSubeClase(UserIndex, False)
+                Else
+                    .Clase = eClass.Sin_Mana
+                End If
             
 235             Case eClass.Con_Mana
 240                 Select Case Clase

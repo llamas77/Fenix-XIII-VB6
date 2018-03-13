@@ -1021,12 +1021,12 @@ End Function
 Public Function getStrenghtColor() As Long
 Dim M As Long
 M = 255 / MAXATRIBUTOS
-getStrenghtColor = RGB(255 - (M * UserFuerza), (M * UserFuerza), 0)
+getStrenghtColor = RGB(255 - IIf(M * UserFuerza >= 254, 254, M * UserFuerza), (M * UserFuerza), 0)
 End Function
 Public Function getDexterityColor() As Long
 Dim M As Long
 M = 255 / MAXATRIBUTOS
-getDexterityColor = RGB(255, M * UserAgilidad, 0)
+getDexterityColor = RGB(255, (M * UserAgilidad), 0)
 End Function
 
 Public Function getCharIndexByName(ByVal Name As String) As Integer
