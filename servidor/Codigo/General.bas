@@ -332,7 +332,7 @@ On Error Resume Next
     
     'Call PlayWaveAPI(App.Path & "\wav\harp3.wav")
     
-    frmMain.Caption = frmMain.Caption & " V." & App.Major & "." & App.Minor & "." & App.Revision
+    frmMain.Caption = frmMain.Caption & " v" & App.Major & "." & App.Minor & "." & App.Revision
     IniPath = App.path & "\"
     CharPath = App.path & "\Charfile\"
     

@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmMain 
    BackColor       =   &H00C0C0C0&
    BorderStyle     =   3  'Fixed Dialog
-   Caption         =   "Argentum Online"
+   Caption         =   "Fénix XIII"
    ClientHeight    =   4845
    ClientLeft      =   1950
    ClientTop       =   1815
@@ -822,7 +822,7 @@ If Not haciendoBK And Not EnPausa Then
                            Call EfectoParalisisNpc(NpcIndex)
                         End If
                         
-                        mapa = .Pos.map
+                        mapa = .Pos.Map
                         
                         If mapa > 0 Then
                             If MapInfo(mapa).NumUsers > 0 Then
@@ -841,7 +841,7 @@ End If
 Exit Sub
 
 ErrorHandler:
-    Call LogError("Error en TIMER_AI_Timer " & Npclist(NpcIndex).Name & " mapa:" & Npclist(NpcIndex).Pos.map)
+    Call LogError("Error en TIMER_AI_Timer " & Npclist(NpcIndex).Name & " mapa:" & Npclist(NpcIndex).Pos.Map)
     Call MuereNpc(NpcIndex, 0)
 End Sub
 
@@ -909,7 +909,7 @@ On Error GoTo Errhandler
     For i = 1 To LastUser
         With UserList(i)
             If .flags.UserLogged Then
-                If MapData(.Pos.map, .Pos.X, .Pos.Y).trigger = eTrigger.ANTIPIQUETE Then
+                If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ANTIPIQUETE Then
                     .Counters.PiqueteC = .Counters.PiqueteC + 1
                     Call WriteConsoleMsg(i, "¡¡¡Estás obstruyendo la vía pública, muévete o serás encarcelado!!!", FontTypeNames.FONTTYPE_INFO)
                     
@@ -924,8 +924,8 @@ On Error GoTo Errhandler
                 If .flags.Muerto = 1 Then
                     If .flags.Traveling = 1 Then
                         If .Counters.goHome <= 0 Then
-                            Call FindLegalPos(i, Ciudades(.Hogar).map, Ciudades(.Hogar).X, Ciudades(.Hogar).Y)
-                            Call WarpUserChar(i, Ciudades(.Hogar).map, Ciudades(.Hogar).X, Ciudades(.Hogar).Y, True)
+                            Call FindLegalPos(i, Ciudades(.Hogar).Map, Ciudades(.Hogar).X, Ciudades(.Hogar).Y)
+                            Call WarpUserChar(i, Ciudades(.Hogar).Map, Ciudades(.Hogar).X, Ciudades(.Hogar).Y, True)
                             Call WriteMultiMessage(i, eMessages.FinishHome)
                             .flags.Traveling = 0
                         Else

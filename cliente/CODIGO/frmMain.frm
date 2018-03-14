@@ -73,7 +73,7 @@ Begin VB.Form frmMain
       ScaleHeight     =   544
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   736
-      TabIndex        =   33
+      TabIndex        =   32
       TabStop         =   0   'False
       Top             =   2265
       Width           =   11040
@@ -242,7 +242,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   12825
-      TabIndex        =   35
+      TabIndex        =   34
       Top             =   1365
       Width           =   135
    End
@@ -253,7 +253,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   12585
-      TabIndex        =   34
+      TabIndex        =   33
       Top             =   1245
       Visible         =   0   'False
       Width           =   105
@@ -266,7 +266,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   360
-      TabIndex        =   32
+      TabIndex        =   31
       Top             =   1695
       Width           =   750
    End
@@ -277,7 +277,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   12300
-      TabIndex        =   31
+      TabIndex        =   30
       Top             =   1365
       Visible         =   0   'False
       Width           =   105
@@ -289,7 +289,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   12000
-      TabIndex        =   30
+      TabIndex        =   29
       Top             =   1245
       Visible         =   0   'False
       Width           =   105
@@ -329,7 +329,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   12120
       MousePointer    =   99  'Custom
-      TabIndex        =   29
+      TabIndex        =   28
       Top             =   6180
       Width           =   255
    End
@@ -338,7 +338,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   14400
       MousePointer    =   99  'Custom
-      TabIndex        =   28
+      TabIndex        =   27
       Top             =   240
       Width           =   255
    End
@@ -347,7 +347,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   14760
       MousePointer    =   99  'Custom
-      TabIndex        =   27
+      TabIndex        =   26
       Top             =   240
       Width           =   255
    End
@@ -376,7 +376,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   180
       Left            =   7395
-      TabIndex        =   26
+      TabIndex        =   25
       Top             =   1710
       Width           =   435
    End
@@ -404,7 +404,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H0000FFFF&
       Height          =   255
       Left            =   8280
-      TabIndex        =   25
+      TabIndex        =   24
       Top             =   10800
       Visible         =   0   'False
       Width           =   1935
@@ -445,7 +445,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00C0C0C0&
       Height          =   195
       Left            =   12840
-      TabIndex        =   24
+      TabIndex        =   23
       Top             =   780
       Width           =   1785
    End
@@ -455,7 +455,7 @@ Begin VB.Form frmMain
       Caption         =   "255"
       BeginProperty Font 
          Name            =   "Arial"
-         Size            =   8.25
+         Size            =   12
          Charset         =   0
          Weight          =   700
          Underline       =   0   'False
@@ -463,30 +463,11 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00FFFFFF&
-      Height          =   225
-      Left            =   12240
-      TabIndex        =   23
-      Top             =   1080
-      Width           =   270
-   End
-   Begin VB.Label Label6 
-      BackStyle       =   0  'Transparent
-      Caption         =   "Nivel"
-      BeginProperty Font 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFFF&
-      Height          =   225
+      Height          =   285
       Left            =   12120
       TabIndex        =   22
-      Top             =   720
-      Width           =   465
+      Top             =   960
+      Width           =   405
    End
    Begin VB.Label lblPorcLvl 
       AutoSize        =   -1  'True
@@ -639,7 +620,7 @@ Begin VB.Form frmMain
    Begin VB.Label lblWeapon 
       Alignment       =   2  'Center
       BackStyle       =   0  'Transparent
-      Caption         =   "000/000"
+      Caption         =   "00/00"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   9.75
@@ -734,7 +715,7 @@ Begin VB.Form frmMain
       Alignment       =   2  'Center
       BackColor       =   &H00C0C000&
       BackStyle       =   0  'Transparent
-      Caption         =   "9999/9999"
+      Caption         =   "999/999"
       BeginProperty Font 
          Name            =   "Arial"
          Size            =   8.25

@@ -376,9 +376,9 @@ End Function
 
 'CSEH: ErrLog
 Public Sub CheckUserLevel(ByVal UserIndex As Integer)
-    '<EhHeader>
+
     On Error GoTo CheckUserLevel_Err
-    '</EhHeader>
+  
         Dim Pts As Integer
         Dim SubeHit As Integer
         Dim AumentoMANA As Integer
@@ -388,81 +388,81 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer)
         Dim Promedio As Double
       '  Dim GI As Integer 'Guild Index
     
-100     WasNewbie = EsNewbie(UserIndex)
+     WasNewbie = EsNewbie(UserIndex)
     
-105     With UserList(UserIndex)
-110         Do While .Stats.Exp >= .Stats.ELU
+     With UserList(UserIndex)
+         Do While .Stats.Exp >= .Stats.ELU
             
                 'Checkea si alcanzó el máximo nivel
-115             If .Stats.ELV >= STAT_MAXELV Then
-120                 .Stats.Exp = 0
-125                 .Stats.ELU = 0
+            If .Stats.ELV >= STAT_MAXELV Then
+                 .Stats.Exp = 0
+                 .Stats.ELU = 0
                     Exit Sub
                 End If
             
-130             If .Stats.ELV >= 14 And ClaseBase(.Clase) Then
-135                 Call WriteConsoleMsg(UserIndex, "No podés pasar de nivel sin elegir tu clase final.", FontTypeNames.FONTTYPE_INFO)
-140                 .Stats.Exp = .Stats.ELU - 1
-145                 Call WriteUpdateExp(UserIndex)
+             If .Stats.ELV >= 14 And ClaseBase(.Clase) Then
+                 Call WriteConsoleMsg(UserIndex, "No podés pasar de nivel sin elegir tu clase final.", FontTypeNames.FONTTYPE_INFO)
+                 .Stats.Exp = .Stats.ELU - 1
+                 Call WriteUpdateExp(UserIndex)
                     Exit Sub
                 End If
             
-150             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
-155             Call WriteConsoleMsg(UserIndex, "¡Has subido de nivel!", FontTypeNames.FONTTYPE_INFO)
+             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
+             Call WriteConsoleMsg(UserIndex, "¡Has subido de nivel!", FontTypeNames.FONTTYPE_INFO)
             
-160             If .Stats.ELV = 1 Then
-165                 Pts = 10
+             If .Stats.ELV = 1 Then
+                 Pts = 10
                 Else
                     'For multiple levels being rised at once
-170                 Pts = Pts + 5
+                 Pts = Pts + 5
                 End If
             
-175             .Stats.ELV = .Stats.ELV + 1
+             .Stats.ELV = .Stats.ELV + 1
             
-180             .Stats.Exp = .Stats.Exp - .Stats.ELU
-185             .Stats.ELU = ELUs(.Stats.ELV)
+             .Stats.Exp = .Stats.Exp - .Stats.ELU
+             .Stats.ELU = ELUs(.Stats.ELV)
             
                 'Calculo subida de vida
                 'Promedio = ModVida(.clase) - (21 - .Stats.UserAtributos(eAtributos.Constitucion)) * 0.5
             
                 'lo dejo editable desde el archivo, como en 13.0, pero con los valores de fénix
-190             Promedio = .Stats.UserAtributos(eAtributos.Constitucion) * 0.5 - ModVida(.Clase)
+             Promedio = .Stats.UserAtributos(eAtributos.Constitucion) * 0.5 - ModVida(.Clase)
                 AumentoHP = RandomNumber(Fix(Promedio - 1), Redondea(Promedio + 1))
-195             SubeHit = AumentoHit(.Clase)
+             SubeHit = AumentoHit(.Clase)
             
-200             Select Case .Clase
+             Select Case .Clase
                     Case eClass.Ciudadano, eClass.Trabajador, eClass.Experto_Minerales, eClass.Herrero, eClass.Experto_Madera, _
                         eClass.Carpintero, eClass.Sastre, eClass.Sin_Mana, eClass.Caballero, eClass.Bandido, eClass.Pirata
                     
-205                     AumentoSTA = AumentoSTDef
+                     AumentoSTA = AumentoSTDef
                 
-210                 Case eClass.Minero
-215                     AumentoSTA = AumentoSTDef + AdicionalSTMinero
+                 Case eClass.Minero
+                     AumentoSTA = AumentoSTDef + AdicionalSTMinero
                 
-220                 Case eClass.Talador
-225                     AumentoSTA = AumentoSTDef + AdicionalSTLeñador
+                 Case eClass.Talador
+                     AumentoSTA = AumentoSTDef + AdicionalSTLeñador
                 
-230                 Case eClass.Pescador
-235                     AumentoSTA = AumentoSTDef + AdicionalSTPescador
+                 Case eClass.Pescador
+                     AumentoSTA = AumentoSTDef + AdicionalSTPescador
                 
-240                 Case eClass.Hechicero
-245                     AumentoSTA = AumentoSTDef
-250                     AumentoMANA = 2.2 * .Stats.UserAtributos(eAtributos.Inteligencia)
+                 Case eClass.Hechicero
+                     AumentoSTA = AumentoSTDef
+                     AumentoMANA = 2.2 * .Stats.UserAtributos(eAtributos.Inteligencia)
                     
-255                 Case eClass.Mago
-260                     AumentoSTA = AumentoSTMago
+                 Case eClass.Mago
+                     AumentoSTA = AumentoSTMago
                     
-265                     If .Stats.ELV <= 45 Then
-270                         Select Case .Stats.MaxMAN
+                     If .Stats.ELV <= 45 Then
+                         Select Case .Stats.MaxMAN
                                 Case Is < 2300
-275                                 AumentoMANA = 3 * .Stats.UserAtributos(eAtributos.Inteligencia)
-280                             Case Is < 2500
-285                                 AumentoMANA = 2 * .Stats.UserAtributos(eAtributos.Inteligencia)
-290                             Case Else
-295                                 AumentoMANA = 1.5 * .Stats.UserAtributos(eAtributos.Inteligencia)
+                                 AumentoMANA = 3 * .Stats.UserAtributos(eAtributos.Inteligencia)
+                             Case Is < 2500
+                                 AumentoMANA = 2 * .Stats.UserAtributos(eAtributos.Inteligencia)
+                             Case Else
+                                 AumentoMANA = 1.5 * .Stats.UserAtributos(eAtributos.Inteligencia)
                             End Select
                         Else
-300                         AumentoMANA = 0
+                         AumentoMANA = 0
                         End If
                     
 305                 Case eClass.Nigromante
@@ -565,31 +565,32 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer)
               '          End If
               '      End If
               '  End If
-570             If PuedeSubirClase(UserIndex) Then Call WriteSubeClase(UserIndex, True)
-571             If PuedeRecompensa(UserIndex) Then Call WriteEligeRecompensa(UserIndex, True)
+             If PuedeSubirClase(UserIndex) Then Call WriteSubeClase(UserIndex, True)
+             If PuedeRecompensa(UserIndex) Then Call WriteEligeRecompensa(UserIndex, True)
             Loop
         
-            'If it ceased to be a newbie, remove newbie items and get char away from newbie dungeon
-575         If Not EsNewbie(UserIndex) And WasNewbie Then
-580             Call QuitarNewbieObj(UserIndex)
-585             If MapInfo(.Pos.Map).Restringir Then
-590                 Call WarpUserChar(UserIndex, 1, 50, 50, True)
-595                 Call WriteConsoleMsg(UserIndex, "Debes abandonar el Dungeon Newbie.", FontTypeNames.FONTTYPE_INFO)
-                End If
-            End If
         
+            If Not EsNewbie(UserIndex) And WasNewbie Then
+                If MapInfo(.Pos.Map).Restringir = True Then
+                    Call WarpUserChar(UserIndex, 1, 50, 50, True)
+                'Else
+                '    Call UpdateUserChar(UserIndex)
+                End If
+                    Call QuitarNewbieObj(UserIndex)
+            End If
+    
             'Send all gained skill points at once (if any)
-600         If Pts > 0 Then
-605             Call WriteLevelUp(UserIndex, Pts)
+         If Pts > 0 Then
+             Call WriteLevelUp(UserIndex, Pts)
             
-610             .Stats.SkillPts = .Stats.SkillPts + Pts
+             .Stats.SkillPts = .Stats.SkillPts + Pts
             
-615             Call WriteConsoleMsg(UserIndex, "Has ganado un total de " & Pts & " skillpoints.", FontTypeNames.FONTTYPE_INFO)
+             Call WriteConsoleMsg(UserIndex, "Has ganado un total de " & Pts & " skillpoints.", FontTypeNames.FONTTYPE_INFO)
             End If
         
         End With
     
-620     Call WriteUpdateUserStats(UserIndex)
+     Call WriteUpdateUserStats(UserIndex)
     '<EhFooter>
     Exit Sub
 
@@ -1100,7 +1101,18 @@ Sub SubirSkill(ByVal UserIndex As Integer, _
             .Stats.UserSkills(Skill) = .Stats.UserSkills(Skill) + 1
                     
             Call WriteConsoleMsg(UserIndex, "!Has mejorado tu skill en " & SkillsNames(Skill) & " en un punto! Ahora tienes " & .Stats.UserSkills(Skill) & " pts.", FontTypeNames.FONTTYPE_INFO)
-                    
+                   
+            If .Stats.ELV >= STAT_MAXELV Then
+                 .Stats.Exp = 0
+                 .Stats.ELU = 0
+                 Call WriteConsoleMsg(UserIndex, "¡Ya eres nivel máximo no puedes ganar más experiencia!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+            'ElseIf .Stats.ELV >= 14 And ClaseBase(.Clase) Then
+            '   Call WriteConsoleMsg(UserIndex, "No podés pasar de nivel sin elegir tu clase final.", FontTypeNames.FONTTYPE_INFO)
+            '     .Stats.Exp = .Stats.ELU - 1
+            '     Call WriteUpdateExp(UserIndex)
+            '        Exit Sub
+            End If
             .Stats.Exp = .Stats.Exp + 50
                     
             Call WriteConsoleMsg(UserIndex, "¡Has ganado 50 puntos de experiencia!", FontTypeNames.FONTTYPE_FIGHT)

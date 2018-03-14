@@ -275,9 +275,10 @@ Public Enum FontTypeNames
     FONTTYPE_NEUTRAL
     FONTTYPE_GUILDWELCOME
     FONTTYPE_GUILDLOGIN
+    FONTTYPE_UP
 End Enum
 
-Public FontTypes(24) As tFont
+Public FontTypes(26) As tFont
 
 ''
 ' Initializes the fonts array
@@ -444,6 +445,16 @@ Public Sub InitFonts()
         .italic = True
         
     End With
+    
+    With FontTypes(FontTypeNames.FONTTYPE_UP)
+    
+        .Red = 255
+        .Green = 150
+        .blue = 25
+        .bold = True
+        
+    End With
+    
 End Sub
 
 ''
@@ -1309,7 +1320,7 @@ Private Sub HandleBankInit()
  
     BankGold = incomingData.ReadLong
     Call InvBanco(0).Initialize(frmBancoObj.PicBancoInv, MAX_BANCOINVENTORY_SLOTS)
-    Call InvBanco(1).Initialize(frmBancoObj.PicInv, Inventario.MaxObjs)
+    Call InvBanco(1).Initialize(frmBancoObj.picInv, Inventario.MaxObjs)
    
     For i = 1 To Inventario.MaxObjs
         With Inventario
@@ -1584,6 +1595,8 @@ Private Sub HandleUpdateSta()
     
     bWidth = (((UserMinSTA / 100) / (UserMaxSTA / 100)) * 75)
     
+    If bWidth > 75 Then bWidth = 75
+    
     frmMain.shpEnergia.Width = 75 - bWidth
     frmMain.shpEnergia.Left = frmMain.shpEnergia.Left + (75 - frmMain.shpEnergia.Width)
     
@@ -1617,6 +1630,8 @@ Private Sub HandleUpdateMana()
     If UserMaxMAN > 0 Then _
         bWidth = (((UserMinMAN / 100) / (UserMaxMAN / 100)) * 75)
         
+    If bWidth > 75 Then bWidth = 75
+        
     frmMain.shpMana.Width = 75 - bWidth
     frmMain.shpMana.Left = frmMain.shpMana.Left + (75 - frmMain.shpMana.Width)
     
@@ -1646,6 +1661,8 @@ Private Sub HandleUpdateHP()
     Dim bWidth As Byte
     
     bWidth = (((UserMinHP / 100) / (UserMaxHP / 100)) * 75)
+    
+    If bWidth > 75 Then bWidth = 75
     
     frmMain.shpVida.Width = 75 - bWidth
     frmMain.shpVida.Left = frmMain.shpVida.Left + (75 - frmMain.shpVida.Width)
@@ -1689,7 +1706,11 @@ Private Sub HandleUpdateGold()
         frmMain.GldLbl.ForeColor = &HFFFF& 'Yellow
     End If
     
-    frmMain.GldLbl.Caption = UserGLD
+    If UserGLD <> 0 Then
+        frmMain.GldLbl.Caption = Format$(UserGLD, "##,##")
+       Else
+        frmMain.GldLbl.Caption = UserGLD
+    End If
 End Sub
 
 ''
@@ -2812,7 +2833,11 @@ Private Sub HandleUpdateUserStats()
         frmMain.lblPorcLvl.Caption = "[N/A]"
     End If
         
-    frmMain.GldLbl.Caption = UserGLD
+    If UserGLD <> 0 Then
+        frmMain.GldLbl.Caption = Format$(UserGLD, "##,##")
+       Else
+        frmMain.GldLbl.Caption = UserGLD
+    End If
     frmMain.lblLvl.Caption = UserLvl
     
     'Stats

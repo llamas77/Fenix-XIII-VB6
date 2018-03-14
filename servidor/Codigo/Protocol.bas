@@ -278,6 +278,7 @@ Public Enum FontTypeNames
     FONTTYPE_NEUTRAL
     FONTTYPE_GUILDWELCOME
     FONTTYPE_GUILDLOGIN
+    FONTTYPE_UP
 End Enum
 
 Public Enum eEditOptions
@@ -1243,11 +1244,11 @@ Private Sub HandleThrowDices(ByVal UserIndex As Integer)
     Call UserList(UserIndex).incomingData.ReadByte
     
     With UserList(UserIndex).Stats
-        .UserAtributos(eAtributos.Fuerza) = MaximoInt(15, 13 + RandomNumber(0, 3) + RandomNumber(0, 2))
-        .UserAtributos(eAtributos.Agilidad) = MaximoInt(15, 12 + RandomNumber(0, 3) + RandomNumber(0, 3))
-        .UserAtributos(eAtributos.Inteligencia) = MaximoInt(16, 13 + RandomNumber(0, 3) + RandomNumber(0, 2))
-        .UserAtributos(eAtributos.Carisma) = MaximoInt(15, 12 + RandomNumber(0, 3) + RandomNumber(0, 3))
-        .UserAtributos(eAtributos.Constitucion) = 16 + RandomNumber(0, 1) + RandomNumber(0, 1)
+        .UserAtributos(eAtributos.Fuerza) = RandomNumber(16, 18)
+        .UserAtributos(eAtributos.Agilidad) = RandomNumber(16, 18)
+        .UserAtributos(eAtributos.Inteligencia) = RandomNumber(16, 18)
+        .UserAtributos(eAtributos.Carisma) = RandomNumber(16, 18)
+        .UserAtributos(eAtributos.Constitucion) = RandomNumber(16, 18)
     End With
     
     Call WriteDiceRoll(UserIndex)
@@ -9351,7 +9352,7 @@ Private Sub HandleCreateItem(ByVal UserIndex As Integer)
         If LenB(ObjData(tObj).Name) = 0 Then Exit Sub
         
         Dim Objeto As Obj
-        Call WriteConsoleMsg(UserIndex, "Haz creado el ítem: " & ObjData(tObj).Name & " (x" & tCant & ")", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Has creado el ítem: " & ObjData(tObj).Name & " (x" & tCant & ")", FontTypeNames.FONTTYPE_INFO)
         
         Objeto.Amount = tCant
         Objeto.OBJIndex = tObj

@@ -110,7 +110,7 @@ With UserList(UserIndex)
     
     '[Barrin 17-12-03] Si el usuario dejó de ser Newbie, y estaba en el Newbie Dungeon
     'es transportado a su hogar de origen ;)
-    If MapInfo(.Pos.Map).Restringir Then
+    If MapInfo(.Pos.Map).Restringir = True Then
         
         Dim DeDonde As WorldPos
         

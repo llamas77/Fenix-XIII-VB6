@@ -151,7 +151,6 @@ On Error Resume Next
     End With
 
 End Sub
-
 Function QuedanItems(ByVal NpcIndex As Integer, ByVal OBJIndex As Integer) As Boolean
 '***************************************************
 'Author: Unknown
@@ -316,7 +315,6 @@ Sub CargarInvent(ByVal NpcIndex As Integer)
 
 End Sub
 
-
 Public Sub TirarOroNpc(ByVal Cantidad As Long, ByRef Pos As WorldPos)
 '***************************************************
 'Autor: ZaMa
@@ -354,4 +352,3 @@ On Error GoTo Errhandler
 Errhandler:
     Call LogError("Error en TirarOro. Error " & Err.Number & " : " & Err.description)
 End Sub
-
