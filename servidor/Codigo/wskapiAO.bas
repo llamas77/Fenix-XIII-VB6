@@ -130,7 +130,7 @@ End Function
 Public Sub AgregaSlotSock(ByVal Sock As Long, ByVal Slot As Long)
 Debug.Print "AgregaSockSlot"
 
-If WSAPISock2Usr.count > MaxUsers Then
+If WSAPISock2Usr.Count > MaxUsers Then
     Call CloseSocket(Slot)
     Exit Sub
 End If
@@ -172,11 +172,11 @@ End Sub
 Public Sub BorraSlotSock(ByVal Sock As Long)
 Dim cant As Long
 
-cant = WSAPISock2Usr.count
+cant = WSAPISock2Usr.Count
 On Error Resume Next
 WSAPISock2Usr.Remove CStr(Sock)
 
-Debug.Print "BorraSockSlot " & cant & " -> " & WSAPISock2Usr.count
+Debug.Print "BorraSockSlot " & cant & " -> " & WSAPISock2Usr.Count
 
 End Sub
 
@@ -426,12 +426,12 @@ Public Sub EventoSockAccept(ByVal SockID As Long)
     If NewIndex <= MaxUsers Then
         
         'Make sure both outgoing and incoming data buffers are clean
-        Call UserList(NewIndex).incomingData.ReadASCIIStringFixed(UserList(NewIndex).incomingData.length)
-        Call UserList(NewIndex).outgoingData.ReadASCIIStringFixed(UserList(NewIndex).outgoingData.length)
+        Call UserList(NewIndex).incomingData.ReadASCIIStringFixed(UserList(NewIndex).incomingData.Length)
+        Call UserList(NewIndex).outgoingData.ReadASCIIStringFixed(UserList(NewIndex).outgoingData.Length)
 
         UserList(NewIndex).ip = GetAscIP(sa.sin_addr)
         'Busca si esta banneada la ip
-        For i = 1 To BanIps.count
+        For i = 1 To BanIps.Count
             If BanIps.Item(i) = UserList(NewIndex).ip Then
                 'Call apiclosesocket(NuevoSock)
                 Call WriteErrorMsg(NewIndex, "Su IP se encuentra bloqueada en este servidor.")
@@ -470,7 +470,8 @@ With UserList(Slot)
     Call .incomingData.WriteBlock(Datos)
     
     If .ConnID <> -1 Then
-        Call HandleIncomingData(Slot)
+        Do While HandleIncomingData(Slot)
+        Loop
     Else
         Exit Sub
     End If

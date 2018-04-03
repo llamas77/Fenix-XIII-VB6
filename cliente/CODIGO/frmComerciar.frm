@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmComerciar 
-   BackColor       =   &H80000013&
+   BackColor       =   &H00C0C0C0&
    BorderStyle     =   0  'None
    ClientHeight    =   7290
    ClientLeft      =   0
@@ -54,9 +54,9 @@ Begin VB.Form frmComerciar
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H80000008&
-      Height          =   3840
+      Height          =   2400
       Left            =   3945
-      ScaleHeight     =   256
+      ScaleHeight     =   160
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   160
       TabIndex        =   5
@@ -80,9 +80,9 @@ Begin VB.Form frmComerciar
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H80000008&
-      Height          =   3840
+      Height          =   2400
       Left            =   600
-      ScaleHeight     =   256
+      ScaleHeight     =   160
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   160
       TabIndex        =   4
@@ -372,7 +372,7 @@ Private Sub imgComprar_Click()
     
     If Not IsNumeric(cantidad.Text) Or cantidad.Text = 0 Then Exit Sub
     
-    Call audio.PlayWave(SND_CLICK)
+    Call Audio.PlayWave(SND_CLICK)
     
     LasActionBuy = True
     If UserGLD >= CalculateSellPrice(NPCInventory(InvComNpc.SelectedItem).Valor, Val(cantidad.Text)) Then
@@ -395,7 +395,7 @@ Private Sub imgVender_Click()
 
     If Not IsNumeric(cantidad.Text) Or cantidad.Text = 0 Then Exit Sub
     
-    Call audio.PlayWave(SND_CLICK)
+    Call Audio.PlayWave(SND_CLICK)
     
     LasActionBuy = False
 

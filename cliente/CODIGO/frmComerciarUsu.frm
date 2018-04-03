@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "Richtx32.ocx"
 Begin VB.Form frmComerciarUsu 
    BorderStyle     =   0  'None
    ClientHeight    =   8850
@@ -76,9 +76,9 @@ Begin VB.Form frmComerciarUsu
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H80000008&
-      Height          =   2880
+      Height          =   2400
       Left            =   6975
-      ScaleHeight     =   192
+      ScaleHeight     =   160
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   160
       TabIndex        =   4
@@ -102,9 +102,9 @@ Begin VB.Form frmComerciarUsu
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H80000008&
-      Height          =   2880
+      Height          =   2400
       Left            =   6960
-      ScaleHeight     =   192
+      ScaleHeight     =   160
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   160
       TabIndex        =   3
@@ -151,9 +151,9 @@ Begin VB.Form frmComerciarUsu
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H80000008&
-      Height          =   2880
+      Height          =   2400
       Left            =   630
-      ScaleHeight     =   192
+      ScaleHeight     =   160
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   160
       TabIndex        =   1
@@ -184,7 +184,7 @@ Begin VB.Form frmComerciarUsu
       _ExtentY        =   2858
       _Version        =   393217
       BackColor       =   0
-      Enabled         =   -1  'True
+      BorderStyle     =   0
       ReadOnly        =   -1  'True
       ScrollBars      =   2
       DisableNoScroll =   -1  'True
@@ -304,29 +304,29 @@ Private Sub imgAgregar_Click()
     HabilitarConfirmar True
     
     Dim OfferSlot As Byte
-    Dim Amount As Long
+    Dim amount As Long
     Dim InvSlot As Byte
         
     With InvComUsu
         If .SelectedItem = FLAGORO Then
-            If Val(txtAgregar.Text) > InvOroComUsu(0).Amount(1) Then
+            If Val(txtAgregar.Text) > InvOroComUsu(0).amount(1) Then
                 Call PrintCommerceMsg("¡No tienes esa cantidad!", FontTypeNames.FONTTYPE_FIGHT)
                 Exit Sub
             End If
             
-            Amount = InvOroComUsu(1).Amount(1) + Val(txtAgregar.Text)
+            amount = InvOroComUsu(1).amount(1) + Val(txtAgregar.Text)
     
             ' Le aviso al otro de mi cambio de oferta
             Call WriteUserCommerceOffer(FLAGORO, Val(txtAgregar.Text), GOLD_OFFER_SLOT)
             
             ' Actualizo los inventarios
-            Call InvOroComUsu(0).ChangeSlotItemAmount(1, InvOroComUsu(0).Amount(1) - Val(txtAgregar.Text))
-            Call InvOroComUsu(1).ChangeSlotItemAmount(1, Amount)
+            Call InvOroComUsu(0).ChangeSlotItemAmount(1, InvOroComUsu(0).amount(1) - Val(txtAgregar.Text))
+            Call InvOroComUsu(1).ChangeSlotItemAmount(1, amount)
             
             Call PrintCommerceMsg("¡Agregaste " & Val(txtAgregar.Text) & " moneda" & IIf(Val(txtAgregar.Text) = 1, "", "s") & " de oro a tu oferta!!", FontTypeNames.FONTTYPE_GUILD)
             
         ElseIf .SelectedItem > 0 Then
-             If Val(txtAgregar.Text) > .Amount(.SelectedItem) Then
+             If Val(txtAgregar.Text) > .amount(.SelectedItem) Then
                 Call PrintCommerceMsg("¡No tienes esa cantidad!", FontTypeNames.FONTTYPE_FIGHT)
                 Exit Sub
             End If
@@ -342,19 +342,19 @@ Private Sub imgAgregar_Click()
                 Call WriteUserCommerceOffer(.SelectedItem, Val(txtAgregar.Text), OfferSlot)
                 
                 ' Actualizo el inventario general de comercio
-                Call .ChangeSlotItemAmount(.SelectedItem, .Amount(.SelectedItem) - Val(txtAgregar.Text))
+                Call .ChangeSlotItemAmount(.SelectedItem, .amount(.SelectedItem) - Val(txtAgregar.Text))
                 
-                Amount = InvOfferComUsu(0).Amount(OfferSlot) + Val(txtAgregar.Text)
+                amount = InvOfferComUsu(0).amount(OfferSlot) + Val(txtAgregar.Text)
                 
                 ' Actualizo los inventarios
                 If InvOfferComUsu(0).OBJIndex(OfferSlot) > 0 Then
                     ' Si ya esta el item, solo actualizo su cantidad en el invenatario
-                    Call InvOfferComUsu(0).ChangeSlotItemAmount(OfferSlot, Amount)
+                    Call InvOfferComUsu(0).ChangeSlotItemAmount(OfferSlot, amount)
                 Else
                     InvSlot = .SelectedItem
                     ' Si no agrego todo
                     Call InvOfferComUsu(0).SetItem(OfferSlot, .OBJIndex(InvSlot), _
-                                                    Amount, 0, .GrhIndex(InvSlot), .OBJType(InvSlot), _
+                                                    amount, 0, .GrhIndex(InvSlot), .OBJType(InvSlot), _
                                                     .MaxHit(InvSlot), .MinHit(InvSlot), .MaxDef(InvSlot), .MinDef(InvSlot), _
                                                     .Valor(InvSlot), .ItemName(InvSlot))
                 End If
@@ -380,7 +380,7 @@ Private Sub imgConfirmar_Click()
 End Sub
 
 Private Sub imgQuitar_Click()
-    Dim Amount As Long
+    Dim amount As Long
 
     ' No tiene seleccionado ningun item
     If InvOfferComUsu(0).SelectedItem = 0 Then
@@ -393,46 +393,46 @@ Private Sub imgQuitar_Click()
 
     ' Comparar con el inventario para distribuir los items
     If InvOfferComUsu(0).SelectedItem = FLAGORO Then
-        Amount = IIf(Val(txtAgregar.Text) > InvOroComUsu(1).Amount(1), InvOroComUsu(1).Amount(1), Val(txtAgregar.Text))
+        amount = IIf(Val(txtAgregar.Text) > InvOroComUsu(1).amount(1), InvOroComUsu(1).amount(1), Val(txtAgregar.Text))
         ' Estoy quitando, paso un valor negativo
-        Amount = Amount * (-1)
+        amount = amount * (-1)
         
         ' No tiene sentido que se quiten 0 unidades
-        If Amount <> 0 Then
+        If amount <> 0 Then
             ' Le aviso al otro de mi cambio de oferta
-            Call WriteUserCommerceOffer(FLAGORO, Amount, GOLD_OFFER_SLOT)
+            Call WriteUserCommerceOffer(FLAGORO, amount, GOLD_OFFER_SLOT)
             
             ' Actualizo los inventarios
-            Call InvOroComUsu(0).ChangeSlotItemAmount(1, InvOroComUsu(0).Amount(1) - Amount)
-            Call InvOroComUsu(1).ChangeSlotItemAmount(1, InvOroComUsu(1).Amount(1) + Amount)
+            Call InvOroComUsu(0).ChangeSlotItemAmount(1, InvOroComUsu(0).amount(1) - amount)
+            Call InvOroComUsu(1).ChangeSlotItemAmount(1, InvOroComUsu(1).amount(1) + amount)
         
-            Call PrintCommerceMsg("¡¡Quitaste " & Amount * (-1) & " moneda" & IIf(Val(txtAgregar.Text) = 1, "", "s") & " de oro de tu oferta!!", FontTypeNames.FONTTYPE_GUILD)
+            Call PrintCommerceMsg("¡¡Quitaste " & amount * (-1) & " moneda" & IIf(Val(txtAgregar.Text) = 1, "", "s") & " de oro de tu oferta!!", FontTypeNames.FONTTYPE_GUILD)
         End If
     Else
-        Amount = IIf(Val(txtAgregar.Text) > InvOfferComUsu(0).Amount(InvOfferComUsu(0).SelectedItem), _
-                    InvOfferComUsu(0).Amount(InvOfferComUsu(0).SelectedItem), Val(txtAgregar.Text))
+        amount = IIf(Val(txtAgregar.Text) > InvOfferComUsu(0).amount(InvOfferComUsu(0).SelectedItem), _
+                    InvOfferComUsu(0).amount(InvOfferComUsu(0).SelectedItem), Val(txtAgregar.Text))
         ' Estoy quitando, paso un valor negativo
-        Amount = Amount * (-1)
+        amount = amount * (-1)
         
         ' No tiene sentido que se quiten 0 unidades
-        If Amount <> 0 Then
+        If amount <> 0 Then
             With InvOfferComUsu(0)
                 
-                Call PrintCommerceMsg("¡¡Quitaste " & Amount * (-1) & " " & .ItemName(.SelectedItem) & " de tu oferta!!", FontTypeNames.FONTTYPE_GUILD)
+                Call PrintCommerceMsg("¡¡Quitaste " & amount * (-1) & " " & .ItemName(.SelectedItem) & " de tu oferta!!", FontTypeNames.FONTTYPE_GUILD)
     
                 ' Le aviso al otro de mi cambio de oferta
-                Call WriteUserCommerceOffer(0, Amount, .SelectedItem)
+                Call WriteUserCommerceOffer(0, amount, .SelectedItem)
             
                 ' Actualizo el inventario general
-                Call UpdateInvCom(.OBJIndex(.SelectedItem), Abs(Amount))
+                Call UpdateInvCom(.OBJIndex(.SelectedItem), Abs(amount))
                  
                  ' Actualizo el inventario de oferta
-                 If .Amount(.SelectedItem) + Amount = 0 Then
+                 If .amount(.SelectedItem) + amount = 0 Then
                      ' Borro el item
                      Call .SetItem(.SelectedItem, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "")
                  Else
                      ' Le resto la cantidad deseada
-                     Call .ChangeSlotItemAmount(.SelectedItem, .Amount(.SelectedItem) + Amount)
+                     Call .ChangeSlotItemAmount(.SelectedItem, .amount(.SelectedItem) + amount)
                  End If
             End With
         End If
@@ -606,7 +606,7 @@ End If
 
 End Sub
 
-Private Function CheckAvailableSlot(ByVal InvSlot As Byte, ByVal Amount As Long) As Byte
+Private Function CheckAvailableSlot(ByVal InvSlot As Byte, ByVal amount As Long) As Byte
 '***************************************************
 'Author: ZaMa
 'Last Modify Date: 30/11/2009
@@ -617,7 +617,7 @@ On Error GoTo Err
     ' Primero chequeo si puedo sumar esa cantidad en algun slot que ya tenga ese item
     For slot = 1 To INV_OFFER_SLOTS
         If InvComUsu.OBJIndex(InvSlot) = InvOfferComUsu(0).OBJIndex(slot) Then
-            If InvOfferComUsu(0).Amount(slot) + Amount <= MAX_INVENTORY_OBJS Then
+            If InvOfferComUsu(0).amount(slot) + amount <= MAX_INVENTORY_OBJS Then
                 ' Puedo sumarlo aca
                 CheckAvailableSlot = slot
                 Exit Function
@@ -638,23 +638,23 @@ Err:
     Debug.Print "Slot: " & slot
 End Function
 
-Public Sub UpdateInvCom(ByVal OBJIndex As Integer, ByVal Amount As Long)
+Public Sub UpdateInvCom(ByVal OBJIndex As Integer, ByVal amount As Long)
     Dim slot As Byte
     Dim RemainingAmount As Long
     Dim DifAmount As Long
     
-    RemainingAmount = Amount
+    RemainingAmount = amount
     
     For slot = 1 To MAX_INVENTORY_SLOTS
         
         If InvComUsu.OBJIndex(slot) = OBJIndex Then
-            DifAmount = Inventario.Amount(slot) - InvComUsu.Amount(slot)
+            DifAmount = Inventario.amount(slot) - InvComUsu.amount(slot)
             If DifAmount > 0 Then
                 If RemainingAmount > DifAmount Then
                     RemainingAmount = RemainingAmount - DifAmount
-                    Call InvComUsu.ChangeSlotItemAmount(slot, Inventario.Amount(slot))
+                    Call InvComUsu.ChangeSlotItemAmount(slot, Inventario.amount(slot))
                 Else
-                    Call InvComUsu.ChangeSlotItemAmount(slot, InvComUsu.Amount(slot) + RemainingAmount)
+                    Call InvComUsu.ChangeSlotItemAmount(slot, InvComUsu.amount(slot) + RemainingAmount)
                     Exit Sub
                 End If
             End If
@@ -665,7 +665,7 @@ End Sub
 Public Sub PrintCommerceMsg(ByRef msg As String, ByVal FontIndex As Integer)
     
     With FontTypes(FontIndex)
-        Call AddtoRichTextBox(frmComerciarUsu.CommerceConsole, msg, .red, .green, .blue, .bold, .italic)
+        Call AddtoRichTextBox(frmComerciarUsu.CommerceConsole, msg, .Red, .Green, .blue, .bold, .italic)
     End With
     
 End Sub
@@ -675,7 +675,7 @@ Public Function HasAnyItem(ByRef Inventory As clsGraphicalInventory) As Boolean
     Dim slot As Long
     
     For slot = 1 To Inventory.MaxObjs
-        If Inventory.Amount(slot) > 0 Then HasAnyItem = True: Exit Function
+        If Inventory.amount(slot) > 0 Then HasAnyItem = True: Exit Function
     Next slot
     
 End Function

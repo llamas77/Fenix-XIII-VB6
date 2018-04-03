@@ -304,7 +304,7 @@ End Enum
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Sub HandleIncomingData(ByVal UserIndex As Integer)
+Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
 '***************************************************
 'Author: Juan Martín Sotuyo Dodero (Maraxus)
 'Last Modification: 01/09/07
@@ -323,7 +323,7 @@ On Error Resume Next
         'Is the user actually logged?
         If Not UserList(UserIndex).flags.UserLogged Then
             Call CloseSocket(UserIndex)
-            Exit Sub
+            Exit Function
         
         'He is logged. Reset idle counter if id is valid.
         ElseIf packetID <= LAST_CLIENT_PACKET_ID Then
@@ -335,7 +335,7 @@ On Error Resume Next
         'Is the user logged?
         If UserList(UserIndex).flags.UserLogged Then
             Call CloseSocket(UserIndex)
-            Exit Sub
+            Exit Function
         End If
     End If
     
@@ -630,11 +630,10 @@ On Error Resume Next
             Call CloseSocket(UserIndex)
     End Select
     
-    'Done with this packet, move on to next one or send everything if no more packets found
+     'Done with this packet, move on to next one or send everything if no more packets found
     If UserList(UserIndex).incomingData.Length > 0 And Err.Number = 0 Then
-        Err.Clear
-        Call HandleIncomingData(UserIndex)
-    
+        HandleIncomingData = True
+ 
     ElseIf Err.Number <> 0 And Not Err.Number = UserList(UserIndex).incomingData.NotEnoughDataErrCode Then
         'An error ocurred, log it and kick player.
         Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.Source & _
@@ -642,12 +641,14 @@ On Error Resume Next
                         vbTab & " LastDllError: " & Err.LastDllError & vbTab & _
                         " - UserIndex: " & UserIndex & " - producido al manejar el paquete: " & CStr(packetID))
         Call CloseSocket(UserIndex)
-    
+ 
+        HandleIncomingData = False
     Else
         'Flush buffer - send everything that has been written
         Call FlushBuffer(UserIndex)
+        HandleIncomingData = False
     End If
-End Sub
+End Function
 
 Public Sub WriteMultiMessage(ByVal UserIndex As Integer, ByVal MessageIndex As Integer, Optional ByVal Arg1 As Long, Optional ByVal Arg2 As Long, Optional ByVal Arg3 As Long, Optional ByVal StringArg1 As String)
 '***************************************************

@@ -742,12 +742,8 @@ Private Sub DrawFilleableListBox(ByVal ID As Integer)
 End Sub
 
 Private Sub UpdateTextBoxBuffer(ByVal ID As Integer)
-    
-    'If UserWriting Then
         With Components(ID)
-            
             If Not StrComp(.TextBuffer, vbNullString) = 0 Then
-                
                 Dim renderstr As String
                 If .PasswChr Then
                     renderstr = String$(Len(.TextBuffer), "*")
@@ -756,20 +752,20 @@ Private Sub UpdateTextBoxBuffer(ByVal ID As Integer)
                 End If
                 
                 If Focused = ID Then
-                    Call Text_Draw(.X + 3, .Y + 3, renderstr + "|", .ForeColor)
+                    If Len(renderstr) < 22 Then
+                        Call Text_Draw(.X + 2, .Y + 2, renderstr + "|", .ForeColor)
+                    End If
                 Else
-                    Call Text_Draw(.X + 3, .Y + 3, renderstr, .ForeColor)
+                    If Len(renderstr) < 22 Then
+                        Call Text_Draw(.X + 2, .Y + 2, renderstr, .ForeColor)
+                    End If
                 End If
             Else
                 If Focused = ID Then
-                    Call Text_Draw(.X + 3, .Y + 3, "|", .ForeColor)
+                    Call Text_Draw(.X + 2, .Y + 2, "|", .ForeColor)
                 End If
-                
             End If
-            
         End With
-    'End If
-    
 End Sub
 
 Private Sub ScrollListUp(ByVal ID As Integer)

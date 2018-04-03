@@ -64,11 +64,12 @@ Begin VB.Form frmBancoObj
    Begin VB.PictureBox PicBancoInv 
       Appearance      =   0  'Flat
       BackColor       =   &H00000000&
+      BorderStyle     =   0  'None
       ForeColor       =   &H80000008&
       Height          =   2400
       Left            =   540
       ScaleHeight     =   160
-      ScaleMode       =   0  'User
+      ScaleMode       =   3  'Pixel
       ScaleWidth      =   160
       TabIndex        =   4
       Top             =   2400
@@ -77,11 +78,12 @@ Begin VB.Form frmBancoObj
    Begin VB.PictureBox PicInv 
       Appearance      =   0  'Flat
       BackColor       =   &H00000000&
+      BorderStyle     =   0  'None
       ForeColor       =   &H80000008&
       Height          =   2400
       Left            =   4020
       ScaleHeight     =   160
-      ScaleMode       =   0  'User
+      ScaleMode       =   3  'Pixel
       ScaleWidth      =   160
       TabIndex        =   3
       Top             =   2400

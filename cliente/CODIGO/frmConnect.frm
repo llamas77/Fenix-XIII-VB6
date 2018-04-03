@@ -167,8 +167,8 @@ Public Sub LoadComponents()
     
     If Loaded Then Exit Sub
     
-    txtNombre = AddTextBox(429, 357, 170, 19, Black, White)
-    txtPassword = AddTextBox(429, 407, 170, 19, Black, White, , True)
+    txtNombre = AddTextBox(429, 357, 166, 18, Black, White)
+    txtPassword = AddTextBox(429, 407, 166, 18, Black, White, , True)
     btnLogin = AddRect(406, 438, 100, 37)
     btnCrearPj = AddRect(519, 438, 100, 37)
     
@@ -188,10 +188,11 @@ Public Sub LoadComponents()
     Call SetEvents(cmbSexo, Callback(AddressOf cmbSexo_EventHandler))
     
     'info
-    txtNick = AddTextBox(425, 289, 176, 22, Black, White)
-    txtMail = AddTextBox(425, 339, 176, 22, Black, White)
-    txtPass = AddTextBox(425, 389, 176, 22, Black, White, , True)
-    txtRepPass = AddTextBox(425, 439, 176, 22, Black, White, , True)
+
+    txtNick = AddTextBox(424, 289, 174, 22, Black, White)
+    txtMail = AddTextBox(424, 339, 174, 22, Black, White)
+    txtPass = AddTextBox(424, 389, 174, 22, Black, White, , True)
+    txtRepPass = AddTextBox(424, 439, 174, 22, Black, White, , True)
     
     'attribs
     lblFuerza = AddLabel("0", 485, 335, White)
@@ -204,7 +205,7 @@ Public Sub LoadComponents()
     SkillPts = 10
     
     'sks
-    lstSkills = AddFillableListBox(425, 289, 152, 244, Transparent, 10)
+    lstSkills = AddFillableListBox(424, 289, 152, 244, Transparent, 10)
     lblSkillLibres = AddLabel("Puntos disponibles: " & SkillPts, 5, 45, White)
     
     Call SetEvents(lstSkills, Callback(AddressOf lstSkill_EventHandler))
