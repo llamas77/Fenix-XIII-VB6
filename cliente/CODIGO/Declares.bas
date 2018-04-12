@@ -138,7 +138,7 @@ Public Const GNOMO_M_PRIMER_CABEZA As Integer = 470
 Public Const GNOMO_M_ULTIMA_CABEZA As Integer = 473
 Public Const GNOMO_M_CUERPO_DESNUDO As Integer = 60
 
-
+Public NumUsers As Integer
 'Musica
 Public Const MP3_Inicio As Byte = 101
 
@@ -352,7 +352,7 @@ Public Enum eObjType
     otFogata = 15
     otescudo = 16
     otcasco = 17
-    otAnillo = 18
+    otHerramientas = 18
     otTeleport = 19
     otYacimiento = 22
     otMinerales = 23
@@ -366,7 +366,8 @@ Public Enum eObjType
     otBotellaLlena = 34
     otManchas = 35          'No se usa
     otArbolElfico = 36
-    otMochilas = 37
+    otWarp = 37
+    otMochilas = 38
     otCualquiera = 1000
 End Enum
 
@@ -414,7 +415,7 @@ Public Enum eGMCommands
     OnlineGM                '/ONLINEGM
     OnlineMap               '/ONLINEMAP
     Kick                    '/ECHAR
-    Execute                 '/EJECUTAR
+    Execute                 '/KILL
     BanChar                 '/BAN
     UnbanChar               '/UNBAN
     NPCFollow               '/SEGUIR
@@ -505,6 +506,7 @@ Public Enum eGMCommands
     LoseTournament          '/PERDIOTORNEO
     WinQuest                '/GANOQUEST
     LoseQuest               '/PERDIOQUEST
+    Online                  '/ONLINE
 End Enum
 
 '
@@ -848,7 +850,7 @@ Public stxtbuffer As String 'Holds temp raw data from server
 Public stxtbuffercmsg As String 'Holds temp raw data from server
 Public Connected As Boolean 'True when connected to server
 Public UserMap As Integer
-
+Public MapName As String
 'Control
 Public prgRun As Boolean 'When true the program ends
 

@@ -168,7 +168,7 @@ On Error GoTo Errhandler
    
     If MiNPC.MaestroUser = 0 Then
         'Tiramos el oro
-       ' Call NPCTirarOro(MiNPC)
+         Call NPCTirarOro(MiNPC, UserIndex)
         'Tiramos el inventario
         Call NPC_TIRAR_ITEMS(MiNPC, IsPretoriano)
         'ReSpawn o no
@@ -813,31 +813,22 @@ Sub ReSpawnNpc(MiNPC As npc)
     If (MiNPC.flags.Respawn = 0) Then Call CrearNPC(MiNPC.Numero, MiNPC.Pos.Map, MiNPC.Orig)
 
 End Sub
-
-Private Sub NPCTirarOro(ByRef MiNPC As npc)
+Private Sub NPCTirarOro(ByRef MiNPC As npc, ByVal UserIndex As Integer)
 '***************************************************
 'Author: Unknown
 'Last Modification: -
 '
 '***************************************************
-
-'SI EL NPC TIENE ORO LO TIRAMOS
-    If MiNPC.GiveGLD > 0 Then
-        Dim MiObj As Obj
-        Dim MiAux As Long
-        MiAux = MiNPC.GiveGLD
-        Do While MiAux > MAX_INVENTORY_OBJS
-            MiObj.Amount = MAX_INVENTORY_OBJS
-            MiObj.OBJIndex = iORO
-            Call TirarItemAlPiso(MiNPC.Pos, MiObj)
-            MiAux = MiAux - MAX_INVENTORY_OBJS
-        Loop
-        If MiAux > 0 Then
-            MiObj.Amount = MiAux
-            MiObj.OBJIndex = iORO
-            Call TirarItemAlPiso(MiNPC.Pos, MiObj)
-        End If
-    End If
+ 
+If MiNPC.GiveGLD = 0 Then
+Call WriteConsoleMsg(UserIndex, "No has ganado oro al matar esta criatura.", FontTypeNames.FONTTYPE_FIGHT)
+End If
+If MiNPC.GiveGLD > 0 Then
+Call WriteConsoleMsg(UserIndex, "Has ganado " & MiNPC.GiveGLD & " monedas de oro.", FontTypeNames.FONTTYPE_FIGHT)
+UserList(UserIndex).Stats.GLD = UserList(UserIndex).Stats.GLD + MiNPC.GiveGLD
+Call WriteUpdateUserStats(UserIndex)
+End If
+ 
 End Sub
 
 Public Function OpenNPC(ByVal NpcNumber As Integer, Optional ByVal Respawn = True) As Integer

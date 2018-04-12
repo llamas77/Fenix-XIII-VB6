@@ -48,7 +48,7 @@ Private Type TYPE_LONG_BYTES
 End Type
 
 Private Type TYPE_LONG
-        Value As Long
+        value As Long
 End Type
 
 'http://stackoverflow.com/questions/6861733/vb6-integer-to-two-bytes-c-short-to-send-over-serial
@@ -61,14 +61,14 @@ Public Function IntegersToLong(ByVal H As Integer, ByVal L As Integer) As Long
     
     LSet TempTL = TempBL
     
-    IntegersToLong = TempTL.Value
+    IntegersToLong = TempTL.value
 End Function
 
-Public Sub LongToIntegers(ByVal Value As Long, ByRef H As Integer, ByRef L As Integer)
+Public Sub LongToIntegers(ByVal value As Long, ByRef H As Integer, ByRef L As Integer)
     Dim TempTL As TYPE_LONG
     Dim TempBL As TYPE_LONG_BYTES
     
-    TempTL.Value = Value
+    TempTL.value = value
     
     LSet TempBL = TempTL
     
@@ -178,6 +178,7 @@ On Error Resume Next
     CInt(GetVar(archivoC, "NE", "G")), _
     CInt(GetVar(archivoC, "NE", "B")))
     
+    ' Newbie
     ColoresPJ(47) = D3DColorXRGB(CInt(GetVar(archivoC, "NW", "R")), _
     CInt(GetVar(archivoC, "NW", "G")), _
     CInt(GetVar(archivoC, "NW", "B")))
@@ -575,7 +576,7 @@ Sub Main()
         End With
     Next i
     
-    Call AddtoRichTextBox(frmCargando.Status, "Hecho", 255, 0, 0, True, False, False)
+    Call AddtoRichTextBox(frmCargando.Status, "Hecho", 255, 150, 25, True, False, False)
     
     Call AddtoRichTextBox(frmCargando.Status, "Iniciando motor gráfico... ", 255, 255, 255, True, False, True)
     
@@ -585,7 +586,7 @@ Sub Main()
         Call CloseClient
     End If
     
-    'Call AddtoRichTextBox(frmCargando.Status, "Hecho", 255, 0, 0, True, False, False)
+    Call AddtoRichTextBox(frmCargando.Status, "Hecho", 255, 150, 25, True, False, False)
     
     Call AddtoRichTextBox(frmCargando.Status, "Creando animaciones extra... ", 255, 255, 255, True, False, True)
     
@@ -598,7 +599,7 @@ UserMap = 1
     Call CargarAnimEscudos
     Call CargarColores
     
-    Call AddtoRichTextBox(frmCargando.Status, "Hecho", 255, 0, 0, True, False, False)
+    Call AddtoRichTextBox(frmCargando.Status, "Hecho", 255, 150, 25, True, False, False)
     
     Call AddtoRichTextBox(frmCargando.Status, "Iniciando DirectSound... ", 255, 255, 255, True, False, True)
     
@@ -610,13 +611,13 @@ UserMap = 1
     Audio.SoundEffectsActivated = Not ClientSetup.bNoSoundEffects
     
     'Inicializamos el inventario gráfico
-    Call Inventario.Initialize(frmMain.picInv, MAX_INVENTORY_SLOTS)
+    Call Inventario.Initialize(frmMain.PicInv, MAX_INVENTORY_SLOTS)
     
     Call Audio.MusicMP3Play(App.path & "\MP3\" & MP3_Inicio & ".mp3")
     
-    Call AddtoRichTextBox(frmCargando.Status, "Hecho", 255, 0, 0, True, False, False)
+    Call AddtoRichTextBox(frmCargando.Status, "Hecho", 255, 150, 25, True, False, False)
     
-    Call AddtoRichTextBox(frmCargando.Status, "                    ¡Bienvenido a Argentum Online!", 255, 255, 255, True, False, True)
+    Call AddtoRichTextBox(frmCargando.Status, "¡Bienvenido a Fénix XIII!", 255, 150, 25, True, False, True)
     
     'Give the user enough time to read the welcome text
     Call Sleep(500)
@@ -688,11 +689,11 @@ UserMap = 1
     Call CloseClient
 End Sub
 
-Sub WriteVar(ByVal file As String, ByVal Main As String, ByVal Var As String, ByVal Value As String)
+Sub WriteVar(ByVal file As String, ByVal Main As String, ByVal Var As String, ByVal value As String)
 '*****************************************************************
 'Writes a var to a text file
 '*****************************************************************
-    writeprivateprofilestring Main, Var, Value, file
+    writeprivateprofilestring Main, Var, value, file
 End Sub
 
 Function GetVar(ByVal file As String, ByVal Main As String, ByVal Var As String) As String
@@ -998,9 +999,9 @@ End Sub
 
 Public Function esGM(CharIndex As Integer) As Boolean
 esGM = False
-If charlist(CharIndex).priv >= 1 And charlist(CharIndex).priv <= 5 Or charlist(CharIndex).priv = 25 Then _
+If charlist(CharIndex).priv >= 1 And charlist(CharIndex).priv <= 5 Then ' Or charlist(CharIndex).priv = 25 Then
     esGM = True
-
+End If
 End Function
 
 Public Function getTagPosition(ByVal Nick As String) As Integer

@@ -150,6 +150,7 @@ Private Enum ServerPacketID
     ShowRecompensaForm
     SendGuildForm
     GuildFoundation
+    UpdateUsersOnline
 End Enum
 
 Private Enum ClientPacketID
@@ -197,7 +198,6 @@ Private Enum ClientPacketID
     MoveSpell               'DESPHE
     MoveBank
     UserCommerceOffer       'OFRECER
-    Online                  '/ONLINE
     Quit                    '/SALIR
     RequestAccountState     '/BALANCE
     PetStand                '/QUIETO
@@ -224,7 +224,7 @@ Private Enum ClientPacketID
     bugReport               '/_BUG
     ChangeDescription       '/DESC
     Punishments             '/PENAS
-    ChangePassword          '/CONTRASEÑA
+    ChangePassword          '/PASSWORD
     Gamble                  '/APOSTAR
     InquiryVote             '/ENCUESTA ( with parameters )
     LeaveFaction            '/RETIRAR ( with no arguments )
@@ -352,15 +352,15 @@ Public Sub InitFonts()
     End With
     
     With FontTypes(FontTypeNames.FONTTYPE_CONSEJO)
-        .Red = 130
-        .Green = 130
-        .blue = 255
+        .Green = 192
+        .blue = 224
         .bold = 1
     End With
     
     With FontTypes(FontTypeNames.FONTTYPE_CONSEJOCAOS)
         .Red = 255
-        .Green = 60
+        .Green = 96
+        .blue = 96
         .bold = 1
     End With
     
@@ -396,7 +396,8 @@ Public Sub InitFonts()
     End With
     
     With FontTypes(FontTypeNames.FONTTYPE_CITIZEN)
-        .blue = 200
+        .Green = 128
+        .blue = 255
         .bold = 1
     End With
     
@@ -775,6 +776,9 @@ Public Sub HandleIncomingData()
         
         Case ServerPacketID.GuildFoundation
             Call HandleGuildFoundation
+        
+        Case ServerPacketID.UpdateUsersOnline
+            Call HandleUpdateUsersOnline
             
         Case Else
             'ERROR : Abort!
@@ -1589,19 +1593,19 @@ Private Sub HandleUpdateSta()
     'Get data and update form
     UserMinSTA = incomingData.ReadInteger()
     
-    frmMain.lblEnergia = UserMinSTA & "/" & UserMaxSTA
     
-    Dim bWidth As Byte
     
-    bWidth = (((UserMinSTA / 100) / (UserMaxSTA / 100)) * 75)
+    Dim eWidth As Byte
     
-    If bWidth > 75 Then bWidth = 75
+    eWidth = (((UserMinSTA / 100) / (UserMaxSTA / 100)) * 140)
     
-    frmMain.shpEnergia.Width = 75 - bWidth
-    frmMain.shpEnergia.Left = frmMain.shpEnergia.Left + (75 - frmMain.shpEnergia.Width)
+    'If bWidth > 140 Then bWidth = 140
     
-    frmMain.shpEnergia.Visible = (bWidth <> 75)
+    frmMain.imgEne.Width = eWidth
+    'frmMain.imgEne.Left = frmMain.imgEne.Left + (140 - frmMain.imgEne.Width)
     
+    'frmMain.imgEne.Visible = bWidth
+    frmMain.lblEnergia.Caption = UserMinSTA & "/" & UserMaxSTA
 End Sub
 
 ''
@@ -1623,19 +1627,18 @@ Private Sub HandleUpdateMana()
     'Get data and update form
     UserMinMAN = incomingData.ReadInteger()
     
-    frmMain.lblMana = UserMinMAN & "/" & UserMaxMAN
     
-    Dim bWidth As Byte
     
-    If UserMaxMAN > 0 Then _
-        bWidth = (((UserMinMAN / 100) / (UserMaxMAN / 100)) * 75)
+    Dim mWidth As Byte
+    
+    mWidth = (((UserMinMAN / 100) / (UserMaxMAN / 100)) * 140)
         
-    If bWidth > 75 Then bWidth = 75
+    'If bWidth > 140 Then bWidth = 140
         
-    frmMain.shpMana.Width = 75 - bWidth
-    frmMain.shpMana.Left = frmMain.shpMana.Left + (75 - frmMain.shpMana.Width)
-    
-    frmMain.shpMana.Visible = (bWidth <> 75)
+    frmMain.imgMana.Width = mWidth
+    'frmMain.imgMana.Left = frmMain.imgMana.Left + (140 - frmMain.imgMana.Width)
+    frmMain.lblMana.Caption = UserMinMAN & "/" & UserMaxMAN
+    'frmMain.imgMana.Visible = (bWidth <> 140)
 End Sub
 
 ''
@@ -1656,19 +1659,19 @@ Private Sub HandleUpdateHP()
     'Get data and update form
     UserMinHP = incomingData.ReadInteger()
     
-    frmMain.lblVida = UserMinHP & "/" & UserMaxHP
+   
     
-    Dim bWidth As Byte
+    Dim vWidth As Byte
     
-    bWidth = (((UserMinHP / 100) / (UserMaxHP / 100)) * 75)
+    vWidth = (((UserMinHP / 100) / (UserMaxHP / 100)) * 140)
     
-    If bWidth > 75 Then bWidth = 75
+   ' If bWidth > 140 Then bWidth = 140
     
-    frmMain.shpVida.Width = 75 - bWidth
-    frmMain.shpVida.Left = frmMain.shpVida.Left + (75 - frmMain.shpVida.Width)
+    frmMain.imgVida.Width = vWidth
+    'frmMain.imgVida.Left = frmMain.imgVida.Left + (140 - frmMain.imgVida.Width)
     
-    frmMain.shpVida.Visible = (bWidth <> 75)
-    
+    'frmMain.imgVida.Visible = (bWidth <> 140)
+     frmMain.lblVida.Caption = UserMinHP & "/" & UserMaxHP
     'Is the user alive??
     If UserMinHP = 0 Then
         UserEstado = 1
@@ -1856,11 +1859,10 @@ Private Sub HandleChangeMap()
         
         Call CloseClient
     End If
-End Sub
 
 ''
 ' Handles the PosUpdate message.
-
+End Sub
 Private Sub HandlePosUpdate()
 '***************************************************
 'Author: Juan Martín Sotuyo Dodero (Maraxus)
@@ -1893,7 +1895,7 @@ Private Sub HandlePosUpdate()
             MapData(ViewPositionX, ViewPositionY).Trigger = 4, True, False)
                 
     'Update pos label
-    frmMain.Coord.Caption = UserMap & " X: " & ViewPositionX & " Y: " & ViewPositionY
+    frmMain.Coord.Caption = "[" & UserMap & " - " & ViewPositionX & " - " & ViewPositionY & "]"
 End Sub
 
 ''
@@ -2291,7 +2293,7 @@ Private Sub HandleUserCharIndexInServer()
                 MapData(ViewPositionX, ViewPositionY).Trigger = 2 Or _
                 MapData(ViewPositionX, ViewPositionY).Trigger = 4, True, False)
 
-130     frmMain.Coord.Caption = UserMap & " X: " & ViewPositionX & " Y: " & ViewPositionY
+130     frmMain.Coord.Caption = "[" & UserMap & " - " & ViewPositionX & " - " & ViewPositionY & "]"
     '<EhFooter>
     Exit Sub
 
@@ -2840,38 +2842,45 @@ Private Sub HandleUpdateUserStats()
     End If
     frmMain.lblLvl.Caption = UserLvl
     
-    'Stats
-    frmMain.lblMana = UserMinMAN & "/" & UserMaxMAN
-    frmMain.lblVida = UserMinHP & "/" & UserMaxHP
-    frmMain.lblEnergia = UserMinSTA & "/" & UserMaxSTA
     
-    Dim bWidth As Byte
+    
+    Dim mWidth As Byte
     
     '***************************
-    If UserMaxMAN > 0 Then _
-        bWidth = (((UserMinMAN / 100) / (UserMaxMAN / 100)) * 75)
+   ' If UserMaxMAN > 0 Then
+        mWidth = (((UserMinMAN / 100) / (UserMaxMAN / 100)) * 140)
+    'If bWidth > 140 Then bWidth = 140
         
-    frmMain.shpMana.Width = 75 - bWidth
-    frmMain.shpMana.Left = frmMain.shpMana.Left + (75 - frmMain.shpMana.Width)
+    frmMain.imgMana.Width = mWidth
+   ' frmMain.imgMana.Left = frmMain.imgMana.Left + (140 - frmMain.imgMana.Width)
     
-    frmMain.shpMana.Visible = (bWidth <> 75)
+    'frmMain.imgMana.Visible = (bWidth <> 140)
     '***************************
     
-    bWidth = (((UserMinHP / 100) / (UserMaxHP / 100)) * 75)
+    Dim vWidth As Byte
+    vWidth = (((UserMinHP / 100) / (UserMaxHP / 100)) * 140)
     
-    frmMain.shpVida.Width = 75 - bWidth
-    frmMain.shpVida.Left = frmMain.shpVida.Left + (75 - frmMain.shpVida.Width)
+   ' If bWidth > 140 Then bWidth = 140
     
-    frmMain.shpVida.Visible = (bWidth <> 75)
+    frmMain.imgVida.Width = vWidth
+    'frmMain.imgVida.Left = frmMain.imgVida.Left + (140 - frmMain.imgVida.Width)
+    
+   ' frmMain.imgVida.Visible = bWidth
     '***************************
+    Dim eWidth As Byte
+    eWidth = (((UserMinSTA / 100) / (UserMaxSTA / 100)) * 140)
     
-    bWidth = (((UserMinSTA / 100) / (UserMaxSTA / 100)) * 75)
+   ' If bWidth > 140 Then bWidth = 140
     
-    frmMain.shpEnergia.Width = 75 - bWidth
-    frmMain.shpEnergia.Left = frmMain.shpEnergia.Left + (75 - frmMain.shpEnergia.Width)
+    frmMain.imgEne.Width = eWidth
+   ' frmMain.imgEne.Left = frmMain.imgEne.Left + (140 - frmMain.imgEne.Width)
     
-    frmMain.shpEnergia.Visible = (bWidth <> 75)
+    'frmMain.imgEne.Visible = bWidth
     '***************************
+    'Stats
+    frmMain.lblMana.Caption = UserMinMAN & "/" & UserMaxMAN
+    frmMain.lblVida.Caption = UserMinHP & "/" & UserMaxHP
+    frmMain.lblEnergia.Caption = UserMinSTA & "/" & UserMaxSTA
     
     If UserMinHP = 0 Then
         UserEstado = 1
@@ -2953,7 +2962,7 @@ On Error GoTo ErrHandler
     Dim MinHit As Integer
     Dim MaxDef As Integer
     Dim MinDef As Integer
-    Dim Value As Single
+    Dim value As Single
     
     slot = incomingData.ReadByte()
     OBJIndex = incomingData.ReadInteger()
@@ -2966,7 +2975,7 @@ On Error GoTo ErrHandler
     MinHit = incomingData.ReadInteger()
     MaxDef = incomingData.ReadInteger()
     MinDef = incomingData.ReadInteger
-    Value = incomingData.ReadSingle()
+    value = incomingData.ReadSingle()
     
     
     If Equipped Then
@@ -3001,7 +3010,7 @@ On Error GoTo ErrHandler
         End Select
     End If
     
-    Call Inventario.SetItem(slot, OBJIndex, amount, Equipped, GrhIndex, OBJType, MaxHit, MinHit, MaxDef, MinDef, Value, Name)
+    Call Inventario.SetItem(slot, OBJIndex, amount, Equipped, GrhIndex, OBJType, MaxHit, MinHit, MaxDef, MinDef, value, Name)
 
 ErrHandler:
     Dim error As Long
@@ -3543,26 +3552,27 @@ Private Sub HandleUpdateHungerAndThirst()
     UserMaxHAM = incomingData.ReadByte()
     UserMinHAM = incomingData.ReadByte()
     
-    frmMain.lblHambre = UserMinHAM & "/" & UserMaxHAM
-    frmMain.lblSed = UserMinAGU & "/" & UserMaxAGU
 
-    Dim bWidth As Byte
+    Dim hWidth As Byte
     
-    bWidth = (((UserMinHAM / 100) / (UserMaxHAM / 100)) * 75)
+    hWidth = (((UserMinHAM / 100) / (UserMaxHAM / 100)) * 140)
     
-    frmMain.shpHambre.Width = 75 - bWidth
-    frmMain.shpHambre.Left = frmMain.shpHambre.Left + (75 - frmMain.shpHambre.Width)
+    frmMain.imgHambre.Width = hWidth
+    'frmMain.imgHambre.Left = frmMain.imgHambre.Left + (140 - frmMain.imgHambre.Width)
     
-    frmMain.shpHambre.Visible = (bWidth <> 75)
+    frmMain.lblHambre.Caption = UserMinHAM & "/" & UserMaxHAM
+    'frmMain.imgHambre.Visible = (bWidth <> 140)
     '*********************************
     
-    bWidth = (((UserMinAGU / 100) / (UserMaxAGU / 100)) * 75)
+    Dim sWidth
+    sWidth = (((UserMinAGU / 100) / (UserMaxAGU / 100)) * 140)
     
-    frmMain.shpSed.Width = 75 - bWidth
-    frmMain.shpSed.Left = frmMain.shpSed.Left + (75 - frmMain.shpSed.Width)
+    frmMain.imgSed.Width = sWidth
+    'frmMain.imgSed.Left = frmMain.imgSed.Left + (140 - frmMain.imgSed.Width)
     
-    frmMain.shpSed.Visible = (bWidth <> 75)
+    'frmMain.imgSed.Visible = (bWidth <> 140)
     
+    frmMain.lblSed.Caption = UserMinAGU & "/" & UserMaxAGU
 End Sub
 
 ''
@@ -3939,21 +3949,21 @@ Private Sub HandleTradeOK()
         Next i
        
         ' Fill Npc inventory
-        For i = 1 To 20
+        'For i = 1 To 20
             ' Compraron la totalidad de un item, o vendieron un item que el npc no tenia
-            If NPCInventory(i).OBJIndex <> InvComNpc.OBJIndex(i) Then
-                With NPCInventory(i)
-                    Call InvComNpc.SetItem(i, .OBJIndex, _
+         '   If NPCInventory(i).OBJIndex = InvComNpc.OBJIndex(i) Then
+         '       With NPCInventory(i)
+         '           Call InvComNpc.SetItem(i, .OBJIndex, _
                     .amount, 0, .GrhIndex, _
                     .OBJType, .MaxHit, .MinHit, .MaxDef, .MinDef, _
                     .Valor, .Name)
-                    InvComNpc.DrawInventory
-                End With
+          '          InvComNpc.DrawInventory
+         '       End With
             ' Compraron o vendieron cierta cantidad (no su totalidad)
-            ElseIf NPCInventory(i).amount <> InvComNpc.amount(i) Then
-                'Call InvComNpc.ChangeSlotItemAmount(i, NPCInventory(i).Amount)
-            End If
-        Next i
+            'ElseIf NPCInventory(i).amount <> InvComNpc.amount(i) Then
+             '   Call InvComNpc.ChangeSlotItemAmount(i, NPCInventory(i).amount)
+            'End If
+        'Next i
    
     End If
 End Sub
@@ -5126,7 +5136,8 @@ Public Sub WriteOnline()
 'Last Modification: 05/17/06
 'Writes the "Online" message to the outgoing data incomingData
 '***************************************************
-    Call outgoingData.WriteByte(ClientPacketID.Online)
+    Call outgoingData.WriteByte(ClientPacketID.GMCommands)
+    Call outgoingData.WriteByte(eGMCommands.Online)
 End Sub
 
 ''
@@ -8319,7 +8330,25 @@ Public Sub WriteMoveItem(ByVal originalSlot As Integer, ByVal newSlot As Integer
         Call .WriteByte(moveType)
     End With
 End Sub
-
+Private Sub HandleUpdateUsersOnline()
+'***************************************************
+'Author:
+'Last Modification:
+'
+'***************************************************
+    'Check packet is complete
+    If incomingData.Remaining < 2 Then
+        Err.Raise incomingData.NotEnoughDataErrCode
+        Exit Sub
+    End If
+ 
+    'Remove packet ID
+   ' Call incomingData.ReadByte
+ 
+    'Get data and update form
+    NumUsers = incomingData.ReadInteger()
+    frmMain.lblOnline.Caption = NumUsers
+End Sub
 
 ''
 ' Flushes the outgoing data incomingData of the user.

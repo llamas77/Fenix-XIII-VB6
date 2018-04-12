@@ -149,6 +149,7 @@ Private Enum ServerPacketID
     ShowRecompensaForm
     SendGuildForm
     GuildFoundation
+    UpdateUsersOnline
 End Enum
 
 Private Enum ClientPacketID
@@ -196,7 +197,6 @@ Private Enum ClientPacketID
     MoveSpell               'DESPHE
     MoveBank
     UserCommerceOffer       'OFRECER
-    Online                  '/ONLINE
     Quit                    '/SALIR
     RequestAccountState     '/BALANCE
     PetStand                '/QUIETO
@@ -223,7 +223,7 @@ Private Enum ClientPacketID
     bugReport               '/_BUG
     ChangeDescription       '/DESC
     Punishments             '/PENAS
-    ChangePassword          '/CONTRASEÑA
+    ChangePassword          '/PASSWORD
     Gamble                  '/APOSTAR
     InquiryVote             '/ENCUESTA ( with parameters )
     LeaveFaction            '/RETIRAR ( with no arguments )
@@ -474,9 +474,6 @@ On Error Resume Next
         
         Case ClientPacketID.UserCommerceOffer       'OFRECER
             Call HandleUserCommerceOffer(UserIndex)
-                  
-        Case ClientPacketID.Online                  '/ONLINE
-            Call HandleOnline(UserIndex)
         
         Case ClientPacketID.Quit                    '/SALIR
             Call HandleQuit(UserIndex)
@@ -556,7 +553,7 @@ On Error Resume Next
         Case ClientPacketID.Punishments             '/PENAS
             Call HandlePunishments(UserIndex)
         
-        Case ClientPacketID.ChangePassword          '/CONTRASEÑA
+        Case ClientPacketID.ChangePassword          '/PASSWORD
             Call HandleChangePassword(UserIndex)
         
         Case ClientPacketID.Gamble                  '/APOSTAR
@@ -836,7 +833,7 @@ With UserList(UserIndex)
         Case eGMCommands.Kick                    '/ECHAR
             Call HandleKick(UserIndex)
         
-        Case eGMCommands.Execute                 '/EJECUTAR
+        Case eGMCommands.Execute                 '/KILL
             Call HandleExecute(UserIndex)
         
         Case eGMCommands.BanChar                 '/BAN
@@ -1108,6 +1105,9 @@ With UserList(UserIndex)
             
         Case eGMCommands.LoseQuest               '/PERDIOQUEST
             Call HandleLoseQuest(UserIndex)
+            
+        Case eGMCommands.Online                  '/ONLINE
+            Call HandleOnline(UserIndex)
     End Select
 End With
 
@@ -3696,33 +3696,38 @@ Private Sub HandleUserCommerceOffer(ByVal UserIndex As Integer)
     End With
 End Sub
 
-
 ''
 ' Handles the "Online" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
 Private Sub HandleOnline(ByVal UserIndex As Integer)
-'***************************************************
-'Author: Juan Martín Sotuyo Dodero (Maraxus)
-'Last Modification: 05/17/06
-'
-'***************************************************
     Dim i As Long
     Dim Count As Long
-    
+    Dim priv As PlayerType
+    Dim list As String
+   
     With UserList(UserIndex)
-        'Remove packet ID
         Call .incomingData.ReadByte
-        
+       
+       If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then Exit Sub
+       
         For i = 1 To LastUser
             If LenB(UserList(i).Name) <> 0 Then
-                If UserList(i).flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then _
+                If Not UserList(i).flags.Privilegios And (PlayerType.RoleMaster Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.Dios Or PlayerType.Admin) Then
                     Count = Count + 1
+                    list = list & UserList(i).Name & ", "
+                End If
             End If
         Next i
-        
-        Call WriteConsoleMsg(UserIndex, "Número de usuarios: " & CStr(Count), FontTypeNames.FONTTYPE_INFO)
+       
+        If LenB(list) <> 0 Then
+            list = Left$(list, Len(list) - 2)
+            Call WriteConsoleMsg(UserIndex, "Usuarios Online: (" & CStr(Count) & ") " & list & ".", FontTypeNames.FONTTYPE_INFO)
+        Else
+            Call WriteConsoleMsg(UserIndex, "No hay usuarios online.", FontTypeNames.FONTTYPE_INFO)
+        End If
+       
     End With
 End Sub
 
@@ -4093,20 +4098,16 @@ Private Sub HandleMeditate(ByVal UserIndex As Integer)
             .Char.loops = INFINITE_LOOPS
             
             'Show proper FX according to level
-            If .Stats.ELV < 13 Then
-                .Char.FX = FXIDs.FXMEDITARCHICO
-            
+            If .Stats.ELV < 15 Then
+                .Char.FX = FXIDs.FXMEDITARCHICO 'violeta
             ElseIf .Stats.ELV < 25 Then
-                .Char.FX = FXIDs.FXMEDITARMEDIANO
-            
+                .Char.FX = FXIDs.FXMEDITARMEDIANO 'roja
             ElseIf .Stats.ELV < 35 Then
-                .Char.FX = FXIDs.FXMEDITARGRANDE
-            
-            ElseIf .Stats.ELV < 42 Then
-                .Char.FX = FXIDs.FXMEDITARXGRANDE
-            
+                .Char.FX = FXIDs.FXMEDITARGRANDE 'azul
+            ElseIf .Stats.ELV < 43 Then
+                .Char.FX = FXIDs.FXMEDITARXGRANDE 'dorada
             Else
-                .Char.FX = FXIDs.FXMEDITARXXGRANDE
+                .Char.FX = FXIDs.FXMEDITARXXGRANDE 'fenix
             End If
             
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, .Char.FX, INFINITE_LOOPS))
@@ -5529,7 +5530,7 @@ Private Sub HandleOnlineRoyalArmy(ByVal UserIndex As Integer)
     End With
     
     If Len(list) > 0 Then
-        Call WriteConsoleMsg(UserIndex, "Reales conectados: " & Left$(list, Len(list) - 2), FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Reales conectados: " & list & ".", FontTypeNames.FONTTYPE_INFO)
     Else
         Call WriteConsoleMsg(UserIndex, "No hay reales conectados.", FontTypeNames.FONTTYPE_INFO)
     End If
@@ -5568,9 +5569,9 @@ Private Sub HandleOnlineChaosLegion(ByVal UserIndex As Integer)
     End With
 
     If Len(list) > 0 Then
-        Call WriteConsoleMsg(UserIndex, "Caos conectados: " & Left$(list, Len(list) - 2), FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Caos conectados: " & list & ".", FontTypeNames.FONTTYPE_INFO)
     Else
-        Call WriteConsoleMsg(UserIndex, "No hay Caos conectados.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "No hay caos conectados.", FontTypeNames.FONTTYPE_INFO)
     End If
 End Sub
 
@@ -7445,7 +7446,7 @@ Private Sub HandleOnlineGM(ByVal UserIndex As Integer)
         
         If LenB(list) <> 0 Then
             list = Left$(list, Len(list) - 2)
-            Call WriteConsoleMsg(UserIndex, list & ".", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "GMs Online: " & list & ".", FontTypeNames.FONTTYPE_INFO)
         Else
             Call WriteConsoleMsg(UserIndex, "No hay GMs Online.", FontTypeNames.FONTTYPE_INFO)
         End If
@@ -7488,7 +7489,7 @@ Private Sub HandleOnlineMap(ByVal UserIndex As Integer)
         
         If Len(list) > 2 Then list = Left$(list, Len(list) - 2)
         
-        Call WriteConsoleMsg(UserIndex, "Usuarios en el mapa: " & list, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Usuarios en el mapa: " & list & ".", FontTypeNames.FONTTYPE_INFO)
     End With
 End Sub
 
@@ -7595,7 +7596,7 @@ On Error GoTo Errhandler
                     Call WriteConsoleMsg(UserIndex, "¿¿Estás loco?? ¿¿Cómo vas a piñatear un gm?? :@", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call UserDie(tUser)
-                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " ha ejecutado a " & UserName & ".", FontTypeNames.FONTTYPE_EJECUCION))
+                    'Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " ha ejecutado a " & UserName & ".", FontTypeNames.FONTTYPE_EJECUCION))
                     Call LogGM(.Name, " ejecuto a " & UserName)
                 End If
             Else
@@ -8795,7 +8796,7 @@ On Error GoTo Errhandler
             If tUser <= 0 Then
                 Call WriteConsoleMsg(UserIndex, "Usuario offline", FontTypeNames.FONTTYPE_INFO)
             Else
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el Concilio de las Sombras.", FontTypeNames.FONTTYPE_CONSEJO))
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el Concilio de las Sombras.", FontTypeNames.FONTTYPE_CONSEJOCAOS))
                 
                 With UserList(tUser)
                     If .flags.Privilegios And PlayerType.RoyalCouncil Then .flags.Privilegios = .flags.Privilegios - PlayerType.RoyalCouncil
@@ -9033,19 +9034,19 @@ On Error GoTo Errhandler
             Else
                 With UserList(tUser)
                     If .flags.Privilegios And PlayerType.RoyalCouncil Then
-                        Call WriteConsoleMsg(tUser, "Has sido echado del consejo de Banderbill.", FontTypeNames.FONTTYPE_TALK)
+                        Call WriteConsoleMsg(tUser, "Has sido echado del Consejo de Banderbill.", FontTypeNames.FONTTYPE_TALK)
                         .flags.Privilegios = .flags.Privilegios - PlayerType.RoyalCouncil
                         
                         Call WarpUserChar(tUser, .Pos.Map, .Pos.X, .Pos.Y, False)
-                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del consejo de Banderbill.", FontTypeNames.FONTTYPE_CONSEJO))
+                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del Consejo de Banderbill.", FontTypeNames.FONTTYPE_CONSEJO))
                     End If
                     
                     If .flags.Privilegios And PlayerType.ChaosCouncil Then
-                        Call WriteConsoleMsg(tUser, "Has sido echado del Concilio de las Sombras.", FontTypeNames.FONTTYPE_TALK)
+                        Call WriteConsoleMsg(tUser, "Has sido echado del Concilio de Arghal.", FontTypeNames.FONTTYPE_TALK)
                         .flags.Privilegios = .flags.Privilegios - PlayerType.ChaosCouncil
                         
                         Call WarpUserChar(tUser, .Pos.Map, .Pos.X, .Pos.Y, False)
-                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del Concilio de las Sombras.", FontTypeNames.FONTTYPE_CONSEJO))
+                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del Concilio de Arghal.", FontTypeNames.FONTTYPE_CONSEJOCAOS))
                     End If
                 End With
             End If
@@ -12076,7 +12077,8 @@ End Sub
 ' @param    version The version of the map in the server to check if client is properly updated.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteChangeMap(ByVal UserIndex As Integer, ByVal Map As Integer, ByVal version As Integer)
+Public Sub WriteChangeMap(ByVal UserIndex As Integer, ByVal Map As Integer, ByVal version As Integer) ', ByVal MapName As String)
+
 '***************************************************
 'Author: Juan Martín Sotuyo Dodero (Maraxus)
 'Last Modification: 05/17/06
@@ -12087,9 +12089,9 @@ On Error GoTo Errhandler
         Call .WriteByte(ServerPacketID.ChangeMap)
         Call .WriteInteger(Map)
         Call .WriteInteger(version)
+        'Call .WriteString(MapName)
     End With
 Exit Sub
-
 Errhandler:
     If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
         Call FlushBuffer(UserIndex)
@@ -14004,7 +14006,22 @@ Errhandler:
         Resume
     End If
 End Sub
-
+Public Sub WriteUpdateUsersOnline(ByVal UserIndex As Integer)
+ 
+    On Error GoTo Errhandler
+ 
+    With UserList(UserIndex).outgoingData
+        Call .WriteByte(ServerPacketID.UpdateUsersOnline)
+        Call .WriteInteger(NumUsers)
+    End With
+    Exit Sub
+ 
+Errhandler:
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+    End If
+End Sub
 ''
 ' Flushes the outgoing data buffer of the user.
 '
@@ -14623,6 +14640,16 @@ Public Function PrepareMessageErrorMsg(ByVal message As String) As String
         
         PrepareMessageErrorMsg = .ReadASCIIStringFixed(.Length)
     End With
+End Function
+Public Function PrepareUpdateUsersOnline() As String
+ 
+    With auxiliarBuffer
+        Call .WriteByte(ServerPacketID.UpdateUsersOnline)
+        Call .WriteInteger(NumUsers)
+       
+        PrepareUpdateUsersOnline = .ReadASCIIStringFixed(.Length)
+    End With
+ 
 End Function
 
 ''

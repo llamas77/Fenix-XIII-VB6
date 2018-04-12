@@ -81,7 +81,7 @@ Public Sub Comercio(ByVal Modo As eModoComercio, ByVal UserIndex As Integer, ByV
         
         
         If MeterItemEnInventario(UserIndex, Objeto) = False Then
-            'Call WriteConsoleMsg(UserIndex, "No puedes cargar mas objetos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No puedes cargar mas objetos.", FontTypeNames.FONTTYPE_INFO)
             Call EnviarNpcInv(UserIndex, UserList(UserIndex).flags.TargetNPC)
             Call WriteTradeOK(UserIndex)
             Exit Sub
@@ -89,7 +89,7 @@ Public Sub Comercio(ByVal Modo As eModoComercio, ByVal UserIndex As Integer, ByV
         
         UserList(UserIndex).Stats.GLD = UserList(UserIndex).Stats.GLD - Precio
         
-        Call QuitarNpcInvItem(UserList(UserIndex).flags.TargetNPC, CByte(Slot), Cantidad)
+        'Call QuitarNpcInvItem(UserList(UserIndex).flags.TargetNPC, CByte(Slot), Cantidad)
         
         'Agregado para que no se vuelvan a vender las llaves si se recargan los .dat.
         If ObjData(Objeto.OBJIndex).OBJType = otLlaves Then
@@ -106,11 +106,11 @@ Public Sub Comercio(ByVal Modo As eModoComercio, ByVal UserIndex As Integer, ByV
         
         If Objeto.OBJIndex = 0 Then
             Exit Sub
-        ElseIf (Npclist(NpcIndex).TipoItems <> ObjData(Objeto.OBJIndex).OBJType And Npclist(NpcIndex).TipoItems <> eOBJType.otCualquiera) Or Objeto.OBJIndex = iORO Then
-            Call WriteConsoleMsg(UserIndex, "Lo siento, no estoy interesado en este tipo de objetos.", FontTypeNames.FONTTYPE_INFO)
-            Call EnviarNpcInv(UserIndex, UserList(UserIndex).flags.TargetNPC)
-            Call WriteTradeOK(UserIndex)
-            Exit Sub
+        'ElseIf (Npclist(NpcIndex).TipoItems <> ObjData(Objeto.OBJIndex).OBJType And Npclist(NpcIndex).TipoItems <> eOBJType.otCualquiera) Or Objeto.OBJIndex = iORO Then
+        '    Call WriteConsoleMsg(UserIndex, "Lo siento, no estoy interesado en este tipo de objetos.", FontTypeNames.FONTTYPE_INFO)
+        '    Call EnviarNpcInv(UserIndex, UserList(UserIndex).flags.TargetNPC)
+        '    Call WriteTradeOK(UserIndex)
+        '    Exit Sub
         ElseIf ObjData(Objeto.OBJIndex).Real = 1 Then
             If Npclist(NpcIndex).Name <> "SR" Then
                 Call WriteConsoleMsg(UserIndex, "Las armaduras del ejército real sólo pueden ser vendidas a los sastres reales.", FontTypeNames.FONTTYPE_INFO)
@@ -146,23 +146,23 @@ Public Sub Comercio(ByVal Modo As eModoComercio, ByVal UserIndex As Integer, ByV
         If UserList(UserIndex).Stats.GLD > MAXORO Then _
             UserList(UserIndex).Stats.GLD = MAXORO
         
-        Dim NpcSlot As Integer
-        NpcSlot = SlotEnNPCInv(NpcIndex, Objeto.OBJIndex, Objeto.Amount)
+        'Dim NpcSlot As Integer
+        'NpcSlot = SlotEnNPCInv(NpcIndex, Objeto.OBJIndex, Objeto.Amount)
         
-        If NpcSlot <= MAX_INVENTORY_SLOTS Then 'Slot valido
+        'If NpcSlot <= MAX_INVENTORY_SLOTS Then 'Slot valido
             'Mete el obj en el slot
-            Npclist(NpcIndex).Invent.Object(NpcSlot).OBJIndex = Objeto.OBJIndex
-            Npclist(NpcIndex).Invent.Object(NpcSlot).Amount = Npclist(NpcIndex).Invent.Object(NpcSlot).Amount + Objeto.Amount
-            If Npclist(NpcIndex).Invent.Object(NpcSlot).Amount > MAX_INVENTORY_OBJS Then
-                Npclist(NpcIndex).Invent.Object(NpcSlot).Amount = MAX_INVENTORY_OBJS
-            End If
-        End If
+        '    Npclist(NpcIndex).Invent.Object(NpcSlot).OBJIndex = Objeto.OBJIndex
+        '    Npclist(NpcIndex).Invent.Object(NpcSlot).Amount = Npclist(NpcIndex).Invent.Object(NpcSlot).Amount + Objeto.Amount
+        '    If Npclist(NpcIndex).Invent.Object(NpcSlot).Amount > MAX_INVENTORY_OBJS Then
+        '        Npclist(NpcIndex).Invent.Object(NpcSlot).Amount = MAX_INVENTORY_OBJS
+        '    End If
+        'End If
         
     End If
     
     Call UpdateUserInv(True, UserIndex, 0)
     Call WriteUpdateUserStats(UserIndex)
-    Call EnviarNpcInv(UserIndex, UserList(UserIndex).flags.TargetNPC)
+    'Call EnviarNpcInv(UserIndex, UserList(UserIndex).flags.TargetNPC)
     Call WriteTradeOK(UserIndex)
         
     Call SubirSkill(UserIndex, eSkill.Comerciar)

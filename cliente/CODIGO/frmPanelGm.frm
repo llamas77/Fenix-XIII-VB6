@@ -1082,7 +1082,7 @@ Private Sub cmdECHAR_Click()
 End Sub
 
 Private Sub cmdEJECUTAR_Click()
-    '/EJECUTAR
+    '/KILL
     Dim Nick As String
 
     Nick = cboListaUsus.Text

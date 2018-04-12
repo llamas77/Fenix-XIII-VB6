@@ -127,7 +127,7 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
         ' Comando normal
         
         Select Case Comando
-            Case "/ONLINE"
+            Case "/ONLINES"
                 Call WriteOnline
                 
             Case "/SALIR"
@@ -326,8 +326,6 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
                 End If
                 
                 Call WriteChangeDescription(ArgumentosRaw)
-            
-         
                
             Case "/PENAS"
                 If notNullArguments Then
@@ -337,7 +335,7 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
                     Call ShowConsoleMsg("Faltan parámetros. Utilice /penas NICKNAME.")
                 End If
                 
-            Case "/CONTRASEÑA"
+            Case "/PASSWORD"
                 Call frmNewPassword.Show(vbModal, frmMain)
             
             Case "/APOSTAR"
@@ -731,12 +729,12 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
                     Call ShowConsoleMsg("Faltan parámetros. Utilice /echar NICKNAME.")
                 End If
                 
-            Case "/EJECUTAR"
+            Case "/KILL"
                 If notNullArguments Then
                     Call WriteExecute(ArgumentosRaw)
                 Else
                     'Avisar que falta el parametro
-                    Call ShowConsoleMsg("Faltan parámetros. Utilice /ejecutar NICKNAME.")
+                    Call ShowConsoleMsg("Faltan parámetros. Utilice /kill NICKNAME.")
                 End If
                 
             Case "/BAN"
@@ -1412,6 +1410,7 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
                 
             Case "/HOGAR"
                 Call WriteHome
+                
         End Select
         
     ElseIf (Left$(Comando, 1) = "\") Or (TalkMode = 2) Then

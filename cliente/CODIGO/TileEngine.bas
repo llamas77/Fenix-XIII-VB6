@@ -374,7 +374,7 @@ End Enum
 'Very percise counter 64bit system counter
 Private Declare Function QueryPerformanceFrequency Lib "kernel32" (lpFrequency As Currency) As Long
 Private Declare Function QueryPerformanceCounter Lib "kernel32" (lpPerformanceCount As Currency) As Long
-Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByRef Destination As Any, ByRef Source As Any, ByVal Length As Long)
+Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As Any, ByRef source As Any, ByVal length As Long)
 
 Sub CargarCabezas()
     Dim N As Integer
@@ -2202,7 +2202,7 @@ Public Sub CheckKeys()
                 If frmMain.TrainingMacro.Enabled Then frmMain.DesactivarMacroHechizos
                 Call MoveTo(NORTH)
                 'todo
-                frmMain.Coord.Caption = UserMap & " X: " & ViewPositionX & " Y: " & ViewPositionY
+                frmMain.Coord.Caption = "[" & UserMap & " - " & ViewPositionX & " - " & ViewPositionY & "]"
                 Exit Sub
             End If
             
@@ -2210,8 +2210,7 @@ Public Sub CheckKeys()
             If Input_Key_Get(CustomKeys.BindedKey(eKeyType.mKeyRight)) Then
                 If frmMain.TrainingMacro.Enabled Then frmMain.DesactivarMacroHechizos
                 Call MoveTo(EAST)
-                frmMain.Coord.Caption = "(" & UserMap & "," & ViewPositionX & "," & ViewPositionY & ")"
-                frmMain.Coord.Caption = UserMap & " X: " & ViewPositionX & " Y: " & ViewPositionY
+                frmMain.Coord.Caption = "[" & UserMap & " - " & ViewPositionX & " - " & ViewPositionY & "]"
                 Exit Sub
             End If
         
@@ -2219,7 +2218,7 @@ Public Sub CheckKeys()
             If Input_Key_Get(CustomKeys.BindedKey(eKeyType.mKeyDown)) Then
                 If frmMain.TrainingMacro.Enabled Then frmMain.DesactivarMacroHechizos
                 Call MoveTo(SOUTH)
-                frmMain.Coord.Caption = UserMap & " X: " & ViewPositionX & " Y: " & ViewPositionY
+                frmMain.Coord.Caption = "[" & UserMap & " - " & ViewPositionX & " - " & ViewPositionY & "]"
                 Exit Sub
             End If
         
@@ -2227,7 +2226,7 @@ Public Sub CheckKeys()
             If Input_Key_Get(CustomKeys.BindedKey(eKeyType.mKeyLeft)) Then
                 If frmMain.TrainingMacro.Enabled Then frmMain.DesactivarMacroHechizos
                 Call MoveTo(WEST)
-                frmMain.Coord.Caption = UserMap & " X: " & ViewPositionX & " Y: " & ViewPositionY
+                frmMain.Coord.Caption = "[" & UserMap & " - " & ViewPositionX & " - " & ViewPositionY & "]"
                 Exit Sub
             End If
             
@@ -2248,8 +2247,7 @@ Public Sub CheckKeys()
             End If
             
             If frmMain.TrainingMacro.Enabled Then frmMain.DesactivarMacroHechizos
-            frmMain.Coord.Caption = "(" & ViewPositionX & "," & ViewPositionY & ")"
-            frmMain.Coord.Caption = "X: " & ViewPositionX & " Y: " & ViewPositionY
+            frmMain.Coord.Caption = "[" & UserMap & " - " & ViewPositionX & " - " & ViewPositionY & "]"
         End If
     End If
 End Sub

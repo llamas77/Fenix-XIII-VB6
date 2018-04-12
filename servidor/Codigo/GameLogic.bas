@@ -285,36 +285,34 @@ Call ClosestLegalPos(Pos, nPos, , , True)
 End Sub
 
 Function NameIndex(ByVal Name As String) As Integer
-'***************************************************
-'Author: Unknown
-'Last Modification: -
-'
-'***************************************************
-
-    Dim UserIndex As Long
-    
-    '¿Nombre valido?
-    If LenB(Name) = 0 Then
-        NameIndex = 0
-        Exit Function
-    End If
-    
-    If InStrB(Name, "+") <> 0 Then
-        Name = UCase$(Replace(Name, "+", " "))
-    End If
-    
-    UserIndex = 1
-    Do Until UCase$(UserList(UserIndex).Name) = UCase$(Name)
-        
-        UserIndex = UserIndex + 1
-        
-        If UserIndex > MaxUsers Then
-            NameIndex = 0
+Dim UserIndex As Integer, i As Integer
+ 
+Name = Replace$(Name, "+", " ")
+ 
+If Len(Name) = 0 Then
+    NameIndex = 0
+    Exit Function
+End If
+ 
+UserIndex = 1
+ 
+If Right$(Name, 1) = "*" Then
+    Name = Left$(Name, Len(Name) - 1)
+    For i = 1 To LastUser
+        If UCase$(UserList(i).Name) = UCase$(Name) Then
+            NameIndex = i
             Exit Function
         End If
-    Loop
-     
-    NameIndex = UserIndex
+    Next
+Else
+    For i = 1 To LastUser
+        If UCase$(Left$(UserList(i).Name, Len(Name))) = UCase$(Name) Then
+            NameIndex = i
+            Exit Function
+        End If
+    Next
+End If
+ 
 End Function
 
 Function CheckForSameIP(ByVal UserIndex As Integer, ByVal UserIP As String) As Boolean
@@ -754,39 +752,52 @@ With UserList(UserIndex)
                         End If
                         
                         If Not .flags.Privilegios And PlayerType.User Then
-                            Stat = Stat & " <Game Master>"
-                            
                             ' Elijo el color segun el rango del GM:
-                            If .flags.Privilegios = PlayerType.Admin Then
+                            
+                            
+                            ' Conse
+                            If .flags.Privilegios = PlayerType.Consejero Then
                                 ft = FontTypeNames.FONTTYPE_GM
-                            ' Dios
-                            ElseIf .flags.Privilegios = PlayerType.Dios Then
-                                ft = FontTypeNames.FONTTYPE_GM
+                                Stat = Stat & " <Game Master>"
                             ' Gm
                             ElseIf .flags.Privilegios = PlayerType.SemiDios Then
                                 ft = FontTypeNames.FONTTYPE_GM
-                            ' Conse
-                            ElseIf .flags.Privilegios = PlayerType.Consejero Then
+                                Stat = Stat & " <Game Master>"
+                            ' Dios
+                            ElseIf .flags.Privilegios = PlayerType.Dios Then
                                 ft = FontTypeNames.FONTTYPE_GM
+                                Stat = Stat & " <Game Master>"
+                                
+                            ElseIf .flags.Privilegios = PlayerType.Admin Then
+                                ft = FontTypeNames.FONTTYPE_GM
+                                Stat = Stat & " <Game Master>"
                             ' Rm o Dsrm
-                            ElseIf .flags.Privilegios = (PlayerType.RoleMaster Or PlayerType.Consejero) Or .flags.Privilegios = (PlayerType.RoleMaster Or PlayerType.Dios) Then
+                            ElseIf .flags.Privilegios = PlayerType.RoleMaster Then
                                 ft = FontTypeNames.FONTTYPE_GM
+                                Stat = Stat & " <Game Master>"
                             End If
-                        
+                                
                         ElseIf EsNewbie(TempCharIndex) Then
                             Stat = Stat & " <Newbie>"
                             ft = FontTypeNames.FONTTYPE_NEWBIE
                         ElseIf .Faccion.Bando = eFaccion.Caos Then
-                            Stat = Stat & " <Criminal>"
+                            Stat = Stat ' & " <Fiel a Lord Thek>"
                             ft = FontTypeNames.FONTTYPE_FIGHT
                         ElseIf .Faccion.Bando = eFaccion.Real Then
-                            Stat = Stat & " <Ciudadano>"
+                            Stat = Stat ' & " <Fiel al Rey>"
                             ft = FontTypeNames.FONTTYPE_CITIZEN
                         ElseIf .Faccion.Bando = eFaccion.Neutral Then
                             Stat = Stat & " <Neutral>"
                             ft = FontTypeNames.FONTTYPE_NEUTRAL
+                        'Conse Caos
+                            ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.ChaosCouncil) Then
+                                Stat = Stat & " <Concilio de Arghal>"
+                                ft = FontTypeNames.FONTTYPE_CONSEJOCAOS
+                            'Conse Real
+                            ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.RoyalCouncil) Then
+                               Stat = Stat & " <Consejo de Banderbill>"
+                                ft = FontTypeNames.FONTTYPE_CONSEJO
                         End If
-                        
                     Else  'Si tiene descRM la muestro siempre.
                         Stat = .DescRM
                         ft = FontTypeNames.FONTTYPE_INFOBOLD
@@ -857,10 +868,8 @@ With UserList(UserIndex)
                                 estatus = "(Herido) "
                             ElseIf MinHp < (MaxHp * 0.75) Then
                                 estatus = "(Levemente herido) "
-                            ElseIf MinHp < (MaxHp) Then
-                                estatus = "(Sano) "
                             Else
-                                estatus = "(Intacto) "
+                                estatus = "(Sano) "
                             End If
                         ElseIf SupervivenciaSkill >= 60 Then
                             estatus = "(" & MinHp & "/" & MaxHp & ") "
@@ -884,7 +893,7 @@ With UserList(UserIndex)
                     If Npclist(TempCharIndex).MaestroUser > 0 Then
                         Call WriteConsoleMsg(UserIndex, estatus & Npclist(TempCharIndex).Name & " es mascota de " & UserList(Npclist(TempCharIndex).MaestroUser).Name & ".", FontTypeNames.FONTTYPE_INFO)
                     Else
-                        sDesc = estatus & Npclist(TempCharIndex).Name & "."
+                        sDesc = estatus & Npclist(TempCharIndex).Name
                         
                         Call WriteConsoleMsg(UserIndex, sDesc, FontTypeNames.FONTTYPE_INFO)
                         

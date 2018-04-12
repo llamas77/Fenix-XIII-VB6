@@ -459,9 +459,12 @@ On Error GoTo Errhandler
     Call UserList(UserIndex).incomingData.ReadASCIIStringFixed(UserList(UserIndex).incomingData.Length)
     
     If UserList(UserIndex).flags.UserLogged Then
-        If NumUsers > 0 Then NumUsers = NumUsers - 1
+        If NumUsers > 0 Then
+        NumUsers = NumUsers - 1
+        Call WriteUpdateUsersOnline(UserIndex)
+        Call SendData(ToAll, 0, PrepareUpdateUsersOnline())
         Call CloseUser(UserIndex)
-        
+        End If
     Else
         Call ResetUserSlot(UserIndex)
     End If
@@ -902,15 +905,15 @@ With UserList(UserIndex)
     Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
     
     
-    Call WriteChangeMap(UserIndex, .Pos.Map, MapInfo(.Pos.Map).MapVersion) 'Carga el mapa
+    Call WriteChangeMap(UserIndex, .Pos.Map, MapInfo(.Pos.Map).MapVersion) ', MapInfo(.Pos.Map).Name) 'Carga el mapa
     Call WritePlayMidi(UserIndex, val(ReadField(1, MapInfo(.Pos.Map).Music, 45)))
     
     If .flags.Privilegios <> PlayerType.User And .flags.Privilegios <> (PlayerType.User Or PlayerType.ChaosCouncil) And .flags.Privilegios <> (PlayerType.User Or PlayerType.RoyalCouncil) Then
         .flags.ChatColor = RGB(255, 128, 32)
-    ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.RoyalCouncil) Then
-        .flags.ChatColor = RGB(0, 255, 255)
-    ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.ChaosCouncil) Then
-        .flags.ChatColor = RGB(255, 128, 64)
+   ' ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.RoyalCouncil) Then
+   '     .flags.ChatColor = RGB(0, 255, 255)
+   ' ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.ChaosCouncil) Then
+   '     .flags.ChatColor = RGB(255, 128, 64)
     Else
         .flags.ChatColor = vbWhite
     End If
@@ -936,7 +939,7 @@ With UserList(UserIndex)
     Call WriteUpdateStrenghtAndDexterity(UserIndex)
         
    ' Call SendMOTD(UserIndex)
-    
+   
     If haciendoBK Then
         Call WritePauseToggle(UserIndex)
         Call WriteConsoleMsg(UserIndex, "Servidor> Por favor espera algunos segundos, el WorldSave está ejecutándose.", FontTypeNames.FONTTYPE_SERVER)
@@ -952,6 +955,8 @@ With UserList(UserIndex)
     'Actualiza el Num de usuarios
     'DE ACA EN ADELANTE GRABA EL CHARFILE, OJO!
     NumUsers = NumUsers + 1
+    Call WriteUpdateUsersOnline(UserIndex)
+    Call SendData(ToAll, 0, PrepareUpdateUsersOnline())
     .flags.UserLogged = True
     
     'usado para borrar Pjs
@@ -1013,8 +1018,8 @@ With UserList(UserIndex)
    ' If LenB(tStr) <> 0 Then
    '     Call WriteShowMessageBox(UserIndex, "Tu solicitud de ingreso al clan ha sido rechazada. El clan te explica que: " & tStr)
    ' End If
-
     Call MostrarNumUsers
+
     
     N = FreeFile
     Open App.path & "\logs\numusers.log" For Output As N

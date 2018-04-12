@@ -1408,7 +1408,7 @@ Sub WarpUserChar(ByVal UserIndex As Integer, ByVal Map As Integer, ByVal X As In
         Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1)
         
         If OldMap <> Map Then
-            Call WriteChangeMap(UserIndex, Map, MapInfo(.Pos.Map).MapVersion)
+            Call WriteChangeMap(UserIndex, Map, MapInfo(.Pos.Map).MapVersion) ', MapInfo(Map).Name)
             Call WritePlayMidi(UserIndex, val(ReadField(1, MapInfo(Map).Music, 45)))
             
             'Update new Map Users

@@ -173,8 +173,8 @@ Public Enum FXIDs
     FXMEDITARCHICO = 4
     FXMEDITARMEDIANO = 5
     FXMEDITARGRANDE = 6
-    FXMEDITARXGRANDE = 16
-    FXMEDITARXXGRANDE = 34
+    FXMEDITARXGRANDE = 36
+    FXMEDITARXXGRANDE = 37
 End Enum
 
 Public Const TIEMPO_CARCEL_PIQUETE As Long = 10
@@ -316,6 +316,7 @@ Public Enum eNPCType
     ResucitadorNewbie = 9
     Pretoriano = 10
     Gobernador = 11
+    Comerciante = 12
     Pirata = 66
 End Enum
 
@@ -436,7 +437,7 @@ Public Const PocionRojaNoCae As Integer = 754
 Public Const PocionAzulNoCae As Integer = 755
 Public Const PocionAmarillaNoCae As Integer = 756
 Public Const PocionVerdeNoCae As Integer = 757
-Public Const Flecha As Integer = 480
+Public Const Flecha As Integer = 777
 
 Public Const AumentoSTDef As Byte = 15
 Public Const AumentoSTMago As Byte = AumentoSTDef - 1
@@ -537,8 +538,8 @@ Public Const FONTTYPE_VENENO As String = "~0~255~0~0~0"
 Public Const FONTTYPE_GUILD As String = "~255~255~255~1~0"
 Public Const FONTTYPE_SERVER As String = "~0~185~0~0~0"
 Public Const FONTTYPE_GUILDMSG As String = "~228~199~27~0~0"
-Public Const FONTTYPE_CONSEJO As String = "~130~130~255~1~0"
-Public Const FONTTYPE_CONSEJOCAOS As String = "~255~60~00~1~0"
+Public Const FONTTYPE_CONSEJO As String = "~0~192~224~1~0"
+Public Const FONTTYPE_CONSEJOCAOS As String = "~255~96~96~1~0"
 Public Const FONTTYPE_CONSEJOVesA As String = "~0~200~255~1~0"
 Public Const FONTTYPE_CONSEJOCAOSVesA As String = "~255~50~0~1~0"
 Public Const FONTTYPE_CENTINELA As String = "~0~255~0~1~0"
@@ -1622,7 +1623,7 @@ Public Enum eGMCommands
     OnlineGM                '/ONLINEGM
     OnlineMap               '/ONLINEMAP
     Kick                    '/ECHAR
-    Execute                 '/EJECUTAR
+    Execute                 '/KILL
     BanChar                 '/BAN
     UnbanChar               '/UNBAN
     NPCFollow               '/SEGUIR
@@ -1713,6 +1714,7 @@ Public Enum eGMCommands
     LoseTournament          '/PERDIOTORNEO
     WinQuest                '/GANOQUEST
     LoseQuest               '/PERDIOQUEST
+    Online                  '/ONLINE
 End Enum
 
 Public Const GOHOME_PENALTY As Integer = 5

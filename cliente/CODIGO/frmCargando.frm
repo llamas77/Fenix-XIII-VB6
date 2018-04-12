@@ -1,39 +1,40 @@
 VERSION 5.00
-Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.ocx"
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "Richtx32.ocx"
 Begin VB.Form frmCargando 
    AutoRedraw      =   -1  'True
    BackColor       =   &H80000000&
    BorderStyle     =   0  'None
-   ClientHeight    =   7650
+   ClientHeight    =   5325
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   10020
+   ClientWidth     =   9750
    ClipControls    =   0   'False
    ControlBox      =   0   'False
    KeyPreview      =   -1  'True
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   510
+   ScaleHeight     =   355
    ScaleMode       =   3  'Pixel
-   ScaleWidth      =   668
+   ScaleWidth      =   650
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Begin RichTextLib.RichTextBox Status 
-      Height          =   1545
-      Left            =   2400
-      TabIndex        =   1
+      Height          =   420
+      Left            =   1035
+      TabIndex        =   0
       TabStop         =   0   'False
       ToolTipText     =   "Mensajes del servidor"
       Top             =   4320
-      Width           =   5160
-      _ExtentX        =   9102
-      _ExtentY        =   2725
+      Width           =   7680
+      _ExtentX        =   13547
+      _ExtentY        =   741
       _Version        =   393217
       BackColor       =   0
       Enabled         =   -1  'True
       ReadOnly        =   -1  'True
       ScrollBars      =   2
+      Appearance      =   0
       TextRTF         =   $"frmCargando.frx":0000
       BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Verdana"
@@ -44,18 +45,6 @@ Begin VB.Form frmCargando
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-   End
-   Begin VB.PictureBox LOGO 
-      BackColor       =   &H00000000&
-      BorderStyle     =   0  'None
-      Height          =   7200
-      Left            =   240
-      ScaleHeight     =   480
-      ScaleMode       =   3  'Pixel
-      ScaleWidth      =   640
-      TabIndex        =   0
-      Top             =   240
-      Width           =   9600
    End
 End
 Attribute VB_Name = "frmCargando"
@@ -99,7 +88,6 @@ Option Explicit
 
 Private Sub Form_Load()
     Me.Picture = LoadPicture(DirGraficos & "VentanaCargando.jpg")
-    LOGO.Picture = LoadPicture(DirGraficos & "ImagenCargando.jpg")
 End Sub
 
 Private Sub LOGO_KeyPress(KeyAscii As Integer)

@@ -2,7 +2,8 @@ VERSION 5.00
 Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "Richtx32.ocx"
 Object = "{33101C00-75C3-11CF-A8A0-444553540000}#1.0#0"; "CSWSK32.OCX"
 Begin VB.Form frmMain 
-   BackColor       =   &H00404040&
+   Appearance      =   0  'Flat
+   BackColor       =   &H80000005&
    BorderStyle     =   0  'None
    ClientHeight    =   11520
    ClientLeft      =   360
@@ -26,6 +27,7 @@ Begin VB.Form frmMain
    MaxButton       =   0   'False
    MinButton       =   0   'False
    PaletteMode     =   1  'UseZOrder
+   Picture         =   "frmMain.frx":030A
    ScaleHeight     =   768
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   1024
@@ -73,7 +75,7 @@ Begin VB.Form frmMain
       ScaleHeight     =   544
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   736
-      TabIndex        =   32
+      TabIndex        =   26
       TabStop         =   0   'False
       Top             =   2265
       Width           =   11040
@@ -100,7 +102,7 @@ Begin VB.Form frmMain
       ScaleHeight     =   160
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   160
-      TabIndex        =   16
+      TabIndex        =   11
       Top             =   3390
       Width           =   2400
    End
@@ -117,14 +119,14 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H000000FF&
-      Height          =   315
+      Height          =   270
       Left            =   1380
       MaxLength       =   160
       MultiLine       =   -1  'True
       TabIndex        =   2
       TabStop         =   0   'False
       ToolTipText     =   "Chat"
-      Top             =   1650
+      Top             =   1680
       Visible         =   0   'False
       Width           =   5550
    End
@@ -152,14 +154,14 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H000000FF&
-      Height          =   315
+      Height          =   270
       Left            =   1380
       MaxLength       =   160
       MultiLine       =   -1  'True
       TabIndex        =   1
       TabStop         =   0   'False
       ToolTipText     =   "Chat"
-      Top             =   1650
+      Top             =   1680
       Visible         =   0   'False
       Width           =   5550
    End
@@ -192,7 +194,7 @@ Begin VB.Form frmMain
       ScrollBars      =   2
       DisableNoScroll =   -1  'True
       Appearance      =   0
-      TextRTF         =   $"frmMain.frx":030A
+      TextRTF         =   $"frmMain.frx":15B1E
       BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -209,7 +211,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   2565
       Left            =   12000
-      TabIndex        =   17
+      TabIndex        =   12
       TabStop         =   0   'False
       Top             =   3345
       Visible         =   0   'False
@@ -217,6 +219,7 @@ Begin VB.Form frmMain
    End
    Begin VB.Label lblSed 
       Alignment       =   2  'Center
+      AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
       Caption         =   "999/999"
       BeginProperty Font 
@@ -231,9 +234,141 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   240
       Left            =   12255
-      TabIndex        =   14
+      TabIndex        =   34
+      Top             =   10485
+      Width           =   2100
+   End
+   Begin VB.Label lblHambre 
+      Alignment       =   2  'Center
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "999/999"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H8000000B&
+      Height          =   240
+      Left            =   12255
+      TabIndex        =   33
+      Top             =   9945
+      Width           =   2100
+   End
+   Begin VB.Label lblVida 
+      Alignment       =   2  'Center
+      AutoSize        =   -1  'True
+      BackColor       =   &H000000FF&
+      BackStyle       =   0  'Transparent
+      Caption         =   "999/999"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFFF&
+      Height          =   240
+      Left            =   12255
+      TabIndex        =   32
+      Top             =   9405
+      Width           =   2100
+   End
+   Begin VB.Label lblMana 
+      Alignment       =   2  'Center
+      AutoSize        =   -1  'True
+      BackColor       =   &H00C0C000&
+      BackStyle       =   0  'Transparent
+      Caption         =   "999/999"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFFF&
+      Height          =   240
+      Left            =   12255
+      TabIndex        =   31
+      Top             =   8865
+      Width           =   2100
+   End
+   Begin VB.Label lblEnergia 
+      Alignment       =   2  'Center
+      AutoSize        =   -1  'True
+      BackColor       =   &H0000C0C0&
+      BackStyle       =   0  'Transparent
+      Caption         =   "999/999"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFFF&
+      Height          =   240
+      Left            =   12255
+      TabIndex        =   30
+      Top             =   8325
+      Width           =   2100
+   End
+   Begin VB.Image imgSed 
+      Appearance      =   0  'Flat
+      Height          =   240
+      Left            =   12255
       Top             =   10470
       Width           =   2100
+   End
+   Begin VB.Image imgHambre 
+      Appearance      =   0  'Flat
+      Height          =   240
+      Left            =   12255
+      Top             =   9930
+      Width           =   2100
+   End
+   Begin VB.Image imgVida 
+      Appearance      =   0  'Flat
+      Height          =   240
+      Left            =   12255
+      Top             =   9390
+      Width           =   2100
+   End
+   Begin VB.Image imgMana 
+      Height          =   240
+      Left            =   12255
+      Top             =   8850
+      Width           =   2100
+   End
+   Begin VB.Image imgEne 
+      Appearance      =   0  'Flat
+      Height          =   240
+      Left            =   12255
+      Top             =   8310
+      Width           =   2100
+   End
+   Begin VB.Label lblOnline 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "101"
+      ForeColor       =   &H00FFFFFF&
+      Height          =   180
+      Left            =   8205
+      TabIndex        =   29
+      Top             =   1710
+      Width           =   435
    End
    Begin VB.Label imgAsignarSkill 
       AutoSize        =   -1  'True
@@ -242,7 +377,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   12825
-      TabIndex        =   34
+      TabIndex        =   28
       Top             =   1365
       Width           =   135
    End
@@ -253,7 +388,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   12585
-      TabIndex        =   33
+      TabIndex        =   27
       Top             =   1245
       Visible         =   0   'False
       Width           =   105
@@ -266,8 +401,8 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   360
-      TabIndex        =   31
-      Top             =   1695
+      TabIndex        =   25
+      Top             =   1710
       Width           =   750
    End
    Begin VB.Label lblFaccion 
@@ -277,7 +412,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   12300
-      TabIndex        =   30
+      TabIndex        =   24
       Top             =   1365
       Visible         =   0   'False
       Width           =   105
@@ -289,39 +424,39 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   12000
-      TabIndex        =   29
+      TabIndex        =   23
       Top             =   1245
       Visible         =   0   'False
       Width           =   105
    End
    Begin VB.Image imgMapa 
       Height          =   300
-      Left            =   13710
-      Top             =   6675
+      Left            =   11640
+      Top             =   7200
       Width           =   1395
    End
    Begin VB.Image imgClanes 
       Height          =   390
-      Left            =   13725
-      Top             =   7980
+      Left            =   13680
+      Top             =   10800
       Width           =   1380
    End
    Begin VB.Image imgEstadisticas 
       Height          =   360
-      Left            =   13695
-      Top             =   7605
+      Left            =   11640
+      Top             =   10800
       Width           =   1425
    End
    Begin VB.Image imgOpciones 
       Height          =   330
-      Left            =   13695
-      Top             =   7275
+      Left            =   13560
+      Top             =   7680
       Width           =   1425
    End
    Begin VB.Image imgGrupo 
       Height          =   315
-      Left            =   13695
-      Top             =   6990
+      Left            =   13440
+      Top             =   7200
       Width           =   1410
    End
    Begin VB.Label lblDropGold 
@@ -329,7 +464,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   12120
       MousePointer    =   99  'Custom
-      TabIndex        =   28
+      TabIndex        =   22
       Top             =   6180
       Width           =   255
    End
@@ -338,7 +473,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   14400
       MousePointer    =   99  'Custom
-      TabIndex        =   27
+      TabIndex        =   21
       Top             =   240
       Width           =   255
    End
@@ -347,9 +482,9 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   14760
       MousePointer    =   99  'Custom
-      TabIndex        =   26
+      TabIndex        =   20
       Top             =   240
-      Width           =   255
+      Width           =   375
    End
    Begin VB.Label Label7 
       BackStyle       =   0  'Transparent
@@ -364,9 +499,9 @@ Begin VB.Form frmMain
       EndProperty
       Height          =   690
       Left            =   13320
-      MouseIcon       =   "frmMain.frx":0388
+      MouseIcon       =   "frmMain.frx":15B9C
       MousePointer    =   99  'Custom
-      TabIndex        =   19
+      TabIndex        =   14
       Top             =   2280
       Width           =   1845
    End
@@ -376,44 +511,24 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   180
       Left            =   7395
-      TabIndex        =   25
+      TabIndex        =   19
       Top             =   1710
       Width           =   435
    End
    Begin VB.Image cmdInfo 
       Height          =   525
       Left            =   13800
-      MouseIcon       =   "frmMain.frx":04DA
+      MouseIcon       =   "frmMain.frx":15CEE
       MousePointer    =   99  'Custom
       Top             =   6000
       Visible         =   0   'False
       Width           =   855
    End
-   Begin VB.Label lblMapName 
-      BackStyle       =   0  'Transparent
-      Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H0000FFFF&
-      Height          =   255
-      Left            =   8280
-      TabIndex        =   24
-      Top             =   10800
-      Visible         =   0   'False
-      Width           =   1935
-   End
    Begin VB.Image cmdMoverHechi 
       Height          =   360
       Index           =   0
       Left            =   14700
-      MouseIcon       =   "frmMain.frx":062C
+      MouseIcon       =   "frmMain.frx":15E40
       MousePointer    =   99  'Custom
       Top             =   3720
       Visible         =   0   'False
@@ -423,7 +538,7 @@ Begin VB.Form frmMain
       Height          =   360
       Index           =   1
       Left            =   14700
-      MouseIcon       =   "frmMain.frx":077E
+      MouseIcon       =   "frmMain.frx":15F92
       MousePointer    =   99  'Custom
       Top             =   3360
       Visible         =   0   'False
@@ -445,7 +560,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00C0C0C0&
       Height          =   195
       Left            =   12840
-      TabIndex        =   23
+      TabIndex        =   18
       Top             =   780
       Width           =   1785
    End
@@ -464,9 +579,9 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H00FFFFFF&
       Height          =   285
-      Left            =   12120
-      TabIndex        =   22
-      Top             =   960
+      Left            =   12150
+      TabIndex        =   17
+      Top             =   900
       Width           =   405
    End
    Begin VB.Label lblPorcLvl 
@@ -485,7 +600,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFF00&
       Height          =   225
       Left            =   13440
-      TabIndex        =   21
+      TabIndex        =   16
       Top             =   1155
       Width           =   555
    End
@@ -505,14 +620,14 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   225
       Left            =   12720
-      TabIndex        =   20
+      TabIndex        =   15
       Top             =   1560
       Width           =   2010
    End
    Begin VB.Image CmdLanzar 
       Height          =   615
       Left            =   12000
-      MouseIcon       =   "frmMain.frx":08D0
+      MouseIcon       =   "frmMain.frx":160E4
       MousePointer    =   99  'Custom
       Top             =   6000
       Visible         =   0   'False
@@ -532,9 +647,9 @@ Begin VB.Form frmMain
       EndProperty
       Height          =   690
       Left            =   11520
-      MouseIcon       =   "frmMain.frx":0A22
+      MouseIcon       =   "frmMain.frx":16236
       MousePointer    =   99  'Custom
-      TabIndex        =   18
+      TabIndex        =   13
       Top             =   2280
       Width           =   1845
    End
@@ -553,7 +668,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H000000FF&
       Height          =   210
       Left            =   12480
-      TabIndex        =   15
+      TabIndex        =   10
       Top             =   6210
       Width           =   1890
    End
@@ -711,125 +826,6 @@ Begin VB.Form frmMain
       Top             =   2175
       Width           =   3780
    End
-   Begin VB.Label lblMana 
-      Alignment       =   2  'Center
-      BackColor       =   &H00C0C000&
-      BackStyle       =   0  'Transparent
-      Caption         =   "999/999"
-      BeginProperty Font 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFFF&
-      Height          =   240
-      Left            =   12255
-      TabIndex        =   11
-      Top             =   8850
-      Width           =   2100
-   End
-   Begin VB.Label lblEnergia 
-      Alignment       =   2  'Center
-      BackColor       =   &H0000C0C0&
-      BackStyle       =   0  'Transparent
-      Caption         =   "999/999"
-      BeginProperty Font 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFFF&
-      Height          =   240
-      Left            =   12255
-      TabIndex        =   10
-      Top             =   8310
-      Width           =   2100
-   End
-   Begin VB.Label lblVida 
-      Alignment       =   2  'Center
-      BackColor       =   &H000000FF&
-      BackStyle       =   0  'Transparent
-      Caption         =   "999/999"
-      BeginProperty Font 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFFF&
-      Height          =   240
-      Left            =   12255
-      TabIndex        =   12
-      Top             =   9390
-      Width           =   2100
-   End
-   Begin VB.Label lblHambre 
-      Alignment       =   2  'Center
-      BackColor       =   &H00004000&
-      BackStyle       =   0  'Transparent
-      Caption         =   "999/999"
-      BeginProperty Font 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFFF&
-      Height          =   240
-      Left            =   12255
-      TabIndex        =   13
-      Top             =   9930
-      Width           =   2100
-   End
-   Begin VB.Shape shpEnergia 
-      FillStyle       =   0  'Solid
-      Height          =   240
-      Left            =   12255
-      Top             =   8310
-      Width           =   2100
-   End
-   Begin VB.Shape shpMana 
-      FillStyle       =   0  'Solid
-      Height          =   240
-      Left            =   12255
-      Top             =   8850
-      Width           =   2100
-   End
-   Begin VB.Shape shpVida 
-      FillStyle       =   0  'Solid
-      Height          =   240
-      Left            =   12255
-      Top             =   9390
-      Width           =   2100
-   End
-   Begin VB.Shape shpHambre 
-      FillStyle       =   0  'Solid
-      Height          =   240
-      Left            =   12255
-      Top             =   9930
-      Width           =   2100
-   End
-   Begin VB.Shape shpSed 
-      FillStyle       =   0  'Solid
-      Height          =   240
-      Left            =   12255
-      Top             =   10470
-      Width           =   2100
-   End
    Begin VB.Menu mnuObj 
       Caption         =   "Objeto"
       Visible         =   0   'False
@@ -931,11 +927,15 @@ Private Sub Form_Load()
     End If
 
     Me.Picture = LoadPicture(DirGraficos & "Main.JPG")
-    
+    imgEne.Picture = LoadPicture(DirGraficos & "imageEnergia.jpg")
+    imgMana.Picture = LoadPicture(DirGraficos & "imageMana.jpg")
+    imgVida.Picture = LoadPicture(DirGraficos & "imageVida.jpg")
+    imgHambre.Picture = LoadPicture(DirGraficos & "imageHambre.jpg")
+    imgSed.Picture = LoadPicture(DirGraficos & "imageSed.jpg")
     InvEqu.Picture = LoadPicture(DirGraficos & "CentroInventario.jpg")
     
     Call LoadButtons
-    
+
     
     Me.Left = 0
     Me.Top = 0
@@ -2050,8 +2050,4 @@ Private Sub Socket1_Read(dataLength As Integer, IsUrgent As Integer)
     
     'Send buffer to Handle data
     Call HandleIncomingData
-End Sub
-
-Private Sub xz_Click(Index As Integer)
-
 End Sub

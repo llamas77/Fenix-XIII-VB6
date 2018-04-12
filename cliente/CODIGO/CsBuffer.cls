@@ -31,19 +31,19 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Declare Sub GetMem2 _
-    Lib "msvbvm60" (ByRef Pointer As Any, ByRef Value As Any)
+    Lib "msvbvm60" (ByRef Pointer As Any, ByRef value As Any)
 Private Declare Sub GetMem4 _
-    Lib "msvbvm60" (ByRef Pointer As Any, ByRef Value As Any)
+    Lib "msvbvm60" (ByRef Pointer As Any, ByRef value As Any)
 Private Declare Sub GetMem8 _
-    Lib "msvbvm60" (ByRef Pointer As Any, ByRef Value As Any)
+    Lib "msvbvm60" (ByRef Pointer As Any, ByRef value As Any)
 Private Declare Sub PutMem2 _
-    Lib "msvbvm60" (ByRef Pointer As Any, ByVal Value As Integer)
+    Lib "msvbvm60" (ByRef Pointer As Any, ByVal value As Integer)
 Private Declare Sub PutMem4 _
-    Lib "msvbvm60" (ByRef Pointer As Any, ByVal Value As Any)
+    Lib "msvbvm60" (ByRef Pointer As Any, ByVal value As Any)
 Private Declare Sub PutMem8 _
-    Lib "msvbvm60" (ByRef Pointer As Any, ByRef Value As Any)
+    Lib "msvbvm60" (ByRef Pointer As Any, ByRef value As Any)
 Private Declare Sub RtlMoveMemory _
-    Lib "kernel32" (ByRef Destination As Any, ByRef Source As Any, ByVal Length As Long)
+    Lib "kernel32" (ByRef destination As Any, ByRef source As Any, ByVal length As Long)
 
 ''
 ' The error number thrown when there is not enough data in  the buffer to read the specified data type.
@@ -62,7 +62,7 @@ Private Const NOT_ENOUGH_SPACE As Long = vbObjectError + 10
 ''
 Private Const DEFAULT_CAPACITY As Long = 8192
 
-''
+
 ' The underlying byte array of the buffer
 ''
 Private mData()                As Byte
@@ -272,23 +272,23 @@ End Function
 ' \param[in] Values     - The array that will contain the bytes
 ' \param[in] Length     - The number of bytes to read (must be less than \ref Values capacity)
 ''
-Public Function ReadBytes(ByRef Values() As Byte, Optional ByVal Length As Long = &HFFFFFFFF)
+Public Function ReadBytes(ByRef Values() As Byte, Optional ByVal length As Long = &HFFFFFFFF)
     
-    If (Length = &HFFFFFFFF) Then
+    If (length = &HFFFFFFFF) Then
     
-        Length = UBound(Values) + 1
+        length = UBound(Values) + 1
 
     End If
     
-    If (mPosition + Length > mLimit) Then
+    If (mPosition + length > mLimit) Then
         
         Call Err.Raise(NOT_ENOUGH_DATA)
 
     Else
         
-        Call RtlMoveMemory(Values(0), mData(mPosition), Length)
+        Call RtlMoveMemory(Values(0), mData(mPosition), length)
                 
-        mPosition = mPosition + Length
+        mPosition = mPosition + length
         
     End If
 
@@ -419,17 +419,17 @@ End Function
 '
 ' \param[in, opt] Length    - The number of characters to read, or retrieve it from the buffer itself
 ''
-Public Function ReadString(Optional ByVal Length As Long = &HFFFFFFFF) As String
+Public Function ReadString(Optional ByVal length As Long = &HFFFFFFFF) As String
 
-    If (Length = &HFFFFFFFF) Then
+    If (length = &HFFFFFFFF) Then
     
-        Length = ReadInteger()
+        length = ReadInteger()
         
     End If
     
-    If (Length > 0) Then
+    If (length > 0) Then
         
-        If (mPosition + Length > mLimit) Then
+        If (mPosition + length > mLimit) Then
             
             Call Err.Raise(NOT_ENOUGH_DATA)
     
@@ -437,9 +437,9 @@ Public Function ReadString(Optional ByVal Length As Long = &HFFFFFFFF) As String
                 
             Dim Bytes() As Byte
             
-            ReDim Bytes(0 To Length - 1) As Byte
+            ReDim Bytes(0 To length - 1) As Byte
             
-            Call ReadBytes(Bytes, Length)
+            Call ReadBytes(Bytes, length)
             
             ReadString = StrConv(Bytes, vbUnicode)
             
@@ -454,19 +454,19 @@ End Function
 '
 ' \param[in, opt] Length    - The number of characters to read, or retrieve it from the buffer itself
 ''
-Public Function ReadUnicode(Optional ByVal Length As Long = &HFFFFFFFF) As String
+Public Function ReadUnicode(Optional ByVal length As Long = &HFFFFFFFF) As String
 
-    If (Length = &HFFFFFFFF) Then
+    If (length = &HFFFFFFFF) Then
     
-        Length = ReadInteger()
+        length = ReadInteger()
         
     End If
   
-    If (Length > 0) Then
+    If (length > 0) Then
                
-        Length = Length * &H2
+        length = length * &H2
            
-        If (mPosition + Length > mLimit) Then
+        If (mPosition + length > mLimit) Then
             
             Call Err.Raise(NOT_ENOUGH_DATA)
     
@@ -474,9 +474,9 @@ Public Function ReadUnicode(Optional ByVal Length As Long = &HFFFFFFFF) As Strin
             
             Dim Bytes() As Byte
             
-            ReDim Bytes(0 To Length - 1) As Byte
+            ReDim Bytes(0 To length - 1) As Byte
             
-            Call ReadBytes(Bytes, Length)
+            Call ReadBytes(Bytes, length)
             
             ReadUnicode = Bytes
             
@@ -491,7 +491,7 @@ End Function
 '
 ' \param[in] Value      - The value to write into the buffer
 ''
-Public Sub WriteByte(ByVal Value As Byte)
+Public Sub WriteByte(ByVal value As Byte)
     
     If (mPosition + &H1 > mLimit) Then
         
@@ -499,7 +499,7 @@ Public Sub WriteByte(ByVal Value As Byte)
 
     Else
         
-        mData(mPosition) = Value
+        mData(mPosition) = value
         
         mPosition = mPosition + &H1
         
@@ -513,23 +513,23 @@ End Sub
 ' \param[in] Values     - The array that contains the bytes
 ' \param[in] Length     - The number of bytes to write (must be less or equal than \ref Values capacity)
 ''
-Public Sub WriteBytes(ByRef Values() As Byte, Optional ByVal Length As Long = &HFFFFFFFF)
+Public Sub WriteBytes(ByRef Values() As Byte, Optional ByVal length As Long = &HFFFFFFFF)
     
-    If (Length = &HFFFFFFFF) Then
+    If (length = &HFFFFFFFF) Then
     
-        Length = UBound(Values) + 1
+        length = UBound(Values) + 1
 
     End If
     
-    If (mPosition + Length > mLimit) Then
+    If (mPosition + length > mLimit) Then
         
         Call Err.Raise(NOT_ENOUGH_SPACE)
 
     Else
         
-        Call RtlMoveMemory(mData(mPosition), Values(0), Length)
+        Call RtlMoveMemory(mData(mPosition), Values(0), length)
                 
-        mPosition = mPosition + Length
+        mPosition = mPosition + length
         
     End If
 
@@ -540,7 +540,7 @@ End Sub
 '
 ' \param[in] Value      - The value to write into the buffer
 ''
-Public Sub WriteBoolean(ByVal Value As Boolean)
+Public Sub WriteBoolean(ByVal value As Boolean)
     
     If (mPosition + &H1 > mLimit) Then
         
@@ -548,7 +548,7 @@ Public Sub WriteBoolean(ByVal Value As Boolean)
 
     Else
       
-        mData(mPosition) = Value
+        mData(mPosition) = value
         
         mPosition = mPosition + &H1
         
@@ -561,7 +561,7 @@ End Sub
 '
 ' \param[in] Value      - The value to write into the buffer
 ''
-Public Sub WriteInteger(ByVal Value As Integer)
+Public Sub WriteInteger(ByVal value As Integer)
     
     If (mPosition + &H2 > mLimit) Then
         
@@ -569,7 +569,7 @@ Public Sub WriteInteger(ByVal Value As Integer)
 
     Else
           
-        Call PutMem2(mData(mPosition), Value)
+        Call PutMem2(mData(mPosition), value)
         
         mPosition = mPosition + &H2
     
@@ -582,7 +582,7 @@ End Sub
 '
 ' \param[in] Value      - The value to write into the buffer
 ''
-Public Sub WriteLong(ByVal Value As Long)
+Public Sub WriteLong(ByVal value As Long)
     
     If (mPosition + &H4 > mLimit) Then
         
@@ -590,7 +590,7 @@ Public Sub WriteLong(ByVal Value As Long)
 
     Else
           
-        Call PutMem4(mData(mPosition), Value)
+        Call PutMem4(mData(mPosition), value)
         
         mPosition = mPosition + &H4
         
@@ -603,7 +603,7 @@ End Sub
 '
 ' \param[in] Value      - The value to write into the buffer
 ''
-Public Sub WriteCurrency(ByVal Value As Currency)
+Public Sub WriteCurrency(ByVal value As Currency)
     
     If (mPosition + &H8 > mLimit) Then
         
@@ -611,7 +611,7 @@ Public Sub WriteCurrency(ByVal Value As Currency)
 
     Else
               
-        Call PutMem8(mData(mPosition), ByVal Value)
+        Call PutMem8(mData(mPosition), ByVal value)
         
         mPosition = mPosition + &H8
         
@@ -624,7 +624,7 @@ End Sub
 '
 ' \param[in] Value      - The value to write into the buffer
 ''
-Public Sub WriteSingle(ByVal Value As Single)
+Public Sub WriteSingle(ByVal value As Single)
     
     If (mPosition + &H4 > mLimit) Then
         
@@ -632,7 +632,7 @@ Public Sub WriteSingle(ByVal Value As Single)
 
     Else
                   
-        Call PutMem4(mData(mPosition), Value)
+        Call PutMem4(mData(mPosition), value)
         
         mPosition = mPosition + &H4
         
@@ -645,7 +645,7 @@ End Sub
 '
 ' \param[in] Value      - The value to write into the buffer
 ''
-Public Sub WriteDouble(ByVal Value As Double)
+Public Sub WriteDouble(ByVal value As Double)
     
     If (mPosition + &H8 > mLimit) Then
         
@@ -653,7 +653,7 @@ Public Sub WriteDouble(ByVal Value As Double)
 
     Else
               
-        Call PutMem8(mData(mPosition), ByVal Value)
+        Call PutMem8(mData(mPosition), ByVal value)
         
         mPosition = mPosition + &H8
         
@@ -667,27 +667,27 @@ End Sub
 ' \param[in]      Value     - The value to write into the buffer
 ' \param[in, opt] Length    - The number of characters to write, or use the entire array
 ''
-Public Sub WriteString(ByRef Value As String, Optional ByVal Length As Long = &HFFFFFFFF)
+Public Sub WriteString(ByRef value As String, Optional ByVal length As Long = &HFFFFFFFF)
 
-    If (Length = &HFFFFFFFF) Then
+    If (length = &HFFFFFFFF) Then
     
-        Length = Len(Value)
+        length = Len(value)
                     
-        Call WriteInteger(Length)
+        Call WriteInteger(length)
 
     End If
     
-    If (Length > 0) Then
+    If (length > 0) Then
         
-        If (mPosition + Length > mLimit) Then
+        If (mPosition + length > mLimit) Then
             
             Call Err.Raise(NOT_ENOUGH_SPACE)
     
         Else
     
-            Call RtlMoveMemory(mData(mPosition), ByVal StrPtr(StrConv(Value, vbFromUnicode)), Length)
+            Call RtlMoveMemory(mData(mPosition), ByVal StrPtr(StrConv(value, vbFromUnicode)), length)
             
-            mPosition = mPosition + Length
+            mPosition = mPosition + length
             
         End If
 
@@ -701,29 +701,29 @@ End Sub
 ' \param[in]      Value     - The value to write into the buffer
 ' \param[in, opt] Length    - The number of characters to write, or use the entire array
 ''
-Public Sub WriteUnicode(ByRef Value As String, Optional ByVal Length As Long = &HFFFFFFFF)
+Public Sub WriteUnicode(ByRef value As String, Optional ByVal length As Long = &HFFFFFFFF)
 
-    If (Length = &HFFFFFFFF) Then
+    If (length = &HFFFFFFFF) Then
     
-        Length = Len(Value)
+        length = Len(value)
                        
-        Call WriteInteger(Length)
+        Call WriteInteger(length)
 
     End If
             
-    If (Length > 0) Then
+    If (length > 0) Then
             
-        Length = Length * &H2
+        length = length * &H2
            
-        If (mPosition + Length > mLimit) Then
+        If (mPosition + length > mLimit) Then
             
             Call Err.Raise(NOT_ENOUGH_SPACE)
     
         Else
     
-            Call RtlMoveMemory(mData(mPosition), ByVal StrPtr(Value), Length)
+            Call RtlMoveMemory(mData(mPosition), ByVal StrPtr(value), length)
     
-            mPosition = mPosition + Length
+            mPosition = mPosition + length
             
         End If
         
@@ -737,22 +737,22 @@ End Sub
 ' \param[in] Values     - The array that contains the bytes
 ' \param[in] Length     - The number of bytes to write (must be less or equal than \ref Values capacity)
 ''
-Public Sub Wrap(ByRef Values() As Byte, Optional ByVal Length As Long = &HFFFFFFFF)
+Public Sub Wrap(ByRef Values() As Byte, Optional ByVal length As Long = &HFFFFFFFF)
 
-    If (Length = &HFFFFFFFF) Then
+    If (length = &HFFFFFFFF) Then
         
-        Length = UBound(Values) + 1
+        length = UBound(Values) + 1
         
     End If
 
-    If (Capacity() < Length) Then
+    If (Capacity() < length) Then
         
-        ReDim mData(0 To Length - 1) As Byte
+        ReDim mData(0 To length - 1) As Byte
         
     End If
         
     Call Clear
-    Call WriteBytes(Values, Length)
+    Call WriteBytes(Values, length)
     Call Flip
     
 End Sub
@@ -771,9 +771,9 @@ End Property
 '
 ' \param[in] Value      - The new capacity of the buffer
 ''
-Public Property Let Capacity(ByVal Value As Long)
+Public Property Let Capacity(ByVal value As Long)
     
-    ReDim Preserve mData(0 To Value - 1) As Byte
+    ReDim Preserve mData(0 To value - 1) As Byte
     
 End Property
 
@@ -791,9 +791,9 @@ End Property
 '
 ' \param[in] Value      - The new limit of the buffer
 ''
-Public Property Let Limit(ByVal Value As Long)
+Public Property Let Limit(ByVal value As Long)
 
-    mLimit = IIf(Value > UBound(mData) + 1, UBound(mData) + 1, Value)
+    mLimit = IIf(value > UBound(mData) + 1, UBound(mData) + 1, value)
     
 End Property
 
@@ -811,9 +811,9 @@ End Property
 '
 ' \param[in] Value      - The new position of the buffer
 ''
-Public Property Let Position(ByVal Value As Long)
+Public Property Let Position(ByVal value As Long)
 
-    mPosition = IIf(Value > mLimit, mLimit, Value)
+    mPosition = IIf(value > mLimit, mLimit, value)
     
 End Property
 
@@ -847,3 +847,4 @@ Public Property Get NotEnoughSpaceErrCode() As Long
     NotEnoughSpaceErrCode = NOT_ENOUGH_SPACE
     
 End Property
+

@@ -91,7 +91,7 @@ Public Loaded As Boolean
 Public SkillPts As Integer
 Private uSkills(1 To NUMSKILLS) As Byte
 
-Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByRef Destination As Any, ByRef Source As Any, ByVal Length As Long)
+Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByRef Destination As Any, ByRef source As Any, ByVal length As Long)
 
 'CSEH: ErrLog
 Public Sub DirectXEvent8_DXCallback(ByVal EventID As Long)
@@ -433,8 +433,8 @@ Function CheckData() As Boolean
         End If
     Next i
     
-    If Len(UserName) > 30 Then
-        MsgBox ("El nombre debe tener menos de 30 letras.")
+    If Len(UserName) > 22 Then
+        MsgBox ("El nombre debe tener menos de 22 letras.")
         Exit Function
     End If
     

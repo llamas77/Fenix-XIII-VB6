@@ -78,8 +78,8 @@ Begin VB.Form frmMain
    Begin VB.Timer GameTimer 
       Enabled         =   0   'False
       Interval        =   40
-      Left            =   1440
-      Top             =   60
+      Left            =   2520
+      Top             =   0
    End
    Begin VB.Timer tLluviaEvent 
       Enabled         =   0   'False
@@ -108,8 +108,8 @@ Begin VB.Form frmMain
    Begin VB.Timer KillLog 
       Enabled         =   0   'False
       Interval        =   60000
-      Left            =   1920
-      Top             =   60
+      Left            =   3120
+      Top             =   0
    End
    Begin VB.Timer TIMER_AI 
       Enabled         =   0   'False

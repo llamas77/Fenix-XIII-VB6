@@ -77,13 +77,30 @@ On Error Resume Next
                         Exit Sub
                     End If
                     
-                    If Distancia(Npclist(tempIndex).Pos, .Pos) > 3 Then
+                    If Distancia(Npclist(tempIndex).Pos, .Pos) > 5 Then
                         Call WriteConsoleMsg(UserIndex, "Estás demasiado lejos del vendedor.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
                     End If
                     
                     'Iniciamos la rutina pa' comerciar.
                     Call IniciarComercioNPC(UserIndex)
+                
+                ElseIf Npclist(tempIndex).NPCtype = eNPCType.Entrenador Then
+                    If .flags.Muerto = 1 Then
+                        Call WriteConsoleMsg(UserIndex, "¡¡Estás muerto!!", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+        
+                    'Make sure it's close enough
+                    If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
+                     Call WriteConsoleMsg(UserIndex, "Estás demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+        
+                    'Make sure it's the trainer
+                    If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Entrenador Then Exit Sub
+                    Call WriteTrainerCreatureList(UserIndex, .flags.TargetNPC)
+                    
                 
                 ElseIf Npclist(tempIndex).NPCtype = eNPCType.Banquero Then
                     '¿Esta el user muerto? Si es asi no puede comerciar
@@ -97,7 +114,7 @@ On Error Resume Next
                         Exit Sub
                     End If
                     
-                    If Distancia(Npclist(tempIndex).Pos, .Pos) > 3 Then
+                    If Distancia(Npclist(tempIndex).Pos, .Pos) > 5 Then
                         Call WriteConsoleMsg(UserIndex, "Estás demasiado lejos del vendedor.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
                     End If
