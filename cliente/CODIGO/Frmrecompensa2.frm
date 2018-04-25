@@ -164,7 +164,7 @@ Attribute VB_Exposed = False
 'You can contact me at:
 'elpresi@fenixao.com.ar
 'www.fenixao.com.ar
-
+Option Explicit
 Private Sub command1_Click(Index As Integer)
 
 Call WriteSendEligioSubClase(Index + 1)
@@ -285,29 +285,11 @@ Private Sub Image1_Click()
 Unload Me
 
 End Sub
-Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-
-If bmoving = False And Button = vbLeftButton Then
-    dX = X
-    dy = Y
-    bmoving = True
-End If
-
-End Sub
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-
-If bmoving And ((X <> dX) Or (Y <> dy)) Then Move Left + (X - dX), Top + (Y - dy)
-
-End Sub
-Private Sub Form_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
-
-If Button = vbLeftButton Then bmoving = False
-
-End Sub
 
 Private Sub Label6_Click(Index As Integer)
 
 Ayuda = 0
+SubAyuda = Index
 FrmAyuda.Show
 
 End Sub

@@ -912,33 +912,7 @@ With UserList(UserIndex)
                 .TargetNpcTipo = eNPCType.Comun
                 .TargetUser = 0
             End If
-            
-            '*** NO ENCOTRO NADA ***
-            If FoundSomething = 0 Then
-                .TargetNPC = 0
-                .TargetNpcTipo = eNPCType.Comun
-                .TargetUser = 0
-                .TargetObj = 0
-                .TargetObjMap = 0
-                .TargetObjX = 0
-                .TargetObjY = 0
-                Call WriteMultiMessage(UserIndex, eMessages.DontSeeAnything)
-            End If
         End With
-    Else
-        If FoundSomething = 0 Then
-            With .flags
-                .TargetNPC = 0
-                .TargetNpcTipo = eNPCType.Comun
-                .TargetUser = 0
-                .TargetObj = 0
-                .TargetObjMap = 0
-                .TargetObjX = 0
-                .TargetObjY = 0
-            End With
-            
-            Call WriteMultiMessage(UserIndex, eMessages.DontSeeAnything)
-        End If
     End If
 End With
 

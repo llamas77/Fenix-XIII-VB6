@@ -10,6 +10,85 @@ Public Sub EnviarSubClase(ByVal UserIndex As Integer)
 End Sub
 
 'CSEH: ErrLog
+Public Sub RecibirFaccion(ByVal UserIndex As Integer, ByVal Faccion As Byte)
+    '<EhHeader>
+    On Error GoTo RecibirFaccion_Err
+    '</EhHeader>
+        If Not PuedeFaccion(UserIndex) Then Exit Sub
+        
+        With UserList(UserIndex)
+            If .Faccion.BandoOriginal > 0 Then
+            Call WriteConsoleMsg(UserIndex, "Ya eres fiel a un bando.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+            End If
+        
+            If .Faccion.Matados(Faccion) > .Faccion.Matados(Enemigo(Faccion)) Then
+                Call WriteConsoleMsg(UserIndex, "La cantidad de matados de tu facción es mayor a la de la facción enemiga.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+     
+            Select Case Faccion
+                Case 0
+                    Call WriteConsoleMsg(UserIndex, "¡Has decidido seguir siendo neutral! Podés jurar fidelidad cuando lo desees.", FontTypeNames.FONTTYPE_INFO)
+                Case 1
+                    .Faccion.Bando = 1
+                    .Faccion.BandoOriginal = 1
+                    .Faccion.Ataco(1) = 0
+                    Call WarpUserChar(UserIndex, .Pos.Map, .Pos.X, .Pos.Y, False)
+                    Call WriteConsoleMsg(UserIndex, "¡Has jurado fidelidad al Rey!", FontTypeNames.FONTTYPE_CONSEJO)
+                Case 2
+                    .Faccion.Bando = 2
+                    .Faccion.BandoOriginal = 2
+                    .Faccion.Ataco(2) = 0
+                    Call WarpUserChar(UserIndex, .Pos.Map, .Pos.X, .Pos.Y, False)
+                    Call WriteConsoleMsg(UserIndex, "¡Has jurado fidelidad a Lord Thek!", FontTypeNames.FONTTYPE_CONSEJOCAOS)
+            End Select
+        End With
+
+    '<EhFooter>
+    Exit Sub
+
+RecibirFaccion_Err:
+        Call LogError("Error en RecibirFaccion: " & Erl & " - " & Err.description)
+    '</EhFooter>
+End Sub
+Public Sub HacerMercenario(ByVal UserIndex As Integer, ByVal Faccion As Byte)
+    On Error GoTo HacerMercenario_Err
+
+        With UserList(UserIndex)
+            If .Faccion.BandoOriginal <> 0 And .Faccion.Bando = .Faccion.BandoOriginal Then
+                Call WriteConsoleMsg(UserIndex, "No necesitas aliarte a un bando si ya eres fiel.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
+            If .Faccion.Bando <> 0 Then
+                Call WriteConsoleMsg(UserIndex, "Ya te aliaste a un bando.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
+            If Not (.flags.Privilegios And PlayerType.User) Then
+                Call WriteConsoleMsg(UserIndex, "No puedes aliarte a mortales.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            Select Case Faccion
+                Case 1
+                    .Faccion.Bando = 1
+                    .Faccion.Ataco(1) = 0
+                    Call WarpUserChar(UserIndex, .Pos.Map, .Pos.X, .Pos.Y, False)
+                    Call WriteConsoleMsg(UserIndex, "¡Decidiste aliarte al Rey!", FontTypeNames.FONTTYPE_CONSEJO)
+                Case 2
+                    .Faccion.Bando = 2
+                    .Faccion.Ataco(2) = 0
+                    Call WarpUserChar(UserIndex, .Pos.Map, .Pos.X, .Pos.Y, False)
+                    Call WriteConsoleMsg(UserIndex, "¡Decidiste aliarte a Lord Thek!", FontTypeNames.FONTTYPE_CONSEJOCAOS)
+            End Select
+        End With
+    Exit Sub
+
+HacerMercenario_Err:
+        Call LogError("Error en HacerMercenario: " & Erl & " - " & Err.description)
+
+End Sub
 Public Sub RecibirSubClase(ByVal UserIndex As Integer, ByVal Clase As Byte)
     '<EhHeader>
     On Error GoTo RecibirSubClase_Err

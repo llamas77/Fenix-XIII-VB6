@@ -921,7 +921,11 @@ Sub LoadUserInit(ByVal UserIndex As Integer, ByRef UserFile As clsIniReader)
     Dim LoopC As Long
     Dim ln As String
     
+    
+    
     With UserList(UserIndex)
+        
+        
         With .Faccion
             .Bando = val(UserFile.GetValue("FACCIONES", "Bando"))
             .BandoOriginal = val(UserFile.GetValue("FACCIONES", "BandoOriginal"))
@@ -932,7 +936,7 @@ Sub LoadUserInit(ByVal UserIndex As Integer, ByRef UserFile As clsIniReader)
             .Ataco(1) = val(UserFile.GetValue("FACCIONES", "Ataco1"))
             .Ataco(2) = val(UserFile.GetValue("FACCIONES", "Ataco2"))
             '.Quests = val(UserFile.GetValue("FACCIONES", "Quests"))
-            .Torneos = val(UserFile.GetValue("FACCIONES", "Torneos"))
+            '.Torneos = val(UserFile.GetValue("FACCIONES", "Torneos"))
         End With
         
         With .flags
@@ -1637,7 +1641,7 @@ With UserList(UserIndex)
     Call WriteVar(UserFile, "FACCIONES", "Ataco2", (.Faccion.Ataco(2) = 1))
     
     'Call WriteVar(UserFile, "FACCIONES", "Quests", val(.Faccion.Quests))
-    Call WriteVar(UserFile, "FACCIONES", "Torneos", val(.Faccion.Torneos))
+    'Call WriteVar(UserFile, "FACCIONES", "Torneos", val(.Faccion.Torneos))
 
     
     '¿Fueron modificados los atributos del usuario?

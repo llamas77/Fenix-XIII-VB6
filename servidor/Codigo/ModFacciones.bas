@@ -6,7 +6,7 @@ Public MiembrosAlianza                      As Collection
 
 Private Const NIVEL_MINIMO_INGRESAR         As Byte = 25
 
-Public Const REQUIERE_MATADOS_PRIMERA       As Integer = 100
+Public Const REQUIERE_MATADOS_PRIMERA       As Integer = 150
 Public Const REQUIERE_MATADOS_SEGUNDA       As Integer = 500
 Public Const REQUIERE_MATADOS_TERCERA       As Integer = 1000
 Public Const REQUIERE_MATADOS_CUARTA        As Integer = 1500
@@ -14,6 +14,10 @@ Public Const REQUIERE_MATADOS_CUARTA        As Integer = 1500
 Private Const REQUIERE_TORNEOS_SEGUNDA      As Integer = 1
 Private Const REQUIERE_TORNEOS_TERCERA      As Integer = 5
 Private Const REQUIERE_TORNEOS_CUARTA       As Integer = 10
+
+Private Const REQUIERE_QUESTS_SEGUNDA      As Integer = 1
+Private Const REQUIERE_QUESTS_TERCERA      As Integer = 2
+Private Const REQUIERE_QUESTS_CUARTA       As Integer = 5
 
 Public Mensajes(1 To 2, 1 To 23) As String
 Public Armaduras(1 To 2, 1 To 3, 1 To 4, 1 To 2) As Integer
@@ -74,7 +78,7 @@ Public Sub QuitarMiembroFaccion(ByVal UserIndex As Integer)
     Select Case Faccion
     
         Case eFaccion.Caos
-            For i = 1 To MiembrosCaos.count
+            For i = 1 To MiembrosCaos.Count
                 If MiembrosCaos.Item(i) = UserIndex Then
                     MiembrosCaos.Remove i
                     Exit For
@@ -82,7 +86,7 @@ Public Sub QuitarMiembroFaccion(ByVal UserIndex As Integer)
             Next
             Exit Sub
         Case eFaccion.Real
-            For i = 1 To MiembrosAlianza.count
+            For i = 1 To MiembrosAlianza.Count
                 If MiembrosAlianza.Item(i) = UserIndex Then
                     MiembrosAlianza.Remove i
                     Exit For
@@ -101,7 +105,7 @@ Dim i As Long
     
         Case eFaccion.Caos
             
-            For i = 1 To MiembrosCaos.count
+            For i = 1 To MiembrosCaos.Count
                 If EsCaos(MiembrosCaos.Item(i)) Then
                     Call EnviarDatosASlot(MiembrosCaos.Item(i), data)
                 End If
@@ -109,7 +113,7 @@ Dim i As Long
             Exit Sub
         
         Case eFaccion.Real
-            For i = 1 To MiembrosAlianza.count
+            For i = 1 To MiembrosAlianza.Count
                 If EsArmada(MiembrosAlianza.items(i)) Then
                     Call EnviarDatosASlot(MiembrosAlianza.Item(i), data)
                 End If
@@ -126,13 +130,13 @@ Dim i As Long
     
         Case eFaccion.Caos
             
-            For i = 1 To MiembrosCaos.count
+            For i = 1 To MiembrosCaos.Count
                 Call EnviarDatosASlot(MiembrosCaos.Item(i), data)
             Next
             Exit Sub
         
         Case eFaccion.Real
-            For i = 1 To MiembrosAlianza.count
+            For i = 1 To MiembrosAlianza.Count
                 Call EnviarDatosASlot(MiembrosAlianza.Item(i), data)
             Next
             Exit Sub
@@ -165,53 +169,57 @@ With UserList(UserIndex)
             Exit Sub
         End If
         
-        If .Faccion.Torneos < REQUIERE_TORNEOS_SEGUNDA Then
-            Call WriteMultiMessage(UserIndex, eMessages.NeedTournaments, REQUIERE_TORNEOS_SEGUNDA, .Faccion.Torneos)
+        If .Events.Torneos < REQUIERE_TORNEOS_SEGUNDA Then
+            Call WriteMultiMessage(UserIndex, eMessages.NeedTournaments, REQUIERE_TORNEOS_SEGUNDA, .Events.Torneos)
             Exit Sub
         End If
         
-        'todo quest
-        'If .Faccion.Quests < 1 Then
-        '    Call SendData(ToIndex, UserIndex, 0, Mensajes(Fuerzas, 14) & 1)
-        '    Exit Sub
-        'End If
+        If .Events.Quests < REQUIERE_QUESTS_SEGUNDA Then
+            Call WriteMultiMessage(UserIndex, eMessages.NeedQuests, REQUIERE_QUESTS_SEGUNDA, .Events.Quests)
+            Exit Sub
+        End If
+    
         
         .Faccion.Jerarquia = 2
         'Call SendData(ToIndex, UserIndex, 0, Mensajes(Fuerzas, 15) & Titulo(UserIndex))
-        Call WriteMultiMessage(UserIndex, eMessages.HierarchyUpgradre, Titulo(UserIndex))
+        'Call WriteConsoleMsg(UserIndex, "¡Ahora eres General Real!", FontTypeNames.FONTTYPE_CONSEJO)
     ElseIf .Faccion.Jerarquia = 2 Then
+        
         If .Faccion.Matados(Enemigo(Fuerzas)) < REQUIERE_MATADOS_TERCERA Then
             Call WriteMultiMessage(UserIndex, eMessages.NeedToKill, REQUIERE_MATADOS_TERCERA, .Faccion.Matados(Enemigo(Fuerzas)))
             Exit Sub
         End If
 
-        If .Faccion.Torneos < REQUIERE_TORNEOS_TERCERA Then
-            Call WriteMultiMessage(UserIndex, eMessages.NeedTournaments, REQUIERE_TORNEOS_TERCERA, .Faccion.Torneos)
+        If .Events.Torneos < REQUIERE_TORNEOS_TERCERA Then
+            Call WriteMultiMessage(UserIndex, eMessages.NeedTournaments, REQUIERE_TORNEOS_TERCERA, .Events.Torneos)
             Exit Sub
         End If
         
-        'If .Faccion.Quests < 2 Then
-        '    Call SendData(ToIndex, UserIndex, 0, Mensajes(Fuerzas, 14) & 2)
-        '    Exit Sub
-        'End If
+        If .Events.Quests < REQUIERE_QUESTS_TERCERA Then
+            Call WriteMultiMessage(UserIndex, eMessages.NeedQuests, REQUIERE_QUESTS_TERCERA, .Events.Quests)
+            Exit Sub
+        End If
         
         .Faccion.Jerarquia = 3
         Call WriteMultiMessage(UserIndex, eMessages.HierarchyUpgradre, Titulo(UserIndex))
+       'Call WriteConsoleMsg(UserIndex, "¡Ahora eres Elite Real!", FontTypeNames.FONTTYPE_CONSEJO)
     ElseIf .Faccion.Jerarquia = 3 Then
+    
         If .Faccion.Matados(Enemigo(Fuerzas)) < REQUIERE_MATADOS_CUARTA Then
             Call WriteMultiMessage(UserIndex, eMessages.NeedToKill, REQUIERE_MATADOS_CUARTA, .Faccion.Matados(Enemigo(Fuerzas)))
             Exit Sub
         End If
         
-        If .Faccion.Torneos < REQUIERE_TORNEOS_CUARTA Then
-            Call WriteMultiMessage(UserIndex, eMessages.NeedTournaments, REQUIERE_TORNEOS_CUARTA, .Faccion.Torneos)
+        If .Events.Torneos < REQUIERE_TORNEOS_CUARTA Then
+            Call WriteMultiMessage(UserIndex, eMessages.NeedTournaments, REQUIERE_TORNEOS_CUARTA, .Events.Torneos)
             Exit Sub
         End If
         
-        'If .Faccion.Quests < 5 Then
-        '    Call SendData(ToIndex, UserIndex, 0, Mensajes(Fuerzas, 14) & 5)
-        '    Exit Sub
-        'End If
+        If .Events.Quests < REQUIERE_QUESTS_CUARTA Then
+            Call WriteMultiMessage(UserIndex, eMessages.NeedQuests, REQUIERE_QUESTS_CUARTA, .Events.Quests)
+            Exit Sub
+        End If
+        
         
         .Faccion.Jerarquia = 4
         Call WriteMultiMessage(UserIndex, eMessages.HierarchyUpgradre, Titulo(UserIndex))
@@ -234,7 +242,7 @@ End Sub
 Public Sub Expulsar(ByVal UserIndex As Integer)
 
 Call WriteMultiMessage(UserIndex, eMessages.HierarchyExpelled)
-UserList(UserIndex).Faccion.Bando = eFaccion.Neutral
+UserList(UserIndex).Faccion.Bando = 0
 UserList(UserIndex).Faccion.Jerarquia = 0
 Call RefreshCharStatus(UserIndex)
 
@@ -331,3 +339,15 @@ End Select
 
 End Function
 
+Sub DesactivarMercenarios()
+    Dim UserIndex As Integer
+    For UserIndex = 1 To LastUser
+        With UserList(UserIndex)
+            If .Faccion.Bando <> eFaccion.Neutral And .Faccion.Bando <> .Faccion.BandoOriginal Then
+                Call WriteConsoleMsg(UserIndex, "La quest ha terminado, has dejado de ser un mercenario.", FontTypeNames.FONTTYPE_INFO)
+               .Faccion.Bando = eFaccion.Neutral
+                Call WarpUserChar(UserIndex, .Pos.Map, .Pos.X, .Pos.Y, False)
+            End If
+        End With
+    Next UserIndex
+End Sub

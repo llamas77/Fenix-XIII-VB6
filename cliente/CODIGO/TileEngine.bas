@@ -1162,7 +1162,7 @@ Sub Draw_Grh(ByRef Grh As Grh, ByVal X As Single, ByVal Y As Single, ByVal Cente
     
     If Animate Then
         If Grh.Started Then
-            Grh.FrameCounter = Grh.FrameCounter + animTicksPerFrame * Grh.Speed '/ 1000
+            Grh.FrameCounter = Grh.FrameCounter + animTicksPerFrame * 0.5 ' Grh.Speed '/ 1000
             
             If Grh.FrameCounter > GrhData(Grh.GrhIndex).NumFrames Then
                 Grh.FrameCounter = (Grh.FrameCounter Mod GrhData(Grh.GrhIndex).NumFrames) + 1
@@ -1906,7 +1906,7 @@ Private Sub ShowNextFrame(ByVal MouseViewX As Integer, ByVal MouseViewY As Integ
         If frmBancoObj.PicBancoInv.Visible Then _
         Call InvBanco(0).DrawInventory
        
-    If frmBancoObj.picInv.Visible Then _
+    If frmBancoObj.PicInv.Visible Then _
         Call InvBanco(1).DrawInventory
    
    

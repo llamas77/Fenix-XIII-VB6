@@ -227,7 +227,7 @@ Private Enum ClientPacketID
     ChangePassword          '/PASSWORD
     Gamble                  '/APOSTAR
     InquiryVote             '/ENCUESTA ( with parameters )
-    LeaveFaction            '/RETIRAR ( with no arguments )
+    LeaveFaction            '/ABANDONAR
     BankExtractGold         '/RETIRAR ( with arguments )
     BankDepositGold         '/DEPOSITAR
     Denounce                '/DENUNCIAR
@@ -247,6 +247,7 @@ Private Enum ClientPacketID
     GuildConfirmFoundation
     GuildRequest
     MoveItem
+    Mercenary
 End Enum
 
 Public Enum FontTypeNames
@@ -807,9 +808,6 @@ Public Sub HandleMultiMessage()
     With incomingData
     
         Select Case .ReadByte
-            Case eMessages.DontSeeAnything
-                Call AddtoRichTextBox(frmMain.RecTxt, MENSAJE_NO_VES_NADA_INTERESANTE, 65, 190, 156, False, False)
-            
             Case eMessages.NPCSwing
                 Call AddtoRichTextBox(frmMain.RecTxt, MENSAJE_CRIATURA_FALLA_GOLPE, 255, 0, 0, True, False)
             
@@ -987,9 +985,9 @@ Public Sub HandleMultiMessage()
                 End If
             Case eMessages.LastHierarchy
                 If UserFaccion = eFaccion.Real Then
-                    Call Dialogos.CreateDialog("¡Ya has alcanzado la máxima jerarquia de la Alianza del Fénix!", .ReadInteger, -1)
+                    Call Dialogos.CreateDialog("¡Ya has alcanzado la máxima jerarquía de la Alianza del Fénix!", .ReadInteger, -1)
                 Else
-                    Call Dialogos.CreateDialog("¡Ya has alcanzado la máxima jerarquia en el Ejército de Lord Thek!", .ReadInteger, -1)
+                    Call Dialogos.CreateDialog("¡Ya has alcanzado la máxima jerarquía en el Ejército de Lord Thek!", .ReadInteger, -1)
                 End If
                 
             Case eMessages.HierarchyExpelled
@@ -1057,6 +1055,13 @@ Public Sub HandleMultiMessage()
                 With FontTypes(FontTypeNames.FONTTYPE_INFOBOLD)
                     Call ShowConsoleMsg("Se eliminará la petición al clan anterior.", .Red, .Green, .blue, .bold, .italic)
                 End With
+             
+             Case eMessages.NeedQuests
+                If UserFaccion = eFaccion.Real Then
+                    Call ShowConsoleMsg("No ganaste suficientes quests. Tenés que haber ganado " & .ReadByte & ", tienes: " & .ReadByte & ".", 0, 128, 255, True)
+                Else
+                    Call ShowConsoleMsg("No ganaste suficientes quests. Tenés que haber ganado " & .ReadByte & ", tienes: " & .ReadByte & ".", 255, 0, 0, True)
+                End If
         End Select
     End With
 
@@ -1176,7 +1181,11 @@ Private Sub HandleDisconnect()
     
     frmMain.Second.Enabled = False
     frmMain.macrotrabajo.Enabled = False
-    
+    frmMain.imgAsignarSkill.Visible = False
+    frmMain.lblRecompensa.Visible = False
+    frmMain.lblFaccion.Visible = False
+    frmMain.lblClase.Visible = False
+    frmMain.lblMana.Visible = False
     'Unload all forms except frmMain
     Dim frm As Form
     
@@ -1628,13 +1637,12 @@ Private Sub HandleUpdateMana()
     UserMinMAN = incomingData.ReadInteger()
     
     
-    
     Dim mWidth As Byte
-    
+
     mWidth = (((UserMinMAN / 100) / (UserMaxMAN / 100)) * 140)
         
     'If bWidth > 140 Then bWidth = 140
-        
+
     frmMain.imgMana.Width = mWidth
     'frmMain.imgMana.Left = frmMain.imgMana.Left + (140 - frmMain.imgMana.Width)
     frmMain.lblMana.Caption = UserMinMAN & "/" & UserMaxMAN
@@ -1756,8 +1764,14 @@ Private Sub HandleUpdateExp()
     'Get data and update form
     UserExp = incomingData.ReadLong()
     
-    frmMain.lblExp.Caption = "Exp: " & UserExp & "/" & UserPasarNivel
-    frmMain.lblPorcLvl.Caption = "[" & Round(CDbl(UserExp) * CDbl(100) / CDbl(UserPasarNivel), 2) & "%]"
+        Dim exWidth As Long
+    exWidth = (((UserExp / 100) / (UserPasarNivel / 100)) * 113)
+    
+   ' If bWidth > 140 Then bWidth = 140
+    
+    frmMain.imgExp.Width = exWidth
+    'frmMain.lblExp.Caption = UserExp & "/" & UserPasarNivel
+    frmMain.lblPorcLvl.Caption = Round(CDbl(UserExp) * CDbl(100) / CDbl(UserPasarNivel), 2) & "%"
 End Sub
 
 ''
@@ -2827,12 +2841,26 @@ Private Sub HandleUpdateUserStats()
     UserPasarNivel = incomingData.ReadLong()
     UserExp = incomingData.ReadLong()
     
-    frmMain.lblExp.Caption = "Exp: " & UserExp & "/" & UserPasarNivel
+   ' frmMain.lblExp.Caption = UserExp & "/" & UserPasarNivel
+  
+    If UserLvl < 45 Then
+    frmMain.lblPorcLvl.Visible = True
+    Dim exWidth As Long
+    exWidth = (((UserExp / 100) / (UserPasarNivel / 100)) * 113)
     
-    If UserPasarNivel > 0 Then
-        frmMain.lblPorcLvl.Caption = "[" & Round(CDbl(UserExp) * CDbl(100) / CDbl(UserPasarNivel), 2) & "%]"
+   ' If bWidth > 140 Then bWidth = 140
+    
+    frmMain.imgExp.Width = exWidth
+    'frmMain.lblExp.Caption = UserExp & "/" & UserPasarNivel
+    frmMain.lblPorcLvl.Caption = Round(CDbl(UserExp) * CDbl(100) / CDbl(UserPasarNivel), 2) & "%"
+    'End If
+    frmMain.lblMaximo.Visible = False
     Else
-        frmMain.lblPorcLvl.Caption = "[N/A]"
+        frmMain.imgExp.Visible = True
+        frmMain.imgExp.Width = 113
+        frmMain.lblMaximo.Visible = True
+        'frmMain.lblExp.Visible = False
+        frmMain.lblPorcLvl.Visible = False
     End If
         
     If UserGLD <> 0 Then
@@ -2840,15 +2868,17 @@ Private Sub HandleUpdateUserStats()
        Else
         frmMain.GldLbl.Caption = UserGLD
     End If
-    frmMain.lblLvl.Caption = UserLvl
     
+    frmMain.lblLvl.Caption = UserLvl
     
     
     Dim mWidth As Byte
     
     '***************************
-   ' If UserMaxMAN > 0 Then
+    If UserMaxMAN > 0 Then
+        frmMain.lblMana.Visible = True
         mWidth = (((UserMinMAN / 100) / (UserMaxMAN / 100)) * 140)
+    End If
     'If bWidth > 140 Then bWidth = 140
         
     frmMain.imgMana.Width = mWidth
@@ -8216,13 +8246,21 @@ Public Sub WriteSendEligioSubClase(ByVal Index As Integer)
 
 End Sub
 
-Public Sub WriteEligioFaccion(ByVal Faccion As eFaccion)
+Public Sub WriteEligioFaccion(ByVal Index As Integer)
     
     With outgoingData
             
-        .WriteByte ClientPacketID.EligioFaccion
-        .WriteByte Faccion
+        Call .WriteByte(ClientPacketID.EligioFaccion)
+        Call .WriteByte(Index)
     
+    End With
+End Sub
+
+Public Sub WriteMercenary(ByVal Index As Integer)
+
+    With outgoingData
+        Call .WriteByte(ClientPacketID.Mercenary)
+        Call .WriteByte(Index)
     End With
 End Sub
 
@@ -8348,6 +8386,21 @@ Private Sub HandleUpdateUsersOnline()
     'Get data and update form
     NumUsers = incomingData.ReadInteger()
     frmMain.lblOnline.Caption = NumUsers
+End Sub
+
+''
+' Writes the "ModoQuest" message to the outgoing data incomingData.
+'
+' @remarks  The data is not actually sent until the incomingData is properly flushed.
+
+Public Sub WriteModoQuest()
+'***************************************************
+'Author: Juan Martín Sotuyo Dodero (Maraxus)
+'Last Modification: 05/17/06
+'Writes the "Online" message to the outgoing data incomingData
+'***************************************************
+    Call outgoingData.WriteByte(ClientPacketID.GMCommands)
+    Call outgoingData.WriteByte(eGMCommands.ModoQuest)
 End Sub
 
 ''

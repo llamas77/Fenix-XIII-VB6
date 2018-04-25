@@ -104,7 +104,11 @@ Public Sub Comercio(ByVal Modo As eModoComercio, ByVal UserIndex As Integer, ByV
         Objeto.Amount = Cantidad
         Objeto.OBJIndex = UserList(UserIndex).Invent.Object(Slot).OBJIndex
         
+        
         If Objeto.OBJIndex = 0 Then
+            Exit Sub
+        ElseIf UserList(UserIndex).Invent.Object(Slot).Equipped = 1 Then
+            Call WriteConsoleMsg(UserIndex, "No puedes vender objetos que tienes equipados.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         'ElseIf (Npclist(NpcIndex).TipoItems <> ObjData(Objeto.OBJIndex).OBJType And Npclist(NpcIndex).TipoItems <> eOBJType.otCualquiera) Or Objeto.OBJIndex = iORO Then
         '    Call WriteConsoleMsg(UserIndex, "Lo siento, no estoy interesado en este tipo de objetos.", FontTypeNames.FONTTYPE_INFO)

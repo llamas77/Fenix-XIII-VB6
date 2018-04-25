@@ -1781,7 +1781,7 @@ SkillPuedeUsarItem = True
 
 End Function
 
-Public Sub moveItem(ByVal UserIndex As Integer, ByVal originalSlot As Integer, ByVal newSlot As Integer)
+Public Sub MoveItem(ByVal UserIndex As Integer, ByVal originalSlot As Integer, ByVal newSlot As Integer)
  
 Dim tmpObj As UserOBJ
 Dim newObjIndex As Integer, originalObjIndex As Integer

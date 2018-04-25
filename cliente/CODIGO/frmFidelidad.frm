@@ -69,16 +69,16 @@ Attribute VB_Exposed = False
 'elpresi@fenixao.com.ar
 'www.fenixao.com.ar
 
-Private Fide As Byte
+'Private Fide As Byte
 
-Public Sub SetFide(ByVal Faccion As eFaccion)
-    Fide = Faccion
-End Sub
+'Public Sub SetFide(ByVal Faccion As eFaccion)
+'    Fide = Faccion
+'End Sub
 Private Sub Form_Load()
 
-If Fide = 1 Then
+If DeclareFidelity = 1 Then
 Me.Picture = LoadPicture(DirGraficos & "fidelidadrey.gif")
-ElseIf Fide = 2 Then
+ElseIf DeclareFidelity = 2 Then
 Me.Picture = LoadPicture(DirGraficos & "fidelidadthek.gif")
 Else
 Unload Me
@@ -87,9 +87,10 @@ End If
 End Sub
 
 Private Sub Image1_Click()
-Call WriteEligioFaccion(Fide)
-Unload FrmElegirCamino
+Call WriteEligioFaccion(DeclareFidelity)
+Unload frmElegirCamino
 Unload Me
+frmMain.lblFaccion.Visible = False
 End Sub
 
 Private Sub Image2_Click()

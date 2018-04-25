@@ -38,7 +38,7 @@ Private Type tComponent 'todo: rehacer, es terrible, OOP where are u?
         Y           As Integer
         W           As Integer
         H           As Integer
-        
+        L           As Byte
         Component   As eComponentType
         
         Enable      As Boolean
@@ -752,13 +752,13 @@ Private Sub UpdateTextBoxBuffer(ByVal ID As Integer)
                 End If
                 
                 If Focused = ID Then
-                    If Len(renderstr) < 22 Then
+                    'If LenB(renderstr) <= 21 Then
                         Call Text_Draw(.X + 2, .Y + 2, renderstr + "|", .ForeColor)
-                    End If
+                    'End If
                 Else
-                    If Len(renderstr) < 22 Then
+                    'If LenB(renderstr) <= 21 Then
                         Call Text_Draw(.X + 2, .Y + 2, renderstr, .ForeColor)
-                    End If
+                    'End If
                 End If
             Else
                 If Focused = ID Then

@@ -250,24 +250,24 @@ Public Enum eClass
         Luchador = 12 '35
         Con_Mana = 13 '36
         Hechicero = 14 '37
-        MAGO = 15 '38
+        Mago = 15 '38
         NIGROMANTE = 16 '39
         Orden_Sagrada = 17 '40
         PALADIN = 18 '41
         CLERIGO = 19 '42
         Naturalista = 20 '43
         BARDO = 21 '44
-        DRUIDA = 22 '45
+        Druida = 22 '45
         Sigiloso = 23 '46
         ASESINO = 24 '47
-        CAZADOR = 25 '48
+        Cazador = 25 '48
         Sin_Mana = 26 '49
         ARQUERO = 27 '50
-        GUERRERO = 28 '51
+        Guerrero = 28 '51
         Caballero = 29 '52
         Bandido = 30 '53
-        PIRATA = 31 '55
-        LADRON = 32 '56
+        Pirata = 31 '55
+        Ladron = 32 '56
 End Enum
 
 Public Enum eCiudad
@@ -375,7 +375,9 @@ Public Enum eMochilas
     Mediana = 1
     GRANDE = 2
 End Enum
-
+Public Ayuda As Byte
+Public SubAyuda As Byte
+Public DeclareFidelity As Byte
 Public MaxInventorySlots As Byte
 
 Public Const FundirMetal As Integer = 88
@@ -506,7 +508,8 @@ Public Enum eGMCommands
     LoseTournament          '/PERDIOTORNEO
     WinQuest                '/GANOQUEST
     LoseQuest               '/PERDIOQUEST
-    Online                  '/ONLINE
+    Online                  '/ONLINES
+    ModoQuest               '/MODOQUEST
 End Enum
 
 '
@@ -573,7 +576,7 @@ Public Const MENSAJE_FRAGSHOOTER_HAS_MATADO As String = "Has matado a"
 Public Const MENSAJE_FRAGSHOOTER_HAS_GANADO As String = "Has ganado "
 Public Const MENSAJE_FRAGSHOOTER_PUNTOS_DE_EXPERIENCIA As String = "puntos de experiencia."
 
-Public Const MENSAJE_NO_VES_NADA_INTERESANTE As String = "No ves nada interesante."
+'Public Const MENSAJE_NO_VES_NADA_INTERESANTE As String = "No ves nada interesante."
 Public Const MENSAJE_HAS_MATADO_A As String = "Has matado a "
 Public Const MENSAJE_HAS_GANADO_EXPE_1 As String = "Has ganado "
 Public Const MENSAJE_HAS_GANADO_EXPE_2 As String = " puntos de experiencia."
@@ -583,7 +586,6 @@ Public Const MENSAJE_HOGAR As String = "Has llegado a tu hogar. El viaje ha fina
 Public Const MENSAJE_HOGAR_CANCEL As String = "Tu viaje ha sido cancelado."
 
 Public Enum eMessages
-    DontSeeAnything
     NPCSwing
     NPCKillUser
     BlockedWithShieldUser
@@ -620,6 +622,7 @@ Public Enum eMessages
     AlreadyInGuild
     PreviousRequest
     EnemyGuild
+    NeedQuests
 End Enum
 
 'Inventario

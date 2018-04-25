@@ -1179,7 +1179,7 @@ Private uSkills(1 To NUMSKILLS) As Byte
 Private MouseButton As Integer
 Private MouseShift As Integer
 
-Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByRef Destination As Any, ByRef Source As Any, ByVal Length As Long)
+Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByRef destination As Any, ByRef source As Any, ByVal length As Long)
 
 
 Private Sub command1_Click()

@@ -114,11 +114,7 @@ End Function
 Public Function PuedeFaccion(ByVal UserIndex As Integer)
     
     With UserList(UserIndex)
-    
-        PuedeFaccion = Not EsNewbie(UserIndex) And _
-        (.Faccion.BandoOriginal = eFaccion.Neutral) And _
-        (.flags.Privilegios And PlayerType.User) 'and (.guilindex > 0)
-    
+        PuedeFaccion = Not EsGM(UserIndex) And Not EsNewbie(UserIndex) And (.Faccion.BandoOriginal = 0) 'And (.flags.Privilegios And PlayerType.User) 'and (.guilindex > 0)
     End With
 End Function
 Public Function PuedeSubirClase(ByVal UserIndex As Integer) As Boolean

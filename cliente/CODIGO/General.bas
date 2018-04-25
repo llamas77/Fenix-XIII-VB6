@@ -162,7 +162,6 @@ On Error Resume Next
     For i = 0 To 46 '49 y 50 reservados para ciudadano y criminal
         ColoresPJ(i) = D3DColorXRGB(CInt(GetVar(archivoC, CStr(i), "R")), CInt(GetVar(archivoC, CStr(i), "G")), CInt(GetVar(archivoC, CStr(i), "B")))
     Next i
-    
     ' Crimi
     ColoresPJ(50) = D3DColorXRGB(CInt(GetVar(archivoC, "CR", "R")), _
     CInt(GetVar(archivoC, "CR", "G")), _
@@ -611,7 +610,7 @@ UserMap = 1
     Audio.SoundEffectsActivated = Not ClientSetup.bNoSoundEffects
     
     'Inicializamos el inventario gráfico
-    Call Inventario.Initialize(frmMain.PicInv, MAX_INVENTORY_SLOTS)
+    Call Inventario.Initialize(frmMain.picInv, MAX_INVENTORY_SLOTS)
     
     Call Audio.MusicMP3Play(App.path & "\MP3\" & MP3_Inicio & ".mp3")
     

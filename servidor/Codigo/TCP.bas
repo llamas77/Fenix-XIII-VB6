@@ -1019,7 +1019,15 @@ With UserList(UserIndex)
    '     Call WriteShowMessageBox(UserIndex, "Tu solicitud de ingreso al clan ha sido rechazada. El clan te explica que: " & tStr)
    ' End If
     Call MostrarNumUsers
-
+    If EnModoQuest Then
+            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Modo Quest activado.", FontTypeNames.FONTTYPE_GUILD))
+            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Los neutrales pueden poner /MERCENARIO ALIANZA o /MERCENARIO LORDTHEK para enlistarse en alguna facción temporalmente durante la quest.", FontTypeNames.FONTTYPE_GUILD))
+    End If
+    
+    If Not EnModoQuest And UserList(UserIndex).Faccion.Bando <> eFaccion.Neutral And UserList(UserIndex).Faccion.Bando <> UserList(UserIndex).Faccion.BandoOriginal Then
+        UserList(UserIndex).Faccion.Bando = eFaccion.Neutral
+        Call WarpUserChar(UserIndex, .Pos.Map, .Pos.X, .Pos.Y, False)
+    End If
     
     N = FreeFile
     Open App.path & "\logs\numusers.log" For Output As N
@@ -1065,7 +1073,7 @@ Sub ResetFacciones(ByVal UserIndex As Integer)
         .Matados(0) = 0
         .Matados(1) = 0
         .Matados(2) = 0
-        .Torneos = 0
+'        .Torneos = 0
     End With
 End Sub
 
@@ -1488,6 +1496,8 @@ Public Sub EcharPjsNoPrivilegiados()
     For LoopC = 1 To LastUser
         If UserList(LoopC).flags.UserLogged And UserList(LoopC).ConnID >= 0 And UserList(LoopC).ConnIDValida Then
             If UserList(LoopC).flags.Privilegios And PlayerType.User Then
+                Call WriteDisconnect(LoopC)
+                Call FlushBuffer(LoopC)
                 Call CloseSocket(LoopC)
             End If
         End If

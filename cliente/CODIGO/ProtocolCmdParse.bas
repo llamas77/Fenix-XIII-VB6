@@ -127,6 +127,9 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
         ' Comando normal
         
         Select Case Comando
+            Case "/MODOQUEST"
+                Call WriteModoQuest
+                
             Case "/ONLINES"
                 Call WriteOnline
                 
@@ -357,7 +360,7 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
                     Call ShowConsoleMsg("Faltan parámetros. Utilice /apostar CANTIDAD.")
                 End If
                 
-            Case "/RETIRARFACCION"
+            Case "/ABANDONAR"
                 If UserEstado = 1 Then 'Muerto
                     With FontTypes(FontTypeNames.FONTTYPE_INFO)
                         Call ShowConsoleMsg("¡¡Estás muerto!!", .Red, .Green, .blue, .bold, .italic)
@@ -526,6 +529,22 @@ Public Sub ParseUserCommand(ByVal RawCommand As String)
                             Call WriteShowServerForm
                             
                     End Select
+                End If
+            
+            Case "/MERCENARIO"
+                If notNullArguments Then
+                    Select Case UCase$(ArgumentosAll(0))
+                        Case "ALIANZA"
+                            Call WriteMercenary(1)
+                            
+                        Case "LORDTHEK"
+                            Call WriteMercenary(2)
+                        
+                        Case Else
+                            Call ShowConsoleMsg("Los parámetros disponibles son: /MERCENARIO ALIANZA o /MERCENARIO LORDTHEK.")
+                    End Select
+                Else
+                    Call ShowConsoleMsg("Faltan parámetros. Utilice /MERCENARIO ALIANZA o /MERCENARIO LORDTHEK.")
                 End If
                 
             Case "/IRA"

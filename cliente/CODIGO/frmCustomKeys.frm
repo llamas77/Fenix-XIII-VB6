@@ -679,7 +679,7 @@ Private Sub imgGuardar_Click()
     
     For i = 1 To CustomKeys.Count
         If LenB(Text1(i).Text) = 0 Then
-            Call MsgBox("Hay una o más teclas no válidas, por favor verifique.", vbCritical Or vbOKOnly Or vbApplicationModal Or vbDefaultButton1, "Argentum Online")
+            Call MsgBox("Hay una o más teclas no válidas, por favor verifique.", vbCritical Or vbOKOnly Or vbApplicationModal Or vbDefaultButton1, "Fénix XII")
             Exit Sub
         End If
     Next i

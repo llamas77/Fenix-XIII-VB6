@@ -1141,8 +1141,6 @@ Public Type tFacciones
     Matados(0 To 2) As Integer
     Ataco(1 To 2) As Byte
     Jerarquia As Byte
-    'Quests As Integer 'todo
-    Torneos As Integer
     RMSG As Byte
 End Type
 
@@ -1482,7 +1480,7 @@ Public Minutos As String
 Public haciendoBK As Boolean
 Public PuedeCrearPersonajes As Integer
 Public ServerSoloGMs As Integer
-
+Public EnModoQuest As Boolean
 ''
 'Esta activada la verificacion MD5 ?
 Public MD5ClientesActivado As Byte
@@ -1549,7 +1547,6 @@ Public Enum e_ObjetosCriticos
 End Enum
 
 Public Enum eMessages
-    DontSeeAnything
     NPCSwing
     NPCKillUser
     BlockedWithShieldUser
@@ -1586,6 +1583,7 @@ Public Enum eMessages
     AlreadyInGuild
     PreviousRequest
     EnemyGuild
+    NeedQuests
 End Enum
 
 Public Enum eGMCommands
@@ -1714,7 +1712,8 @@ Public Enum eGMCommands
     LoseTournament          '/PERDIOTORNEO
     WinQuest                '/GANOQUEST
     LoseQuest               '/PERDIOQUEST
-    Online                  '/ONLINE
+    Online                  '/ONLINES
+    ModoQuest               '/MODOQUEST
 End Enum
 
 Public Const GOHOME_PENALTY As Integer = 5

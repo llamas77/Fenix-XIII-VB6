@@ -12,46 +12,63 @@ Begin VB.Form frmElegirCamino
    ScaleWidth      =   7185
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
-   Begin VB.Label Label10 
+   Begin VB.Label Label8 
+      AutoSize        =   -1  'True
       BackColor       =   &H00000000&
+      BackStyle       =   0  'Transparent
       Caption         =   "Más información"
       ForeColor       =   &H00FFFFFF&
       Height          =   255
-      Left            =   4700
+      Index           =   2
+      Left            =   4800
       MouseIcon       =   "frmElegirCamino.frx":0000
       MousePointer    =   99  'Custom
       TabIndex        =   9
-      Top             =   3600
-      Width           =   1215
-   End
-   Begin VB.Label Label9 
-      BackColor       =   &H00000000&
-      Caption         =   "Más información"
-      ForeColor       =   &H00FFFFFF&
-      Height          =   255
-      Left            =   3120
-      MouseIcon       =   "frmElegirCamino.frx":030A
-      MousePointer    =   99  'Custom
-      TabIndex        =   8
-      Top             =   6360
+      Top             =   3720
       Width           =   1215
    End
    Begin VB.Label Label8 
+      AutoSize        =   -1  'True
       BackColor       =   &H00000000&
+      BackStyle       =   0  'Transparent
       Caption         =   "Más información"
       ForeColor       =   &H00FFFFFF&
       Height          =   255
-      Left            =   1530
+      Index           =   1
+      Left            =   1560
+      MouseIcon       =   "frmElegirCamino.frx":030A
+      MousePointer    =   99  'Custom
+      TabIndex        =   8
+      Top             =   3720
+      Width           =   1215
+   End
+   Begin VB.Image Fidelidad 
+      Height          =   255
+      Index           =   0
+      Left            =   3120
       MouseIcon       =   "frmElegirCamino.frx":0614
       MousePointer    =   99  'Custom
+      Top             =   6840
+      Width           =   1095
+   End
+   Begin VB.Label Label8 
+      BackColor       =   &H00000000&
+      BackStyle       =   0  'Transparent
+      Caption         =   "Más información"
+      ForeColor       =   &H00FFFFFF&
+      Height          =   255
+      Index           =   0
+      Left            =   3120
+      MouseIcon       =   "frmElegirCamino.frx":091E
+      MousePointer    =   99  'Custom
       TabIndex        =   7
-      Top             =   3650
+      Top             =   6480
       Width           =   1215
    End
    Begin VB.Image Image1 
       Height          =   375
       Left            =   0
-      MouseIcon       =   "frmElegirCamino.frx":091E
+      MouseIcon       =   "frmElegirCamino.frx":0C28
       MousePointer    =   99  'Custom
       Top             =   7080
       Width           =   735
@@ -60,7 +77,7 @@ Begin VB.Form frmElegirCamino
       Height          =   255
       Index           =   2
       Left            =   4800
-      MouseIcon       =   "frmElegirCamino.frx":0C28
+      MouseIcon       =   "frmElegirCamino.frx":0F32
       MousePointer    =   99  'Custom
       Top             =   4080
       Width           =   1095
@@ -69,17 +86,9 @@ Begin VB.Form frmElegirCamino
       Height          =   255
       Index           =   1
       Left            =   1560
-      MouseIcon       =   "frmElegirCamino.frx":0F32
-      MousePointer    =   99  'Custom
-      Top             =   4080
-      Width           =   1095
-   End
-   Begin VB.Image command3 
-      Height          =   375
-      Left            =   3120
       MouseIcon       =   "frmElegirCamino.frx":123C
       MousePointer    =   99  'Custom
-      Top             =   6720
+      Top             =   4080
       Width           =   1095
    End
    Begin VB.Label Label6 
@@ -119,7 +128,7 @@ Begin VB.Form frmElegirCamino
       BackStyle       =   0  'Transparent
       Caption         =   $"frmElegirCamino.frx":16FC
       ForeColor       =   &H00FFFFFF&
-      Height          =   2175
+      Height          =   1575
       Left            =   3810
       TabIndex        =   4
       Top             =   2040
@@ -130,7 +139,7 @@ Begin VB.Form frmElegirCamino
       BackStyle       =   0  'Transparent
       Caption         =   $"frmElegirCamino.frx":1802
       ForeColor       =   &H00FFFFFF&
-      Height          =   1935
+      Height          =   1575
       Left            =   600
       TabIndex        =   3
       Top             =   2100
@@ -227,19 +236,18 @@ Attribute VB_Exposed = False
 'You can contact me at:
 'elpresi@fenixao.com.ar
 'www.fenixao.com.ar
+Option Explicit
 
-Private Sub Command3_Click()
-Call WriteEligioFaccion(0)
-Unload Me
-End Sub
 Private Sub Fidelidad_Click(Index As Integer)
+'Call WriteEligioFaccion(Index)
+If Index = 0 Then
+    Call WriteEligioFaccion(Index)
+Else
+    DeclareFidelity = Index
+    frmFidelidad.Show
+End If
 
-Unload frmFidelidad
-
-Call frmFidelidad.SetFide(Index)
-
-frmFidelidad.Show
-
+Unload Me
 End Sub
 
 Private Sub Form_Load()
@@ -247,9 +255,7 @@ Me.Picture = LoadPicture(DirGraficos & "Suclases3op.gif")
 End Sub
 
 Private Sub Image1_Click()
-
 Unload Me
-
 End Sub
 Private Sub Label10_Click()
 Ayuda = 1
@@ -257,9 +263,9 @@ SubAyuda = 2
 FrmAyuda.Show
 End Sub
 
-Private Sub Label8_Click()
+Private Sub Label8_Click(Index As Integer)
 Ayuda = 1
-SubAyuda = 1
+SubAyuda = Index
 FrmAyuda.Show
 End Sub
 

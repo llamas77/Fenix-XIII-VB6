@@ -226,7 +226,7 @@ Private Enum ClientPacketID
     ChangePassword          '/PASSWORD
     Gamble                  '/APOSTAR
     InquiryVote             '/ENCUESTA ( with parameters )
-    LeaveFaction            '/RETIRAR ( with no arguments )
+    LeaveFaction            '/ABANDONAR
     BankExtractGold         '/RETIRAR ( with arguments )
     BankDepositGold         '/DEPOSITAR
     Denounce                '/DENUNCIAR
@@ -245,7 +245,8 @@ Private Enum ClientPacketID
     GuildFoundate
     GuildConfirmFoundation
     GuildRequest
-    moveItem
+    MoveItem
+    Mercenary
 End Enum
 
 ''
@@ -562,7 +563,7 @@ On Error Resume Next
         Case ClientPacketID.InquiryVote             '/ENCUESTA ( with parameters )
             Call HandleInquiryVote(UserIndex)
         
-        Case ClientPacketID.LeaveFaction            '/RETIRAR ( with no arguments )
+        Case ClientPacketID.LeaveFaction            '/ABANDONAR
             Call HandleLeaveFaction(UserIndex)
         
         Case ClientPacketID.BankExtractGold         '/RETIRAR ( with arguments )
@@ -619,8 +620,11 @@ On Error Resume Next
         Case ClientPacketID.GuildRequest
             Call HandleGuildRequest(UserIndex)
             
-        Case ClientPacketID.moveItem
+        Case ClientPacketID.MoveItem
             Call HandleMoveItem(UserIndex)
+            
+        Case ClientPacketID.Mercenary
+            Call HandleMercenary(UserIndex)
             
         Case Else
             'ERROR : Abort!
@@ -660,7 +664,7 @@ On Error GoTo Errhandler
         Call .WriteByte(MessageIndex)
         
         Select Case MessageIndex
-            Case eMessages.DontSeeAnything, eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, _
+            Case eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, _
                 eMessages.BlockedWithShieldother, eMessages.UserSwing, eMessages.NobilityLost, _
                 eMessages.CantUseWhileMeditating, eMessages.CancelHome, eMessages.FinishHome
             
@@ -730,7 +734,7 @@ With UserList(UserIndex)
     
     Command = .incomingData.PeekByte
     
-    Select Case Command
+      Select Case Command
         Case eGMCommands.GMMessage                '/GMSG
             Call HandleGMMessage(UserIndex)
         
@@ -1106,9 +1110,12 @@ With UserList(UserIndex)
         Case eGMCommands.LoseQuest               '/PERDIOQUEST
             Call HandleLoseQuest(UserIndex)
             
-        Case eGMCommands.Online                  '/ONLINE
+        Case eGMCommands.Online                  '/ONLINES
             Call HandleOnline(UserIndex)
-    End Select
+        
+        Case eGMCommands.ModoQuest               '/MODOQUEST
+            Call HandleModoQuest(UserIndex)
+      End Select
 End With
 
 Exit Sub
@@ -3697,6 +3704,32 @@ Private Sub HandleUserCommerceOffer(ByVal UserIndex As Integer)
 End Sub
 
 ''
+' Handles the "ModoQuest" message.
+'
+' @param    userIndex The index of the user sending the message.
+
+Private Sub HandleModoQuest(ByVal UserIndex As Integer)
+
+    With UserList(UserIndex)
+        Call .incomingData.ReadByte
+        
+        If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.RoleMaster) Then Exit Sub
+        
+        EnModoQuest = Not EnModoQuest
+        
+        If EnModoQuest Then
+            Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg(UserList(UserIndex).Name & " activó el modo quest.", FontTypeNames.FONTTYPE_INFO))
+            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Modo Quest activado.", FontTypeNames.FONTTYPE_GUILD))
+            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Los neutrales pueden poner /MERCENARIO ALIANZA o /MERCENARIO LORDTHEK para enlistarse en alguna facción temporalmente durante la quest.", FontTypeNames.FONTTYPE_GUILD))
+        Else
+            Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg(UserList(UserIndex).Name & " desactivó el modo quest.", FontTypeNames.FONTTYPE_INFO))
+            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Modo Quest desactivado.", FontTypeNames.FONTTYPE_GUILD))
+            Call DesactivarMercenarios
+        End If
+    End With
+End Sub
+
+''
 ' Handles the "Online" message.
 '
 ' @param    userIndex The index of the user sending the message.
@@ -3730,6 +3763,10 @@ Private Sub HandleOnline(ByVal UserIndex As Integer)
        
     End With
 End Sub
+
+
+
+
 
 ''
 ' Handles the "Quit" message.
@@ -4582,7 +4619,7 @@ Private Sub HandleReward(ByVal UserIndex As Integer)
         If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Noble _
             Or .flags.Muerto <> 0 Then Exit Sub
         
-        If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 4 Then
+        If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 5 Then
             Call WriteConsoleMsg(UserIndex, "Estás demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
@@ -5254,7 +5291,7 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
             ' Es rey o domonio?
             If Npclist(NpcIndex).NPCtype = eNPCType.Noble Then
                 'Rey?
-                If Npclist(NpcIndex).flags.Faccion = eFaccion.Real Then
+                If Npclist(NpcIndex).flags.Faccion = 1 Then
                     TalkToKing = True
                 ' Demonio
                 Else
@@ -5264,36 +5301,29 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
         End If
                
         'Quit the Royal Army?
-        If .Faccion.Bando = eFaccion.Real Then
+        If .Faccion.Bando = 1 Then
             ' Si le pidio al demonio salir de la armada, este le responde.
             If TalkToDemon Then
-                Call WriteChatOverHead(UserIndex, "¡¡¡Sal de aquí bufón!!!", _
-                                       Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "¡¡¡Sal de aquí bufón!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
             
             Else
                 ' Si le pidio al rey salir de la armada, le responde.
                 If TalkToKing Then
-                    Call WriteChatOverHead(UserIndex, "Serás bienvenido a las fuerzas imperiales si deseas regresar.", _
-                                           Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Serás bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
                 End If
-                
                 Call Expulsar(UserIndex)
-                
             End If
         
         'Quit the Chaos Legion?
-        ElseIf .Faccion.Bando = eFaccion.Caos Then
+        ElseIf .Faccion.Bando = 2 Then
             ' Si le pidio al rey salir del caos, le responde.
             If TalkToKing Then
-                Call WriteChatOverHead(UserIndex, "¡¡¡Sal de aquí maldito criminal!!!", _
-                                       Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "¡¡¡Sal de aquí maldito criminal!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
             Else
                 ' Si le pidio al demonio salir del caos, este le responde.
                 If TalkToDemon Then
-                    Call WriteChatOverHead(UserIndex, "Ya volverás arrastrandote.", _
-                                           Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Ya volverás arrastrándote.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
                 End If
-                
                 Call Expulsar(UserIndex)
             End If
         ' No es faccionario
@@ -5301,8 +5331,7 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
         
             ' Si le hablaba al rey o demonio, le repsonden ellos
             If NpcIndex > 0 Then
-                Call WriteChatOverHead(UserIndex, "¡No perteneces a ninguna facción!", _
-                                       Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "¡No perteneces a ninguna facción!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
             Else
                 Call WriteConsoleMsg(UserIndex, "¡No perteneces a ninguna facción!", FontTypeNames.FONTTYPE_FIGHT)
             End If
@@ -7536,6 +7565,8 @@ On Error GoTo Errhandler
                     Call WriteConsoleMsg(UserIndex, "No puedes echar a alguien con jerarquía mayor a la tuya.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " echó a " & UserName & ".", FontTypeNames.FONTTYPE_INFO))
+                    Call WriteDisconnect(tUser)
+                    Call FlushBuffer(tUser)
                     Call CloseSocket(tUser)
                     Call LogGM(.Name, "Echó a " & UserName)
                 End If
@@ -14317,7 +14348,7 @@ Public Function PrepareMessageMultiMessage(ByVal MessageIndex As Integer, Option
         Call .WriteByte(MessageIndex)
         
         Select Case MessageIndex
-            Case eMessages.DontSeeAnything, eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, _
+            Case eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, _
                 eMessages.BlockedWithShieldother, eMessages.UserSwing, eMessages.NobilityLost, _
                 eMessages.CantUseWhileMeditating, eMessages.CancelHome, eMessages.FinishHome
             
@@ -14837,9 +14868,10 @@ Private Sub HandleWinTournament(ByVal UserIndex As Integer)
         
         If UI > 0 Then
             UserList(UI).Events.Torneos = UserList(UI).Events.Torneos + 1
-            UserList(UI).Faccion.Torneos = UserList(UI).Faccion.Torneos + 1
+            'UserList(UI).Faccion.Torneos = UserList(UI).Faccion.Torneos + 1
         End If 'todo: deslogeado
-        
+
+        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserList(UI).Name & " ganó un torneo.", FontTypeNames.FONTTYPE_INFO))
         Call .incomingData.CopyBuffer(Buffer)
     End With
 
@@ -14871,8 +14903,13 @@ Private Sub HandleLoseTournament(ByVal UserIndex As Integer)
         
         UI = NameIndex(Buffer.ReadASCIIString())
         
-        'que se supone que hace este comando?
+        If UserList(UI).Events.Torneos = 0 Then Exit Sub
         
+        If UI > 0 Then
+            UserList(UI).Events.Torneos = UserList(UI).Events.Torneos - 1
+        End If
+
+        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserList(UI).Name & " perdió un torneo.", FontTypeNames.FONTTYPE_INFO))
         Call .incomingData.CopyBuffer(Buffer)
     End With
 
@@ -14904,10 +14941,9 @@ Private Sub HandleWinQuest(ByVal UserIndex As Integer)
         UI = NameIndex(Buffer.ReadASCIIString())
         
         If UI > 0 Then
-            UserList(UI).Events.Torneos = UserList(UI).Events.Quests + 1
-            'UserList(UI).Faccion.Torneos = UserList(UI).Faccion.Quests + 1 'todo
-        End If 'todo: deslogeado
-        
+            UserList(UI).Events.Quests = UserList(UI).Events.Quests + 1
+        End If
+         Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserList(UI).Name & " ganó una quest.", FontTypeNames.FONTTYPE_INFO))
         Call .incomingData.CopyBuffer(Buffer)
     End With
 
@@ -14938,8 +14974,11 @@ Private Sub HandleLoseQuest(ByVal UserIndex As Integer)
         Dim UI As Integer
         
         UI = NameIndex(Buffer.ReadASCIIString())
-        
-        'que se supone que hace este comando?
+        If UserList(UI).Events.Quests = 0 Then Exit Sub
+        If UI > 0 Then
+            UserList(UI).Events.Quests = UserList(UI).Events.Quests - 1
+        End If
+         Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserList(UI).Name & " perdió una quest.", FontTypeNames.FONTTYPE_INFO))
         
         Call .incomingData.CopyBuffer(Buffer)
     End With
@@ -14957,47 +14996,52 @@ On Error GoTo 0
 End Sub
 
 Private Sub HandleEligioFaccion(ByVal UserIndex As Integer)
-    Dim Faccion As eFaccion
-    
-    With UserList(UserIndex)
-        .incomingData.ReadByte
-        Faccion = .incomingData.ReadByte
+   ' Dim Faccion As eFaccion
+   ' Dim Faccion As Byte
+    With UserList(UserIndex).incomingData
+        Call .ReadByte
+        'Faccion = .incomingData.ReadByte
+        Call RecibirFaccion(UserIndex, .ReadByte)
         
-        If Not PuedeFaccion(UserIndex) Then Exit Sub
+        'If Not PuedeFaccion(UserIndex) Then Exit Sub
         
-        If .Faccion.BandoOriginal > 0 Then Exit Sub
+        'If .Faccion.BandoOriginal > 0 Then Exit Sub
         
         'todo
-        If Faccion = eFaccion.Neutral Then
-            If .Faccion.Bando <> eFaccion.Neutral Then
-                'No podés declararte neutral perteneciendo ya a una facción. 32 51 223 N C
-            Else
-                '¡Has decidido seguir siendo neutral! Podés jurar fidelidad cuando lo desees. 190 190 190 N
-            End If
-            Exit Sub
-        End If
+        'If Faccion = eFaccion.Neutral Then
+        '    If .Faccion.Bando <> eFaccion.Neutral Then
+        '        Call WriteConsoleMsg(UserIndex, "¡No podés declararte neutral perteneciendo ya a una facción.", FontTypeNames.FONTTYPE_INFO) '32 51 223 N C
+        '    Else
+        '        Call WriteConsoleMsg(UserIndex, "¡Has decidido seguir siendo neutral! Podés jurar fidelidad cuando lo desees.", FontTypeNames.FONTTYPE_INFO) ' 190 190 190 N
+        '    End If
+        '    Exit Sub
+        'End If
         
-        If .Faccion.Matados(Faccion) > .Faccion.Matados(Enemigo(Faccion)) Then
-            'mensaje 9
-            Exit Sub
-        End If
+        'If .Faccion.Matados(Faccion) > .Faccion.Matados(Enemigo(Faccion)) Then
+        '    Call WriteConsoleMsg(UserIndex, "La cantidad de matados de tu facción es mayor a la de la facción enemiga.", FontTypeNames.FONTTYPE_INFO)
+        '    Exit Sub
+        'End If
         
         'mensaje 10
-        .Faccion.BandoOriginal = Faccion
-        .Faccion.Bando = Faccion
-        .Faccion.Ataco(Faccion) = 0
-        If Not PuedeFaccion(UserIndex) Then Call WriteEligeFaccion(UserIndex, False)
-        
-        'updateuserchar
+        '.Faccion.Bando = Faccion
+        '.Faccion.BandoOriginal = Faccion
+        '.Faccion.Ataco(Faccion) = 0
+       ' If PuedeFaccion(UserIndex) Then Call AgregarMiembroFaccion(UserIndex)
+        'Call WarpUserChar(UserIndex, .Pos.Map, .Pos.X, .Pos.Y, False)
     End With
     
 End Sub
+Private Sub HandleMercenary(ByVal UserIndex As Integer)
 
+    With UserList(UserIndex).incomingData
+        Call .ReadByte
+        Call HacerMercenario(UserIndex, .ReadByte)
+    End With
+End Sub
 Private Sub HandleEligioRecompensa(ByVal UserIndex As Integer)
     With UserList(UserIndex).incomingData
     
-        .ReadByte
-        
+        Call .ReadByte
         Call RecibirRecompensa(UserIndex, .ReadByte)
     End With
 End Sub
@@ -15120,7 +15164,7 @@ With UserList(UserIndex)
     Call .incomingData.ReadByte
     
     ' TODO: manejar el movimiento en los otros inventarios (comercio / boveda) si es necesario...
-    Call InvUsuario.moveItem(UserIndex, originalSlot, newSlot)
+    Call InvUsuario.MoveItem(UserIndex, originalSlot, newSlot)
    
 End With
  

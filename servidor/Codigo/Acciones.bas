@@ -85,6 +85,22 @@ On Error Resume Next
                     'Iniciamos la rutina pa' comerciar.
                     Call IniciarComercioNPC(UserIndex)
                 
+                ElseIf Npclist(tempIndex).NPCtype = eNPCType.Noble Then
+                    If .flags.Muerto = 1 Then
+                        Call WriteConsoleMsg(UserIndex, "¡¡Estás muerto!!", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+        
+                    'Make sure it's close enough
+                    If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 5 Then
+                     Call WriteConsoleMsg(UserIndex, "Estás demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+                    
+                    If Npclist(.flags.TargetNPC).flags.Faccion = .Faccion.Bando Then
+                        Call Recompensado(UserIndex)
+                    End If
+                
                 ElseIf Npclist(tempIndex).NPCtype = eNPCType.Entrenador Then
                     If .flags.Muerto = 1 Then
                         Call WriteConsoleMsg(UserIndex, "¡¡Estás muerto!!", FontTypeNames.FONTTYPE_INFO)

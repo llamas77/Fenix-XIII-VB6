@@ -780,7 +780,7 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
             Exit Sub
         End If
         
-        index = MapData(AttackPos.map, AttackPos.X, AttackPos.Y).UserIndex
+        index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).UserIndex
         
         'Look for user
         If index > 0 Then
@@ -790,12 +790,12 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
             Exit Sub
         End If
         
-        index = MapData(AttackPos.map, AttackPos.X, AttackPos.Y).NpcIndex
+        index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).NpcIndex
         
         'Look for NPC
         If index > 0 Then
             If Npclist(index).Attackable Then
-                If Npclist(index).MaestroUser > 0 And MapInfo(Npclist(index).Pos.map).Pk = False Then
+                If Npclist(index).MaestroUser > 0 And MapInfo(Npclist(index).Pos.Map).Pk = False Then
                     Call WriteConsoleMsg(UserIndex, "No puedes atacar mascotas en zona segura.", FontTypeNames.FONTTYPE_FIGHT)
                     Exit Sub
                 End If
@@ -1226,53 +1226,64 @@ On Error GoTo Errhandler
             End If
     End Select
     
-    'Ataca un ciudadano?
-    If Not Criminal(VictimIndex) Then
-        ' El atacante es ciuda?
-        If Not Criminal(AttackerIndex) Then
-            ' El atacante es armada?
-            If EsArmada(AttackerIndex) Then
-                ' La victima es armada?
-                If EsArmada(VictimIndex) Then
-                    ' No puede
-                    Call WriteConsoleMsg(AttackerIndex, "Los soldados del ejército real tienen prohibido atacar ciudadanos.", FontTypeNames.FONTTYPE_WARNING)
-                    Exit Function
-                End If
-            End If
-            
-        End If
-    ' Ataca a un criminal
-    Else
-        'Sos un Caos atacando otro caos?
-        If EsCaos(VictimIndex) Then
-            If EsCaos(AttackerIndex) Then
-                Call WriteConsoleMsg(AttackerIndex, "Los miembros de la legión oscura tienen prohibido atacarse entre sí.", FontTypeNames.FONTTYPE_WARNING)
-                Exit Function
-            End If
-        End If
+    If UserList(AttackerIndex).Faccion.Bando = UserList(VictimIndex).Faccion.Bando And UserList(AttackerIndex).Faccion.Bando > 0 And UserList(VictimIndex).Faccion.Bando > 0 Then
+        Call WriteConsoleMsg(AttackerIndex, "No puedes atacar seres de tu mismo bando.", FontTypeNames.FONTTYPE_WARNING)
+        Exit Function
+    ElseIf UserList(AttackerIndex).Faccion.Bando = 1 And UserList(VictimIndex).Stats.ELV < 13 Then
+        Call WriteConsoleMsg(AttackerIndex, "Tu debes proteger a los newbies.", FontTypeNames.FONTTYPE_WARNING)
+        Exit Function
+    ElseIf UserList(AttackerIndex).Stats.ELV < 13 And UserList(VictimIndex).Faccion.Bando = 1 Then
+        Call WriteConsoleMsg(AttackerIndex, "No puedes atacar a quienes te protegen.", FontTypeNames.FONTTYPE_WARNING)
+        Exit Function
     End If
+    
+    'Ataca un ciudadano?
+    'If Not Criminal(VictimIndex) Then
+        ' El atacante es ciuda?
+      '  If Not Criminal(AttackerIndex) Then
+            ' El atacante es armada?
+         '   If EsArmada(AttackerIndex) Then
+        '        ' La victima es armada?
+       '         If EsArmada(VictimIndex) Then
+      '              ' No puede
+          '          Call WriteConsoleMsg(AttackerIndex, "Los soldados del ejército real tienen prohibido atacar ciudadanos.", FontTypeNames.FONTTYPE_WARNING)
+     '               Exit Function
+           '     End If
+     '       End If
+            
+    '    End If
+    ' Ataca a un criminal
+   ' Else
+        'Sos un Caos atacando otro caos?
+   '     If EsCaos(VictimIndex) Then
+   '         If EsCaos(AttackerIndex) Then
+   '             Call WriteConsoleMsg(AttackerIndex, "Los miembros de la legión oscura tienen prohibido atacarse entre sí.", FontTypeNames.FONTTYPE_WARNING)
+   '             Exit Function
+   '         End If
+   '     End If
+   ' End If
     
     ' Un ciuda es atacado
-    If Not Criminal(VictimIndex) Then
+   ' If Not Criminal(VictimIndex) Then
         ' Por un armada sin seguro
-        If EsArmada(AttackerIndex) Then
+    '    If EsArmada(AttackerIndex) Then
             ' No puede
-            Call WriteConsoleMsg(AttackerIndex, "Los soldados del ejército real tienen prohibido atacar ciudadanos.", FontTypeNames.FONTTYPE_WARNING)
-            PuedeAtacar = False
-            Exit Function
-        End If
-    End If
+    '        Call WriteConsoleMsg(AttackerIndex, "Los soldados del ejército real tienen prohibido atacar ciudadanos.", FontTypeNames.FONTTYPE_WARNING)
+    '        PuedeAtacar = False
+    '        Exit Function
+    '    End If
+   ' End If
     
     'Estas en un Mapa Seguro?
-    If MapInfo(UserList(VictimIndex).Pos.map).Pk = False Then
+    If MapInfo(UserList(VictimIndex).Pos.Map).Pk = False Then
         Call WriteConsoleMsg(AttackerIndex, "Esta es una zona segura, aquí no puedes atacar a otros usuarios.", FontTypeNames.FONTTYPE_WARNING)
         PuedeAtacar = False
         Exit Function
     End If
     
     'Estas atacando desde un trigger seguro? o tu victima esta en uno asi?
-    If MapData(UserList(VictimIndex).Pos.map, UserList(VictimIndex).Pos.X, UserList(VictimIndex).Pos.Y).trigger = eTrigger.ZONASEGURA Or _
-        MapData(UserList(AttackerIndex).Pos.map, UserList(AttackerIndex).Pos.X, UserList(AttackerIndex).Pos.Y).trigger = eTrigger.ZONASEGURA Then
+    If MapData(UserList(VictimIndex).Pos.Map, UserList(VictimIndex).Pos.X, UserList(VictimIndex).Pos.Y).trigger = eTrigger.ZONASEGURA Or _
+        MapData(UserList(AttackerIndex).Pos.Map, UserList(AttackerIndex).Pos.X, UserList(AttackerIndex).Pos.Y).trigger = eTrigger.ZONASEGURA Then
         Call WriteConsoleMsg(AttackerIndex, "No puedes pelear aquí.", FontTypeNames.FONTTYPE_WARNING)
         PuedeAtacar = False
         Exit Function
@@ -1454,8 +1465,8 @@ On Error GoTo Errhandler
     Dim tOrg As eTrigger
     Dim tDst As eTrigger
     
-    tOrg = MapData(UserList(Origen).Pos.map, UserList(Origen).Pos.X, UserList(Origen).Pos.Y).trigger
-    tDst = MapData(UserList(Destino).Pos.map, UserList(Destino).Pos.X, UserList(Destino).Pos.Y).trigger
+    tOrg = MapData(UserList(Origen).Pos.Map, UserList(Origen).Pos.X, UserList(Origen).Pos.Y).trigger
+    tDst = MapData(UserList(Destino).Pos.Map, UserList(Destino).Pos.X, UserList(Destino).Pos.Y).trigger
     
     If tOrg = eTrigger.ZONAPELEA Or tDst = eTrigger.ZONAPELEA Then
         If tOrg = tDst Then
